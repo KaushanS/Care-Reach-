@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareReach | Guardian Dashboard</title>
+    <title>CareReach | Notifications</title>
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,7 +14,7 @@
 
     <style>
         :root {
-            
+            /* CareReach Theme Colors */
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #d1f2eb;
@@ -25,11 +25,11 @@
             --text-muted: #6b7280;
             --border: #e5e7eb;
             --danger: #dc2626;
-            --danger-hover: #b91c1c;
             --danger-bg: #fef2f2;
             --warning: #f59e0b;
             --success: #10b981;
             --info: #3b82f6;
+            --info-bg: #eff6ff;
 
             /* Sidebar Variables */
             --sidebar-bg: #042f2e;
@@ -148,7 +148,7 @@
             opacity: 1;
         }
 
-        /* Special Emergency Button in Sidebar */
+        /* Emergency Button */
         .menu-item.emergency-btn {
             background-color: rgba(220, 38, 38, 0.1);
             color: #fca5a5;
@@ -197,6 +197,7 @@
             align-items: center;
             gap: 12px;
             text-decoration: none;
+            margin-left: auto;
         }
 
         .user-profile img {
@@ -225,109 +226,63 @@
         /* --- CONTENT AREA --- */
         .content-area {
             padding: 40px;
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             width: 100%;
         }
 
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--primary) 0%, #042f2e 100%);
-            border-radius: 16px;
-            padding: 32px;
-            color: white;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            box-shadow: 0 4px 20px rgba(15, 118, 110, 0.15);
+        .page-header {
+            margin-bottom: 24px;
         }
 
-        .welcome-text h1 {
+        .page-header h1 {
             font-size: 28px;
             font-weight: 800;
-            margin-bottom: 8px;
-        }
-
-        .welcome-text p {
-            font-size: 15px;
-            opacity: 0.9;
-        }
-
-        /* Dashboard Grid */
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-
-        /* Cards */
-        .card {
-            background: var(--bg-surface);
-            border-radius: 16px;
-            border: 1px solid var(--border);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .card-header {
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .card-title {
-            font-size: 16px;
-            font-weight: 700;
             color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        /* Patient Tabs */
+        .patient-tabs {
             display: flex;
-            align-items: center;
-            gap: 8px;
+            gap: 12px;
+            margin-bottom: 24px;
         }
 
-        .card-title i {
-            color: var(--primary);
-            font-size: 18px;
-        }
-
-        .card-body {
-            padding: 24px;
-            flex: 1;
-        }
-
-        /* Dependents List */
-        .dependent-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            border: 1px solid var(--border);
+        .tab-btn {
+            padding: 12px 20px;
             border-radius: 12px;
-            margin-bottom: 12px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
             transition: 0.2s;
+            color: var(--text-normal);
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .dependent-item:hover {
+        .tab-btn:hover {
             border-color: var(--primary-light);
             background: #f8fafc;
         }
 
-        .dependent-item:last-child {
-            margin-bottom: 0;
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
         }
 
-        .dependent-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-        }
-
-        .dependent-avatar {
-            width: 48px;
-            height: 48px;
+        .tab-avatar {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: var(--primary-light);
             color: var(--primary);
@@ -335,57 +290,167 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 12px;
         }
 
-        .dependent-details h4 {
-            font-size: 15px;
+        .tab-btn.active .tab-avatar {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        /* Patient Overview Card */
+        .overview-card {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .overview-info h2 {
+            font-size: 20px;
             font-weight: 700;
             color: var(--text-dark);
             margin-bottom: 4px;
         }
 
-        .dependent-details p {
-            font-size: 13px;
+        .overview-info p {
+            font-size: 14px;
             color: var(--text-muted);
         }
 
         .status-badge {
-            padding: 4px 10px;
+            padding: 6px 14px;
             border-radius: 99px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
-        }
-
-        .status-stable {
+            gap: 6px;
             background: #dcfce7;
             color: #166534;
         }
 
-        .status-pending {
-            background: #fef9c3;
-            color: #854d0e;
+        /* Medical History Timeline */
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        .btn-sm {
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1px solid var(--border);
-            color: var(--text-normal);
-            transition: 0.2s;
-            display: inline-block;
-        }
-
-        .btn-sm:hover {
-            background: var(--bg-page);
+        .section-title i {
             color: var(--primary);
-            border-color: var(--primary);
+        }
+
+        .history-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .report-card {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .report-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .report-date {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .report-date strong {
+            font-size: 16px;
+            color: var(--text-dark);
+        }
+
+        .report-date span {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+
+        .report-doctor {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: var(--primary-light);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .report-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+        }
+
+        .report-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .field-label {
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .field-value {
+            font-size: 14px;
+            color: var(--text-dark);
+            line-height: 1.5;
+            background: var(--bg-page);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .diagnosis-badge {
+            display: inline-block;
+            background: var(--info-bg);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
         }
 
         .mobile-toggle {
@@ -412,12 +477,6 @@
             .mobile-toggle {
                 display: block;
             }
-
-            .welcome-banner {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 20px;
-            }
         }
     
         /* Notifications */
@@ -435,12 +494,30 @@
         .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
         .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
         .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
+    
+
+        .page-header { margin-bottom: 24px; }
+        .page-header h1 { font-size: 28px; font-weight: 800; color: var(--text-dark); }
+        .page-header p { font-size: 15px; color: var(--text-muted); margin-top: 4px; }
+        .reminder-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+        .reminder-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; transition: 0.2s; }
+        .reminder-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
+        .reminder-card.active-now { border-left: 4px solid var(--primary); }
+        .reminder-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .icon-appt { background: var(--info-bg); color: var(--info); }
+        .reminder-content { flex: 1; }
+        .reminder-content h4 { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .reminder-content p { font-size: 13px; color: var(--text-muted); }
+        .reminder-time { text-align: right; flex-shrink: 0; }
+        .reminder-time .time { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+        .btn-clear { background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-clear:hover { background: var(--primary); color: white; }
     </style>
 </head>
 
 <body>
 
-    <!-- GUARDIAN SIDEBAR -->
+    
     <aside class="sidebar" id="sidebar">
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
@@ -451,13 +528,14 @@
             <div>
             <div class="menu-title">Guardian Menu</div>
 
-            <a href="dashboard.html" class="menu-item active">
+            <a href="dashboard.html" class="menu-item">
                 <i class="bi bi-grid-1x2-fill"></i> Dashboard
             </a>
 
             <a href="patient-status.html" class="menu-item">
                 <i class="bi bi-activity"></i> Patient Status
             </a>
+
 
 
             <div class="menu-title">Account</div>
@@ -472,12 +550,11 @@
     </aside>
 
     <main class="main-content">
-        <!-- HEADER -->
+       
         <header class="top-header">
             <div style="display: flex; align-items: center; gap: 20px;">
                 <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
             </div>
-
                         <div style="display: flex; align-items: center; gap: 20px; margin-left: auto;">
                 <div class="notification-wrapper">
                     <div class="notification-icon" onclick="toggleNotifications()">
@@ -515,68 +592,36 @@
             </div></header>
 
         <div class="content-area">
-
-         
-            <div class="welcome-banner">
-                <div class="welcome-text">
-                    <h1>Welcome back, Namal!</h1>
-                    <p>Track your dependents' health status, manage doctor visits, and handle medication schedules.</p>
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h1>Notifications</h1>
+                    <p>Stay up to date with alerts and reminders about your dependents.</p>
                 </div>
+                <a href="#" class="btn-clear"><i class="bi bi-check2-all"></i> Mark all as read</a>
             </div>
 
-            <div class="dashboard-grid">
-
-             
-                <div class="main-col">
-                    <div class="card">
-                        <div class="card-header">
-                            <h2 class="card-title"><i class="bi bi-people-fill"></i> Linked Dependents (Patients)</h2>
-                            <a href="#" class="btn-sm"><i class="bi bi-plus-lg"></i> Add New</a>
-                        </div>
-                        <div class="card-body">
-
-                            <!-- Dependent 1 -->
-                            <div class="dependent-item">
-                                <div class="dependent-info">
-                                    <div class="dependent-avatar">KP</div>
-                                    <div class="dependent-details">
-                                        <h4>Kamal Perera (Father)</h4>
-                                        <p>ID: CR-1092 • 65 Yrs • Diabetes Type 2</p>
-                                    </div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <a href="patient-status.html" class="btn-sm">View Medical Record</a>
-                                </div>
-                            </div>
-
-                            <!-- Dependent 2 -->
-                            <div class="dependent-item">
-                                <div class="dependent-info">
-                                    <img src="https://ui-avatars.com/api/?name=Sita+Fernando&background=d1f2eb&color=0f766e"
-                                        class="dependent-avatar" alt="Mother">
-                                    <div class="dependent-details">
-                                        <h4>Sita Fernando (Mother)</h4>
-                                        <p>ID: CR-1405 • 62 Yrs • Hypertension</p>
-                                    </div>
-                                </div>
-                                <div style="text-align: right;">
-                                    <a href="patient-status.html" class="btn-sm">View Medical Record</a>
-                                </div>
-                            </div>
-
-                        </div>
+            <div class="reminder-list">
+                <div class="reminder-card active-now">
+                    <div class="reminder-icon icon-appt"><i class="bi bi-calendar-event"></i></div>
+                    <div class="reminder-content">
+                        <h4>Upcoming Appointment</h4>
+                        <p>Reminder: Dental Visit for Kamal Perera tomorrow at 10:00 AM.</p>
+                    </div>
+                    <div class="reminder-time">
+                        <div class="time" style="font-size:13px;">2 hours ago</div>
                     </div>
                 </div>
-
             </div>
         </div>
     </main>
 
-    <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
-        }
-    
+</body>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById('sidebar').classList.toggle('open');
+    }
+
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
             dropdown.classList.toggle('show');
@@ -589,6 +634,5 @@
             }
         });
     </script>
-</body>
 
 </html>
