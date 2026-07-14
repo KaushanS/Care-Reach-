@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Manage Patients</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* CareReach Theme Colors */
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+
+            /* Sidebar Specific Colors */
+            --sidebar-bg: #042f2e;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+
+            --bg-page: #f0f7f6;
+            --bg-surface: #ffffff;
+            --text-dark: #0f172a;
+            --text-normal: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+
+            /* Status Colors */
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --secondary: #64748b;
+            --secondary-bg: #f1f5f9;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+
+            --sidebar-width: 260px;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, 0.15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            transition: color 0.2s;
+            opacity: 0.8;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .menu-item:hover i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item.active i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .badge-alert {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-header {
+            height: 72px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-page);
+            padding: 8px 16px;
+            border-radius: 99px;
+            width: 320px;
+        }
+
+        .header-search i {
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .action-icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon:hover {
+            color: var(--primary);
+        }
+
+        .action-icon .dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+            text-decoration: none;
+        }
+
+        .admin-profile:hover .admin-info h4 {
+            color: var(--primary);
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: color 0.2s;
+        }
+
+        .admin-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- CONTENT AREA & METRICS --- */
+        .content-area {
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: var(--bg-surface);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(15, 118, 110, 0.08);
+        }
+
+        .metric-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-blue {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .icon-teal {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .icon-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .icon-red {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .metric-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .metric-info p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-normal);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* --- DATA TABLES --- */
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Updated Filter Group */
+        .panel-header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .filter-select {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-dark);
+            outline: none;
+            background-color: var(--bg-surface);
+            flex: 1;
+            min-width: 140px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .profile-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .profile-id {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .contact-info span {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .medical-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .badge-blood {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .badge-condition {
+            background: var(--info-bg);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--border);
+        }
+
+        .icon-btn.delete:hover {
+            color: var(--danger);
+            background: var(--danger-bg);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .header-search {
+                display: none;
+            }
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h3 {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #f8fafc;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+    
+        /* Notifications */
+        .notification-wrapper { position: relative; }
+        .notification-icon-bell { font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .notification-icon-bell:hover { color: var(--primary); }
+        .notification-badge-new { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
+        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; overflow: hidden; text-align: left; }
+        .notification-dropdown.show { display: block; }
+        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .notification-list { max-height: 360px; overflow-y: auto; }
+        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; }
+        .notification-item:hover { background: var(--bg-page); }
+        .notification-item:last-child { border-bottom: none; }
+        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
+        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
+    </style>
+
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+            CARE<span>REACH</span>
+        </div>
+
+        <nav class="sidebar-menu">
+            <div class="menu-title">Main</div>
+            <a href="dashboard.html" class="menu-item">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+            <a href="emergency.html" class="menu-item">
+                <i class="bi bi-exclamation-triangle"></i> Emergencies
+                <span class="badge-alert">2 Active</span>
+            </a>
+
+            <div class="menu-title">Network Management</div>
+            <!-- PATIENTS MENU ACTIVE -->
+            <a href="patients.html" class="menu-item active">
+                <i class="bi bi-person-rolodex"></i> Patients
+            </a>
+            <a href="doctors.html" class="menu-item">
+                <i class="bi bi-heart-pulse"></i> Doctors
+            </a>
+            <a href="guardians.html" class="menu-item">
+                <i class="bi bi-shield-check"></i> Guardians
+            </a>
+            <a href="officers.html" class="menu-item">
+                <i class="bi bi-person-badge"></i> Officers
+            </a>
+            <a href="volunteers.html" class="menu-item">
+                <i class="bi bi-people"></i> Volunteers
+            </a>
+
+            <div class="menu-title">Insights & Reports</div>
+            <a href="analytics.html" class="menu-item">
+                <i class="bi bi-graph-up"></i> Analytics
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i> Reports
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="top-header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+                <div class="header-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search by name, ID, or phone...">
+                </div>
+            </div>
+
+            <div class="header-actions">
+                                <!-- Notifications Icon -->
+                <div class="notification-wrapper">
+                    <div class="notification-icon-bell" onclick="toggleNotifications()" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge-new">2</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark all read</a>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i class="bi bi-calendar-event"></i></div>
+                                <div class="noti-content">
+                                    <h4>New Registration</h4>
+                                    <p>Dr. Silva has submitted registration for approval.</p>
+                                    <span style="font-size:11px;color:var(--text-muted);">2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+                            <a href="notifications.html" style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See all notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="profile.html" class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
+                    <div class="admin-info">
+                        <h4>System Admin</h4>
+                        <p>Colombo HQ</p>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <div class="page-header">
+                <div>
+                    <h1>Patient Management</h1>
+                    <p>Manage all registered patients, view medical profiles, and update emergency contacts.</p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon icon-teal"><i class="bi bi-person-lines-fill"></i></div>
+                    <div class="metric-info">
+                        <h3>12,450</h3>
+                        <p>Total Registered Patients</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon icon-green"><i class="bi bi-person-check-fill"></i></div>
+                    <div class="metric-info">
+                        <h3>+145</h3>
+                        <p>New Registrations (This Week)</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <h2 class="panel-title">Registered Patients</h2>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;"
+                            onclick="resetFilters()"><i class="bi bi-arrow-counterclockwise"></i> Reset Filters</button>
+                    </div>
+
+                    <!-- Expanded Filter Group -->
+                    <div class="filter-group">
+                        <select class="filter-select" id="filterProvince" onchange="filterTable()">
+                            <option value="all">All Provinces</option>
+                            <option value="Western">Western</option>
+                            <option value="Central">Central</option>
+                            <option value="Southern">Southern</option>
+                        </select>
+                        <select class="filter-select" id="filterDistrict" onchange="filterTable()">
+                            <option value="all">All Districts</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Gampaha">Gampaha</option>
+                            <option value="Kandy">Kandy</option>
+                        </select>
+                        <select class="filter-select" id="filterDivision" onchange="filterTable()">
+                            <option value="all">All Divisions</option>
+                            <option value="Thimbirigasyaya">Thimbirigasyaya</option>
+                            <option value="Kandy Four Gravets">Kandy Four Gravets</option>
+                            <option value="Negombo">Negombo</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="patientsTable">
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Location</th>
+                                <th>Guardian & Contact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Row 1 -->
+                            <tr data-province="Western" data-district="Colombo" data-division="Thimbirigasyaya">
+                                <td>
+                                    <div class="profile-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Nimal+Perera&background=d1f2eb&color=0f766e"
+                                            alt="Avatar" class="profile-avatar">
+                                        <div>
+                                            <span class="profile-name">Nimal Perera</span>
+                                            <span class="profile-id">CR-90421</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">68 Yrs</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Colombo 05</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Thimbirigasyaya, Western
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <span style="color: var(--text-dark); font-weight: 500;">Kamala Perera
+                                            (Spouse)</span>
+                                        <span><i class="bi bi-telephone"></i> +94 77 123 4567</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
+                                        <button class="icon-btn" title="Edit Patient"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button class="icon-btn" title="Create Patient Account"
+                                            onclick="openPatientModal('Nimal Perera', '534012015V', '15-08-1956', 'Male', '+94 77 123 9999', 'Colombo 05, Thimbirigasyaya', 'Kamala Perera', '+94 77 123 4567', 'Spouse')"><i
+                                                class="bi bi-person-plus"></i></button>
+                                        <button class="icon-btn" title="Create Guardian Account"
+                                            onclick="openGuardianModal('Kamala Perera', '+94 77 123 4567', 'CR-90421')"><i
+                                                class="bi bi-shield-plus"></i></button>
+                                        <button class="icon-btn delete" title="Remove Patient"
+                                            onclick="deleteRow(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 2 -->
+                            <tr data-province="Central" data-district="Kandy" data-division="Kandy Four Gravets">
+                                <td>
+                                    <div class="profile-cell">
+                                        <div class="profile-avatar">AM</div>
+                                        <div>
+                                            <span class="profile-name">Ayesha Mendis</span>
+                                            <span class="profile-id">CR-88301</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">42 Yrs</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Kandy Four Gravets</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Kandy, Central</div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <span style="color: var(--text-dark); font-weight: 500;">Ruwan Mendis
+                                            (Husband)</span>
+                                        <span><i class="bi bi-telephone"></i> +94 71 888 2233</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
+                                        <button class="icon-btn" title="Edit Patient"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button class="icon-btn" title="Create Patient Account"
+                                            onclick="openPatientModal('Ayesha Mendis', '840134012V', '22-03-1984', 'Female', '+94 71 888 2233', 'Kandy Four Gravets, Kandy', 'Ruwan Mendis', '+94 71 888 2233', 'Husband')"><i
+                                                class="bi bi-person-plus"></i></button>
+                                        <button class="icon-btn" title="Create Guardian Account"
+                                            onclick="openGuardianModal('Ruwan Mendis', '+94 71 888 2233', 'CR-88301')"><i
+                                                class="bi bi-shield-plus"></i></button>
+                                        <button class="icon-btn delete" title="Remove Patient"
+                                            onclick="deleteRow(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Row 3 -->
+                            <tr data-province="Western" data-district="Gampaha" data-division="Negombo">
+                                <td>
+                                    <div class="profile-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Sunil+Jayasooriya&background=e2e8f0&color=64748b"
+                                            alt="Avatar" class="profile-avatar">
+                                        <div>
+                                            <span class="profile-name">Sunil Jayasooriya</span>
+                                            <span class="profile-id">CR-11029</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">28 Yrs</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Negombo</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Gampaha, Western</div>
+                                </td>
+                                <td>
+                                    <div class="contact-info">
+                                        <span style="color: var(--text-dark); font-weight: 500;">Mala Jayasooriya
+                                            (Mother)</span>
+                                        <span><i class="bi bi-telephone"></i> +94 76 555 9911</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
+                                        <button class="icon-btn" title="Edit Patient"><i
+                                                class="bi bi-pencil-square"></i></button>
+                                        <button class="icon-btn" title="Create Patient Account"
+                                            onclick="openPatientModal('Sunil Jayasooriya', '19623048590', '10-10-1995', 'Male', '+94 77 555 1111', 'Negombo, Gampaha', 'Mala Jayasooriya', '+94 76 555 9911', 'Mother')"><i
+                                                class="bi bi-person-plus"></i></button>
+                                        <button class="icon-btn" title="Create Guardian Account"
+                                            onclick="openGuardianModal('Mala Jayasooriya', '+94 76 555 9911', 'CR-11029')"><i
+                                                class="bi bi-shield-plus"></i></button>
+                                        <button class="icon-btn delete" title="Remove Patient"
+                                            onclick="deleteRow(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <p style="font-size: 13px; color: var(--text-muted);">Showing 1 to 3 of 12,450 patients</p>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;"
+                            disabled>Previous</button>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 13px;">1</button>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">2</button>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">3</button>
+                        <span style="padding: 6px 4px; color: var(--text-muted);">...</span>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">Next</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="patientModal">
+        <div class="modal-box" style="width: 600px;">
+            <h3>Create Patient Account</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Auto-generated credentials based
+                on verified Grama Niladari records.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <h4
+                    style="grid-column: span 2; font-size: 14px; margin-bottom: 0px; padding-bottom: 4px; border-bottom: 1px solid var(--border); color: var(--text-dark);">
+                    Patient Details</h4>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="pmName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>NIC Number</label>
+                    <input type="text" id="pmNicLabel" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="text" id="pmDob" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Gender</label>
+                    <input type="text" id="pmGender" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="pmPhone" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="pmAddress" readonly>
+                </div>
+
+                <h4
+                    style="grid-column: span 2; font-size: 14px; margin-bottom: 0px; padding-bottom: 4px; border-bottom: 1px solid var(--border); margin-top: 8px; color: var(--text-dark);">
+                    Emergency Contact & Guardian</h4>
+
+                <div class="form-group">
+                    <label>Guardian Name</label>
+                    <input type="text" id="pmGuardian" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Contact Number</label>
+                    <input type="text" id="pmGContact" readonly>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Relationship</label>
+                    <input type="text" id="pmRelation" readonly>
+                </div>
+            </div>
+
+            <hr style="border: 0; border-top: 1px dashed var(--border); margin: 20px 0;">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <div class="form-group">
+                    <label>Username (Patient Name)</label>
+                    <input type="text" id="pmUsername" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Password (NIC Number)</label>
+                    <input type="text" id="pmPassword" readonly>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-outline"
+                    style="padding: 8px 16px; border: 1px solid var(--border); background: transparent; border-radius: 6px; cursor: pointer; color: var(--text-dark); font-weight: 500;"
+                    onclick="closeModal('patientModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitModal('patientModal', 'Patient')">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="guardianModal">
+        <div class="modal-box">
+            <h3>Create Guardian Account</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Auto-generated credentials for
+                the assigned guardian.</p>
+            <div class="form-group">
+                <label>Guardian Name</label>
+                <input type="text" id="gmName" readonly>
+            </div>
+            <div class="form-group">
+                <label>Guardian Contact</label>
+                <input type="text" id="gmPhone" readonly>
+            </div>
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="gmUsername" readonly>
+            </div>
+            <div class="form-group">
+                <label>Password (Register ID / Phone)</label>
+                <input type="text" id="gmPassword" readonly>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline"
+                    style="padding: 8px 16px; border: 1px solid var(--border); background: transparent; border-radius: 6px; cursor: pointer; color: var(--text-dark); font-weight: 500;"
+                    onclick="closeModal('guardianModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitModal('guardianModal', 'Guardian')">Create
+                    Account</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+
+        function openPatientModal(name, nic, dob, gender, phone, address, gName, gContact, relation) {
+            document.getElementById('pmName').value = name;
+            document.getElementById('pmNicLabel').value = nic;
+            document.getElementById('pmDob').value = dob;
+            document.getElementById('pmGender').value = gender;
+            document.getElementById('pmPhone').value = phone;
+            document.getElementById('pmAddress').value = address;
+
+            document.getElementById('pmGuardian').value = gName;
+            document.getElementById('pmGContact').value = gContact;
+            document.getElementById('pmRelation').value = relation;
+
+            document.getElementById('pmUsername').value = name;
+            document.getElementById('pmPassword').value = nic;
+            document.getElementById('patientModal').classList.add('active');
+        }
+
+        function openGuardianModal(name, phone, registerId) {
+            document.getElementById('gmName').value = name;
+            document.getElementById('gmPhone').value = phone;
+            document.getElementById('gmUsername').value = name;
+            document.getElementById('gmPassword').value = registerId;
+            document.getElementById('guardianModal').classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        function submitModal(id, type) {
+            alert(type + ' account created successfully!');
+            closeModal(id);
+        }
+
+        function toggleSidebar() {
+
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function deleteRow(btn) {
+            const confirmed = confirm("Are you sure you want to remove this patient profile? This action will also unlink associated guardians and cannot be undone.");
+            if (confirmed) {
+                const row = btn.closest('tr');
+                row.remove();
+            }
+        }
+
+        // Multi-criteria Table Filter Logic
+        function filterTable() {
+            const valProvince = document.getElementById("filterProvince").value;
+            const valDistrict = document.getElementById("filterDistrict").value;
+            const valDivision = document.getElementById("filterDivision").value;
+
+            const rows = document.querySelectorAll("#patientsTable tbody tr");
+
+            rows.forEach(row => {
+                const prov = row.getAttribute("data-province");
+                const dist = row.getAttribute("data-district");
+                const div = row.getAttribute("data-division");
+
+                const matchProvince = (valProvince === "all" || prov === valProvince);
+                const matchDistrict = (valDistrict === "all" || dist === valDistrict);
+                const matchDivision = (valDivision === "all" || div === valDivision);
+
+                if (matchProvince && matchDistrict && matchDivision) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+
+        // Reset Filters Helper
+        function resetFilters() {
+            document.getElementById("filterProvince").value = "all";
+            document.getElementById("filterDistrict").value = "all";
+            document.getElementById("filterDivision").value = "all";
+            filterTable();
+        }
+    
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+        }
+        document.addEventListener('click', function(event) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+
+</html>
