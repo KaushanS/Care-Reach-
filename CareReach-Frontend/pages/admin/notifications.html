@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareReach | Manage Doctors</title>
+    <title>CareReach | Notifications</title>
+    <!-- Fonts and Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,12 +14,10 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #ccfbf1;
 
-            /* Sidebar Specific Colors (Dark Highlighted) */
             --sidebar-bg: #042f2e;
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
@@ -31,15 +30,12 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
 
-            /* Status Colors */
             --danger: #ef4444;
             --danger-bg: #fef2f2;
             --warning: #f59e0b;
             --warning-bg: #fffbeb;
             --success: #10b981;
             --success-bg: #ecfdf5;
-            --secondary: #64748b;
-            --secondary-bg: #f1f5f9;
 
             --sidebar-width: 260px;
             --font-family: 'Inter', sans-serif;
@@ -60,7 +56,6 @@
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR --- */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--sidebar-bg);
@@ -169,6 +164,21 @@
             font-weight: 700;
             padding: 2px 8px;
             border-radius: 99px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
         }
 
         /* --- MAIN CONTENT --- */
@@ -282,7 +292,7 @@
             color: var(--text-muted);
         }
 
-        /* --- CONTENT AREA & METRICS --- */
+        /* DASHBOARD CONTENT */
         .content-area {
             padding: 32px;
         }
@@ -295,14 +305,13 @@
         }
 
         .page-header h1 {
-            font-size: 28px;
-            font-weight: 800;
+            font-size: 24px;
+            font-weight: 700;
             color: var(--text-dark);
-            letter-spacing: -0.5px;
         }
 
         .page-header p {
-            font-size: 15px;
+            font-size: 14px;
             color: var(--text-muted);
             margin-top: 4px;
         }
@@ -310,7 +319,7 @@
         /* Metric Cards */
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 24px;
             margin-bottom: 32px;
         }
@@ -361,11 +370,6 @@
             color: var(--primary);
         }
 
-        .icon-gray {
-            background: var(--secondary-bg);
-            color: var(--secondary);
-        }
-
         .metric-info h3 {
             font-size: 28px;
             font-weight: 800;
@@ -379,46 +383,7 @@
             color: var(--text-muted);
         }
 
-        /* Buttons */
-        .btn {
-            padding: 12px 24px;
-            border-radius: 10px;
-            font-size: 14px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
-            text-decoration: none;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: var(--white);
-            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-hover);
-            transform: translateY(-1px);
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-normal);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--bg-page);
-            color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        /* --- DATA TABLES --- */
+        /* Data Tables */
         .panel {
             background: var(--bg-surface);
             border-radius: 16px;
@@ -435,24 +400,28 @@
         }
 
         .panel-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: var(--text-dark);
         }
 
-        .filter-group {
-            display: flex;
-            gap: 12px;
-        }
-
-        .filter-select {
-            padding: 8px 16px;
+        .btn-view-all {
+            background: transparent;
             border: 1px solid var(--border);
+            padding: 8px 16px;
             border-radius: 8px;
             font-size: 13px;
-            color: var(--text-dark);
-            outline: none;
-            background-color: var(--bg-surface);
+            font-weight: 600;
+            color: var(--text-normal);
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-view-all:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--primary);
         }
 
         table {
@@ -485,15 +454,15 @@
             background-color: #f8fafc;
         }
 
-        .profile-cell {
+        .patient-cell {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .profile-avatar {
-            width: 40px;
-            height: 40px;
+        .patient-avatar {
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             background: var(--primary-light);
             display: flex;
@@ -501,33 +470,18 @@
             justify-content: center;
             color: var(--primary);
             font-weight: 700;
-            font-size: 14px;
-            object-fit: cover;
+            font-size: 12px;
         }
 
-        .profile-name {
+        .patient-name {
             font-weight: 600;
             color: var(--text-dark);
             display: block;
         }
 
-        .profile-specialty {
+        .patient-id {
             font-size: 12px;
             color: var(--text-muted);
-        }
-
-        .contact-info {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .contact-info span {
-            font-size: 13px;
-            color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
 
         .status-badge {
@@ -541,67 +495,54 @@
         }
 
         .status-active {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .status-active .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--danger);
+            border-radius: 50%;
+        }
+
+        .status-resolved {
             background: var(--success-bg);
             color: var(--success);
         }
 
-        .status-active .dot {
+        .status-resolved .dot {
             width: 6px;
             height: 6px;
             background: var(--success);
             border-radius: 50%;
         }
 
-        .status-busy {
+        .status-pending {
             background: var(--warning-bg);
             color: var(--warning);
         }
 
-        .status-busy .dot {
+        .status-pending .dot {
             width: 6px;
             height: 6px;
             background: var(--warning);
             border-radius: 50%;
         }
 
-        .status-offline {
-            background: var(--secondary-bg);
-            color: var(--secondary);
-        }
-
-        .status-offline .dot {
-            width: 6px;
-            height: 6px;
-            background: var(--secondary);
-            border-radius: 50%;
-        }
-
-        .actions-cell {
-            display: flex;
-            gap: 8px;
-        }
-
-        .icon-btn {
+        .action-btn {
             background: transparent;
-            border: 1px solid transparent;
-            color: var(--text-muted);
-            font-size: 16px;
-            cursor: pointer;
-            padding: 6px;
-            border-radius: 6px;
-            transition: all 0.2s;
-        }
-
-        .icon-btn:hover {
-            background: var(--bg-page);
+            border: none;
             color: var(--primary);
-            border-color: var(--border);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: 6px;
         }
 
-        .icon-btn.delete:hover {
-            color: var(--danger);
-            background: var(--danger-bg);
-            border-color: rgba(239, 68, 68, 0.2);
+        .action-btn:hover {
+            background: var(--primary-light);
         }
 
         .mobile-toggle {
@@ -633,29 +574,6 @@
                 display: none;
             }
         }
-
-        @media (max-width: 768px) {
-            .page-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-
-            .panel-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-
-            .filter-group {
-                width: 100%;
-                flex-wrap: wrap;
-            }
-
-            .filter-select {
-                flex: 1;
-            }
-        }
     
         /* Notifications */
         .notification-wrapper { position: relative; }
@@ -673,11 +591,30 @@
         .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
         .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
         .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
+    
+
+        .page-header { margin-bottom: 24px; }
+        .page-header h1 { font-size: 28px; font-weight: 800; color: var(--text-dark); }
+        .page-header p { font-size: 15px; color: var(--text-muted); margin-top: 4px; }
+        .reminder-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+        .reminder-card { background: var(--bg-surface); border: 1px solid var(--border); border-radius: 14px; padding: 20px 24px; display: flex; align-items: center; gap: 16px; transition: 0.2s; }
+        .reminder-card:hover { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04); }
+        .reminder-card.active-now { border-left: 4px solid var(--primary); }
+        .reminder-icon { width: 48px; height: 48px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+        .icon-appt { background: var(--info-bg); color: var(--info); }
+        .reminder-content { flex: 1; }
+        .reminder-content h4 { font-size: 15px; font-weight: 700; color: var(--text-dark); margin-bottom: 4px; }
+        .reminder-content p { font-size: 13px; color: var(--text-muted); }
+        .reminder-time { text-align: right; flex-shrink: 0; }
+        .reminder-time .time { font-size: 15px; font-weight: 700; color: var(--text-dark); }
+        .btn-clear { background: var(--primary-light); color: var(--primary); padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+        .btn-clear:hover { background: var(--primary); color: white; }
     </style>
 </head>
 
 <body>
 
+    <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
@@ -698,8 +635,7 @@
             <a href="patients.html" class="menu-item">
                 <i class="bi bi-person-rolodex"></i> Patients
             </a>
-            <!-- Active State moved to Doctors -->
-            <a href="doctors.html" class="menu-item active">
+            <a href="doctors.html" class="menu-item">
                 <i class="bi bi-heart-pulse"></i> Doctors
             </a>
             <a href="guardians.html" class="menu-item">
@@ -722,17 +658,20 @@
         </nav>
     </aside>
 
+    <!-- MAIN CONTENT -->
     <main class="main-content">
 
+        <!-- TOP HEADER -->
         <header class="top-header">
             <div style="display: flex; align-items: center; gap: 20px;">
                 <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
                 <div class="header-search">
                     <i class="bi bi-search"></i>
-                    <input type="text" placeholder="Search by name, ID, or specialty...">
+                    <input type="text" placeholder="Search patients, doctors, or ID...">
                 </div>
             </div>
 
+            <!-- HEADER ACTIONS -->
             <div class="header-actions">
                                 <!-- Notifications Icon -->
                 <div class="notification-wrapper">
@@ -761,7 +700,8 @@
                     </div>
                 </div>
 
-                <a href="profile.html" class="admin-profile">
+                <!-- Profile Block linked to profile.html -->
+                <a href="settings.html" class="admin-profile">
                     <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
                     <div class="admin-info">
                         <h4>System Admin</h4>
@@ -771,215 +711,28 @@
             </div>
         </header>
 
+        <!-- DASHBOARD BODY -->
         <div class="content-area">
-
-            <!-- Page Header -->
-            <div class="page-header">
+            <div class="page-header" style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
-                    <h1>Doctor Management</h1>
-                    <p>Manage registered doctors, specialties, and their current availability status.</p>
+                    <h1>Notifications</h1>
+                    <p>Stay up to date with alerts across the CareReach network.</p>
                 </div>
-                <div>
-                    <a href="add_doctor.html" class="btn btn-primary" style="color: #e2e8f0;"><i
-                            class="bi bi-person-plus"></i> Add New Doctor</a>
-                </div>
+                <a href="#" class="btn-clear"><i class="bi bi-check2-all"></i> Mark all as read</a>
             </div>
 
-            <!-- Metrics Grid for Doctors -->
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-icon icon-blue"><i class="bi bi-people-fill"></i></div>
-                    <div class="metric-info">
-                        <h3>156</h3>
-                        <p>Total Doctors</p>
+            <div class="reminder-list">
+                <div class="reminder-card active-now">
+                    <div class="reminder-icon icon-appt"><i class="bi bi-calendar-event"></i></div>
+                    <div class="reminder-content">
+                        <h4>New Registration</h4>
+                        <p>Dr. Silva has submitted registration for approval.</p>
+                    </div>
+                    <div class="reminder-time">
+                        <div class="time" style="font-size:13px;">2 hours ago</div>
                     </div>
                 </div>
             </div>
-
-            <!-- Data Table Panel -->
-            <div class="panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">Registered Doctors</h2>
-                    <div class="filter-group">
-                        <select class="filter-select">
-                            <option value="all">All Specialties</option>
-                            <option value="cardiology">Cardiology</option>
-                            <option value="pediatrics">Pediatrics</option>
-                            <option value="neurology">Neurology</option>
-                            <option value="general">General Practice</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Doctor Info</th>
-                                <th>Contact Details</th>
-                                <th>Assigned Hospital / Region</th>
-                                <th>Division</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- Row 1 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <div class="profile-avatar">RK</div>
-                                        <div>
-                                            <span class="profile-name">Dr. Ravi Kumar</span>
-                                            <span class="profile-specialty">Cardiologist • DOC-0192</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> r.kumar@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 77 123 4567</span>
-                                    </div>
-                                </td>
-                                <td>Colombo General<br><span style="font-size: 12px; color: var(--text-muted);">Western
-                                        Province</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Colombo Division</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Western Province</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 2 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <img src="https://ui-avatars.com/api/?name=Sarah+Fernando&background=d1f2eb&color=0f766e"
-                                            alt="Avatar" class="profile-avatar">
-                                        <div>
-                                            <span class="profile-name">Dr. Sarah Fernando</span>
-                                            <span class="profile-specialty">Pediatrician • DOC-0441</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> s.fernando@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 71 987 6543</span>
-                                    </div>
-                                </td>
-                                <td>Kandy Teaching Hospital<br><span
-                                        style="font-size: 12px; color: var(--text-muted);">Central Province</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Kandy Division</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Central Province</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 3 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <div class="profile-avatar">AR</div>
-                                        <div>
-                                            <span class="profile-name">Dr. Ahamed Rizvi</span>
-                                            <span class="profile-specialty">Neurologist • DOC-1120</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> a.rizvi@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 76 555 1234</span>
-                                    </div>
-                                </td>
-                                <td>National HQ Dispatch<br><span style="font-size: 12px; color: var(--text-muted);">All
-                                        Regions</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">National HQ</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">All Regions</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 4 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <div class="profile-avatar">MJ</div>
-                                        <div>
-                                            <span class="profile-name">Dr. Maya Jayasuriya</span>
-                                            <span class="profile-specialty">General Practice • DOC-2055</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> m.jayasuriya@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 70 222 3344</span>
-                                    </div>
-                                </td>
-                                <td>Karapitiya Hospital<br><span
-                                        style="font-size: 12px; color: var(--text-muted);">Southern Province</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Galle Division</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Southern Province</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Simple Pagination Example -->
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
-                    <p style="font-size: 13px; color: var(--text-muted);">Showing 1 to 4 of 156 doctors</p>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;"
-                            disabled>Previous</button>
-                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 13px;">1</button>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">2</button>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">3</button>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">Next</button>
-                    </div>
-                </div>
-
-            </div>
-
         </div>
     </main>
 
