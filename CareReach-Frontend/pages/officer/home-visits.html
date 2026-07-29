@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Verification Queue</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* CareReach Theme Colors */
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #d1f2eb;
+            --bg-page: #f4f7f6;
+            --bg-surface: #ffffff;
+            --text-dark: #111827;
+            --text-normal: #374151;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+
+            /* Sidebar Variables */
+            --sidebar-bg: #042f2e;
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+            --sidebar-width: 260px;
+
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, 0.15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            opacity: 0.8;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item.active i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .badge-alert {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* TOP HEADER */
+        .top-header {
+            height: 72px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-page);
+            padding: 8px 16px;
+            border-radius: 99px;
+            width: 320px;
+        }
+
+        .header-search i {
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .user-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- CONTENT AREA --- */
+        .content-area {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Filters & Tabs */
+        .filters {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .filter-btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-normal);
+            background: transparent;
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-page);
+        }
+
+        .filter-btn.active {
+            background: var(--bg-surface);
+            color: var(--primary);
+            border-color: var(--border);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        /* Panel & Table */
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 24px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            padding: 16px 24px;
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            border-bottom: 1px solid var(--border);
+            background-color: #f9fafb;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 20px 24px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            color: var(--text-normal);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f9fafb;
+        }
+
+        /* Custom Table Cells */
+        .patient-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .patient-name {
+            font-weight: 700;
+            color: var(--text-dark);
+            font-size: 15px;
+        }
+
+        .patient-meta {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .source-cell {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .source-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            font-size: 14px;
+        }
+
+        .source-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .badge-app {
+            background: var(--info-bg);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .badge-web {
+            background: var(--warning-bg);
+            color: var(--warning);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+        }
+
+        .desc-text {
+            line-height: 1.5;
+            margin-bottom: 8px;
+        }
+
+        .time-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        /* Buttons */
+        .action-cell {
+            display: flex;
+            flex-direction: row;
+            gap: 8px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-normal);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-page);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger-outline:hover {
+            background: var(--danger-bg);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- SIDEBAR FOR GN OFFICER -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-title">GN Operations</div>
+            <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+
+            <!-- ACTIVE PAGE -->
+            <a href="home-visits.html" class="menu-item active">
+                <i class="bi bi-patch-check"></i> Verification Queue
+                <span class="badge-alert">3</span>
+            </a>
+
+            <a href="patients.html" class="menu-item"><i class="bi bi-people"></i> Division Patients</a>
+
+            <!-- <a href="emergency.html" class="menu-item"><i class="bi bi-exclamation-triangle"></i> Local Emergencies</a> -->
+
+            <div class="menu-title">Administration</div>
+            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-bar-graph"></i> Activity Reports</a> -->
+            <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="top-header">
+            <div class="header-search">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search reports by ID, name, or area...">
+            </div>
+            <a href="#" class="user-profile">
+                <div class="user-info">
+                    <h4>Mr. Kasun Perera</h4>
+                    <p>Grama Niladhari</p>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Kasun+Perera&background=042f2e&color=fff" alt="GN Officer">
+            </a>
+        </header>
+
+        <div class="content-area">
+
+            <div class="page-header">
+                <div>
+                    <h1>Verification Queue</h1>
+                    <p>Review public reports and authorize home visits for medical officers.</p>
+                </div>
+            </div>
+
+            <!-- Tabs/Filters -->
+            <div class="filters">
+                <button class="filter-btn active">Pending Review (3)</button>
+                <button class="filter-btn">Verified</button>
+                <button class="filter-btn">Rejected</button>
+            </div>
+
+            <!-- Verification Queue Panel -->
+            <div class="panel">
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date & Time</th>
+                                <th>Reported By</th>
+                                <th>Patient & Location Details</th>
+                                <th>Description</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Item 1 -->
+                            <tr id="row1">
+                                <td>
+                                    <div class="patient-cell">
+                                        <span class="patient-name">Today</span>
+                                        <span class="time-text">10:45 AM</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="source-cell">
+                                        <span class="source-name">Volunteer: Nimal S.</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <span class="patient-name">Sunil Jayasooriya</span>
+                                        <span class="patient-meta"><i class="bi bi-geo-alt-fill text-primary"></i> No
+                                            45, High Level Rd, Colombo 05</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="desc-text">Patient is experiencing suspected cardiac issues and severe
+                                        chest pains. Lives alone and requires urgent attention.</div>
+                                </td>
+                                <td>
+                                    <div class="action-cell">
+                                        <a href="report-details.html" class="btn btn-primary"><i class="bi bi-eye"></i>
+                                            View Details</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Item 2 -->
+                            <tr id="row2">
+                                <td>
+                                    <div class="patient-cell">
+                                        <span class="patient-name">Today</span>
+                                        <span class="time-text">09:15 AM</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="source-cell">
+                                        <span class="source-name">Public Web Portal</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <span class="patient-name">Unknown Elderly Female</span>
+                                        <span class="patient-meta"><i class="bi bi-geo-alt-fill text-primary"></i> Near
+                                            Thimbirigasyaya Junction Bus Stop</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="desc-text">Elderly woman appears severely dehydrated and is unable to
+                                        walk or stand up. Requesting a checkup.</div>
+                                </td>
+                                <td>
+                                    <div class="action-cell">
+                                        <a href="report-details.html" class="btn btn-primary"><i class="bi bi-eye"></i>
+                                            View Details</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <!-- Item 3 -->
+                            <tr id="row3">
+                                <td>
+                                    <div class="patient-cell">
+                                        <span class="patient-name">Yesterday</span>
+                                        <span class="time-text">04:30 PM</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="source-cell">
+                                        <span class="source-name">Namal Fernando (Guardian)</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="patient-cell">
+                                        <span class="patient-name">Kamal Perera</span>
+                                        <span class="patient-meta"><i class="bi bi-geo-alt-fill text-primary"></i> 12,
+                                            Temple Road, Colombo 05</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="desc-text">Routine check-up requested. Patient missed clinic day and
+                                        needs prescription renewal.</div>
+                                </td>
+                                <td>
+                                    <div class="action-cell">
+                                        <a href="report-details.html" class="btn btn-primary"><i class="bi bi-eye"></i>
+                                            View Details</a>
+                                    </div>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function verifyReport(rowId) {
+            // Find the primary button in the clicked row
+            const row = document.getElementById(rowId);
+            const verifyBtn = row.querySelector('.btn-primary');
+
+            // Visual feedback
+            verifyBtn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Routing...';
+            verifyBtn.disabled = true;
+
+            setTimeout(() => {
+                verifyBtn.innerHTML = '<i class="bi bi-check-lg"></i> Verified & Routed';
+                verifyBtn.style.backgroundColor = 'var(--success)';
+                verifyBtn.style.boxShadow = 'none';
+
+                // Hide the other buttons in that row to show it's completed
+                row.querySelector('.btn-outline').style.display = 'none';
+                row.querySelector('.btn-danger-outline').style.display = 'none';
+
+                // Optional: Fade out row after a few seconds
+                setTimeout(() => {
+                    row.style.opacity = '0.5';
+                    row.style.pointerEvents = 'none';
+                }, 1500);
+
+            }, 1000);
+        }
+    </script>
+
+    <style>
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</body>
+
+</html>

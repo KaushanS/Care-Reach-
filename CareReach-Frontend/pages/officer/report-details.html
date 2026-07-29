@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Report Details</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #d1f2eb;
+            --bg-page: #f4f7f6;
+            --bg-surface: #ffffff;
+            --text-dark: #111827;
+            --text-normal: #374151;
+            --text-muted: #6b7280;
+            --border: #e5e7eb;
+            --danger: #dc2626;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+
+            /* Sidebar Variables */
+            --sidebar-bg: #042f2e;
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+            --sidebar-width: 260px;
+
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, 0.15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            opacity: 0.8;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .badge-alert {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-header {
+            height: 72px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-page);
+            padding: 8px 16px;
+            border-radius: 99px;
+            width: 320px;
+        }
+
+        .header-search i {
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+        }
+
+        .user-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light);
+        }
+
+        .user-info {
+            text-align: right;
+        }
+
+        .user-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .user-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .content-area {
+            padding: 32px;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .page-header h1 {
+            font-size: 24px;
+            font-weight: 800;
+            color: var(--text-dark);
+        }
+
+        /* Report Card */
+        .report-card {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+        }
+
+        .report-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9fafb;
+        }
+
+        .report-title h2 {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .report-title p {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .status-badge {
+            background: var(--warning-bg);
+            color: var(--warning);
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 12px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .report-body {
+            padding: 32px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .info-group {
+            margin-bottom: 24px;
+        }
+
+        .info-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .info-value {
+            font-size: 15px;
+            color: var(--text-dark);
+            font-weight: 500;
+            line-height: 1.5;
+        }
+
+        .info-value.highlight {
+            font-weight: 600;
+        }
+
+        /* Action Footer */
+        .report-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border);
+            background: #f9fafb;
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-normal);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-page);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-danger-outline {
+            background: transparent;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-danger-outline:hover {
+            background: var(--danger-bg);
+        }
+
+        .info-card {
+            background: var(--primary-light);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .info-card i {
+            color: var(--primary);
+            font-size: 20px;
+        }
+
+        .info-card p {
+            font-size: 13px;
+            color: var(--primary-hover);
+            line-height: 1.4;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-title">GN Operations</div>
+            <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+            <a href="home-visits.html" class="menu-item active">
+                <i class="bi bi-patch-check"></i> Verification Queue
+                <span class="badge-alert">3</span>
+            </a>
+            <a href="patients.html" class="menu-item"><i class="bi bi-people"></i> Division Patients</a>
+            <div class="menu-title">Administration</div>
+            <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <!-- HEADER -->
+        <header class="top-header">
+            <div class="header-search">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Search...">
+            </div>
+            <a href="profile.html" class="user-profile">
+                <div class="user-info">
+                    <h4>Mr. Kasun Perera</h4>
+                    <p>Grama Niladhari</p>
+                </div>
+                <img src="https://ui-avatars.com/api/?name=Kasun+Perera&background=042f2e&color=fff" alt="GN Officer">
+            </a>
+        </header>
+
+        <div class="content-area">
+            <div class="page-header">
+                <a href="home-visits.html" class="back-btn"><i class="bi bi-arrow-left"></i></a>
+                <h1>Incoming Report Details</h1>
+            </div>
+
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">
+                        <h2>Report ID: #RPT-88912</h2>
+                        <p>Submitted Today at 10:45 AM</p>
+                    </div>
+                    <div class="status-badge">
+                        <i class="bi bi-hourglass-split"></i> Pending Verification
+                    </div>
+                </div>
+
+                <div class="report-body">
+                    <div class="left-col">
+                        <div class="info-group">
+                            <div class="info-label">Patient Details</div>
+                            <div class="info-value highlight">Sunil Jayasooriya</div>
+                            <div class="info-value" style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                                Approx. 72 Years Old, Male</div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Exact Location</div>
+                            <div class="info-value"><i class="bi bi-geo-alt-fill text-primary"
+                                    style="margin-right: 6px;"></i>No 45, High Level Rd, Colombo 05</div>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Medical Description</div>
+                            <div class="info-value">Patient is experiencing suspected cardiac issues and severe chest
+                                pains. He lives alone and appears unable to stand. Requires urgent checkup or ambulance
+                                assistance.</div>
+                        </div>
+                    </div>
+
+                    <div class="right-col">
+                        <div class="info-card">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <p><strong>Note for GN Officer:</strong> This report was submitted through the Volunteer
+                                App. Please verify the patient's existence and require a medical officer visit if
+                                necessary.</p>
+                        </div>
+
+                        <div class="info-group">
+                            <div class="info-label">Reported By</div>
+                            <div class="info-value">Nimal S. (Registered Volunteer)</div>
+                            <div class="info-value" style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">
+                                <i class="bi bi-telephone-fill" style="margin-right: 6px;"></i>077-1234567</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-footer">
+                    <button class="btn btn-primary"
+                        onclick="alert('Report has been verified and routed to Dr. Aruna Silva!')"><i
+                            class="bi bi-check2"></i> Verify Report</button>
+                    <button class="btn btn-outline"><i class="bi bi-map"></i> Show Location</button>
+                    <button class="btn btn-danger-outline" style="margin-left: auto;"><i class="bi bi-x-lg"></i> Reject
+                        Report</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+
+</html>
