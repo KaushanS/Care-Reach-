@@ -733,6 +733,33 @@
             }
         }
 
+    
+        /* CareReach Mobile Box-Sizing & Margin Override */
+        @media (max-width: 768px) {
+            * {
+                box-sizing: border-box !important;
+            }
+            body, html {
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            input, select, textarea, .form-control {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .form-section, .dashboard-card, .metric-card {
+                padding: 15px !important;
+                margin: 10px 0 !important;
+                width: 100% !important;
+            }
+            .main-content {
+                padding: 10px !important;
+                width: 100% !important;
+                margin-left: 0 !important;
+            }
+        }
+
     </style>
 </head>
 
@@ -1061,6 +1088,33 @@ document.addEventListener('DOMContentLoaded', () => {
             /* Metric Cards Grid */
             .metrics-grid {
                 grid-template-columns: 1fr !important;
+            }
+        }
+
+    
+        /* CareReach Mobile Box-Sizing & Margin Override */
+        @media (max-width: 768px) {
+            * {
+                box-sizing: border-box !important;
+            }
+            body, html {
+                overflow-x: hidden !important;
+                width: 100% !important;
+            }
+            input, select, textarea, .form-control {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .form-section, .dashboard-card, .metric-card {
+                padding: 15px !important;
+                margin: 10px 0 !important;
+                width: 100% !important;
+            }
+            .main-content {
+                padding: 10px !important;
+                width: 100% !important;
+                margin-left: 0 !important;
             }
         }
 
