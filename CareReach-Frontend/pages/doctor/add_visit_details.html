@@ -577,7 +577,70 @@
         .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
         .noti-time { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 
-</style>
+
+        /* CareReach Universal Mobile Patch */
+        @media (max-width: 768px) {
+            /* Fix overflowing tables */
+            .table-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                width: 100vw !important;
+                margin-left: -20px !important;
+                margin-right: -20px !important;
+                padding: 0 20px !important;
+                border-radius: 0 !important;
+            }
+            .table-container table {
+                min-width: 800px; /* Ensure table keeps format, users can swipe sideways */
+            }
+
+            /* Fix Modals being cut off */
+            .modal-content {
+                width: 95% !important;
+                margin: 5% auto !important;
+                padding: 20px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Fix Page Headers (Title + Buttons) */
+            .page-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 15px !important;
+            }
+            .page-header .btn {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+
+            /* Fix Search and Filtering Bars */
+            .filter-bar {
+                flex-direction: column !important;
+            }
+            .filter-bar .search-box, 
+            .filter-bar .filter-select {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Fix Form Grids */
+            .form-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Main Content Padding adjustments */
+            .main-content {
+                padding: 15px !important;
+            }
+            
+            /* Metric Cards Grid */
+            .metrics-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
+    </style>
 </head>
 
 <body>
@@ -935,6 +998,69 @@
             margin-top: 4px;
             display: block;
         }
+    
+        /* CareReach Universal Mobile Patch */
+        @media (max-width: 768px) {
+            /* Fix overflowing tables */
+            .table-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                width: 100vw !important;
+                margin-left: -20px !important;
+                margin-right: -20px !important;
+                padding: 0 20px !important;
+                border-radius: 0 !important;
+            }
+            .table-container table {
+                min-width: 800px; /* Ensure table keeps format, users can swipe sideways */
+            }
+
+            /* Fix Modals being cut off */
+            .modal-content {
+                width: 95% !important;
+                margin: 5% auto !important;
+                padding: 20px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Fix Page Headers (Title + Buttons) */
+            .page-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 15px !important;
+            }
+            .page-header .btn {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+
+            /* Fix Search and Filtering Bars */
+            .filter-bar {
+                flex-direction: column !important;
+            }
+            .filter-bar .search-box, 
+            .filter-bar .filter-select {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Fix Form Grids */
+            .form-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Main Content Padding adjustments */
+            .main-content {
+                padding: 15px !important;
+            }
+            
+            /* Metric Cards Grid */
+            .metrics-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
     </style>
 <!-- Logout Confirmation Modal -->
 <div id="logoutModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
@@ -1019,6 +1145,69 @@ document.addEventListener('DOMContentLoaded', () => {
                 flex-direction: column !important;
             }
         }
+    
+        /* CareReach Universal Mobile Patch */
+        @media (max-width: 768px) {
+            /* Fix overflowing tables */
+            .table-container {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                width: 100vw !important;
+                margin-left: -20px !important;
+                margin-right: -20px !important;
+                padding: 0 20px !important;
+                border-radius: 0 !important;
+            }
+            .table-container table {
+                min-width: 800px; /* Ensure table keeps format, users can swipe sideways */
+            }
+
+            /* Fix Modals being cut off */
+            .modal-content {
+                width: 95% !important;
+                margin: 5% auto !important;
+                padding: 20px !important;
+                max-height: 90vh !important;
+                overflow-y: auto !important;
+            }
+
+            /* Fix Page Headers (Title + Buttons) */
+            .page-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 15px !important;
+            }
+            .page-header .btn {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+
+            /* Fix Search and Filtering Bars */
+            .filter-bar {
+                flex-direction: column !important;
+            }
+            .filter-bar .search-box, 
+            .filter-bar .filter-select {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            /* Fix Form Grids */
+            .form-grid {
+                grid-template-columns: 1fr !important;
+            }
+            
+            /* Main Content Padding adjustments */
+            .main-content {
+                padding: 15px !important;
+            }
+            
+            /* Metric Cards Grid */
+            .metrics-grid {
+                grid-template-columns: 1fr !important;
+            }
+        }
+
     </style>
 
 
