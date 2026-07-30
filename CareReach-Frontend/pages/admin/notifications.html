@@ -843,6 +843,48 @@
             }
         }
     
+
+        /* Global Mobile Fallback & Dropdown Fix */
+        @media (max-width: 768px) {
+            /* Guarantee ALL notification dropdowns float exactly in the center */
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+                z-index: 9999 !important;
+            }
+            
+            /* Guarantee ALL modals take up the full screen */
+            .modal-content, .modal {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 5% auto !important;
+                padding: 15px !important;
+            }
+            
+            /* Any data grid inside a modal must stack horizontally */
+            .details-grid, .info-grid, .data-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            /* Generic fix for internal modal details */
+            .detail-item, .info-item {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            
+            /* If they used flex rows for labels and values, force them to wrap */
+            .modal-body div[style*="display: flex"] {
+                flex-wrap: wrap !important;
+            }
+        }
+    
 </style>
 </head>
 
@@ -1512,6 +1554,48 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     
+
+        /* Global Mobile Fallback & Dropdown Fix */
+        @media (max-width: 768px) {
+            /* Guarantee ALL notification dropdowns float exactly in the center */
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+                z-index: 9999 !important;
+            }
+            
+            /* Guarantee ALL modals take up the full screen */
+            .modal-content, .modal {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 5% auto !important;
+                padding: 15px !important;
+            }
+            
+            /* Any data grid inside a modal must stack horizontally */
+            .details-grid, .info-grid, .data-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            /* Generic fix for internal modal details */
+            .detail-item, .info-item {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            
+            /* If they used flex rows for labels and values, force them to wrap */
+            .modal-body div[style*="display: flex"] {
+                flex-wrap: wrap !important;
+            }
+        }
+    
 </style>
     <div id="logoutModal"
         style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
@@ -1799,6 +1883,48 @@ document.addEventListener('DOMContentLoaded', function() {
             .filter-tab {
                 flex: 1 1 auto !important;
                 text-align: center !important;
+            }
+        }
+    
+
+        /* Global Mobile Fallback & Dropdown Fix */
+        @media (max-width: 768px) {
+            /* Guarantee ALL notification dropdowns float exactly in the center */
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+                z-index: 9999 !important;
+            }
+            
+            /* Guarantee ALL modals take up the full screen */
+            .modal-content, .modal {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 5% auto !important;
+                padding: 15px !important;
+            }
+            
+            /* Any data grid inside a modal must stack horizontally */
+            .details-grid, .info-grid, .data-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            /* Generic fix for internal modal details */
+            .detail-item, .info-item {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            
+            /* If they used flex rows for labels and values, force them to wrap */
+            .modal-body div[style*="display: flex"] {
+                flex-wrap: wrap !important;
             }
         }
     
