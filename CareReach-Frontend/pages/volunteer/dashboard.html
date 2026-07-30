@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | Volunteer Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(135deg, #042f2e 0%, #0f766e 100%);
+      border-radius: 16px;
+      padding: 32px;
+      color: #ffffff;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    .welcome-banner h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .welcome-banner p {
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .metric-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .icon-teal {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .icon-red {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .icon-green {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .icon-blue {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    .metric-info h3 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1;
+    }
+
+    .metric-info p {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    .quick-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .action-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      cursor: pointer;
+      transition: 0.2s;
+      text-decoration: none;
+      color: var(--text-normal);
+    }
+
+    .action-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      border-color: var(--primary);
+    }
+
+    .action-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .action-card h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .action-card p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .activity-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .dot-green {
+      background: var(--success);
+    }
+
+    .dot-blue {
+      background: var(--info);
+    }
+
+    .dot-red {
+      background: var(--danger);
+    }
+
+    .dot-orange {
+      background: var(--warning);
+    }
+
+    .activity-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .activity-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .link-btn {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .link-btn:hover {
+      text-decoration: underline;
+    }
+
+    .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+
+      .grid-2col,
+      .quick-actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div>
+        <div class="menu-title">Volunteer Hub</div>
+        <a href="dashboard.html" class="menu-item active"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="activities.html" class="menu-item"><i class="bi bi-journal-text"></i> My Activities</a>
+        <div class="menu-title">Account</div>
+        <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+      </div>
+      <a href="#" class="menu-item" style="color: #ef4444; margin-top: auto;"><i class="bi bi-box-arrow-right"></i> Sign
+        Out</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search..."></div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Nimal Sirisena</h4>
+          <p>Community Volunteer</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Nimal+Sirisena&background=042f2e&color=fff" alt="Volunteer">
+      </a>
+    </header>
+    <div class="content-area">
+      <div class="welcome-banner">
+        <h1>Welcome back, Nimal 🤝</h1>
+        <p>Thank you for being a community volunteer. Here's your activity overview.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon icon-teal"><i class="bi bi-people-fill"></i></div>
+          <div class="metric-info">
+            <h3>12</h3>
+            <p>Patients Reported</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-red"><i class="bi bi-person-fill-exclamation"></i></div>
+          <div class="metric-info">
+            <h3>05</h3>
+            <p>Reported Not Verified Patients</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-green"><i class="bi bi-check-circle-fill"></i></div>
+          <div class="metric-info">
+            <h3>09</h3>
+            <p>Verified Reports</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-blue"><i class="bi bi-calendar3"></i></div>
+          <div class="metric-info">
+            <h3>6 mo</h3>
+            <p>Active Since</p>
+          </div>
+        </div>
+      </div>
+      <div class="quick-actions" style="grid-template-columns: 1fr;">
+        <a href="report-patient.html" class="action-card">
+          <div class="action-icon" style="background:var(--primary-light);color:var(--primary);"><i
+              class="bi bi-person-plus-fill"></i></div>
+          <div>
+            <h4>Report a Vulnerable Patient</h4>
+            <p>Identify and report someone who needs care assistance to authorities.</p>
+          </div>
+        </a>
+      </div>
+      <div class="grid-2col" style="grid-template-columns: 1fr;">
+        <!-- Today Reported Patient Details -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2 class="panel-title"><i class="bi bi-people-fill"></i> Today Reported Patient Details</h2>
+          </div>
+          <div class="panel-body">
+            <div class="activity-item">
+              <div class="activity-dot dot-orange"></div>
+              <div class="activity-info">
+                <h4>Saman Perera (Elderly Male)</h4>
+                <p>Location: Station Road, reported at 10:30 AM • Pending Verify</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-orange"></div>
+              <div class="activity-info">
+                <h4>Kamala Siriwardena (Female, 65 Yrs)</h4>
+                <p>Location: High Level Rd intersection, reported at 08:15 AM • Pending Verify</p>
+              </div>
+            </div>
+            <div class="activity-item">
+              <div class="activity-dot dot-green"></div>
+              <div class="activity-info">
+                <h4>Sunil Jayasooriya (Male)</h4>
+                <p>Location: Negombo, Gampaha, reported at 07:00 AM • Verified by GN</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>
