@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Core Session Manager -->
+    <script>
+        (function () {
+            function enforcePublicSession() {
+                const userId = localStorage.getItem('userId');
+                const userRole = localStorage.getItem('userRole');
+                if (userId && userRole) {
+                    const role = userRole.toLowerCase();
+                    const prefix = window.location.pathname.includes('/pages/') ? '../../' : '';
+                    window.location.replace(prefix + 'pages/' + role + '/dashboard.html');
+                }
+            }
+            enforcePublicSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforcePublicSession();
+                }
+            });
+        })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* CareReach index-style colors */
+            --bg-light: #f4fffd;
+            --panel-light: #ffffff;
+            --panel-soft: rgba(255, 255, 255, 0.8);
+            --primary-blue: #0f766e;
+            --primary-hover: #0a5c56;
+            --text-dark: #123;
+            --text-gray: #475569;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --border-color: #cbd5e1;
+            --border-light: rgba(255, 255, 255, 0.15);
+            --danger-bg: #fef2f2;
+            --danger-text: #dc2626;
+            --danger-border: #fca5a5;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            background: linear-gradient(135deg, var(--bg-light), #eef8ff);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* --- LEFT PANEL --- */
+        .left-panel {
+            width: 50%;
+            background: linear-gradient(135deg, rgba(15, 118, 110, 0.85), rgba(10, 92, 86, 0.95)),
+                url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
+            color: var(--white);
+            padding: 4rem 10%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: auto;
+        }
+
+        .logo-icon {
+            width: 44px;
+            height: 44px;
+            background-color: rgba(255, 255, 255, 0.14);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo-text {
+            font-size: 18px;
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-text span {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .hero-content {
+            margin-bottom: auto;
+            margin-top: 4rem;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background-color: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 6px 16px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-bottom: 24px;
+            color: #e2e8f0;
+        }
+
+        .badge-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #ef4444;
+            border-radius: 50%;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .text-blue {
+            color: #d9fffb;
+        }
+
+        .hero-desc {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #cbd5e1;
+            max-width: 420px;
+            margin-bottom: 40px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+            max-width: 500px;
+        }
+
+        .stat-card {
+            background-color: rgba(255, 255, 255, 0.12);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 20px 16px;
+            backdrop-filter: blur(4px);
+            /* Added slight blur to make cards pop against the image */
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-light);
+        }
+
+        .features-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #cbd5e1;
+        }
+
+        .feature-icon {
+            color: #bffaf4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-text {
+            font-size: 12px;
+            color: var(--text-light);
+            margin-top: 40px;
+        }
+
+        /* --- RIGHT PANEL --- */
+        .right-panel {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.45), rgba(255, 255, 255, 0.72));
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .form-header {
+            margin-bottom: 32px;
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 800;
+            color: #0f766e;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .form-subtitle {
+            font-size: 15px;
+            color: var(--text-gray);
+        }
+
+        .input-group {
+            margin-bottom: 24px;
+        }
+
+        .label-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .input-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: #123;
+        }
+
+        .forgot-link {
+            font-size: 13px;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon-left {
+            position: absolute;
+            left: 16px;
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex;
+        }
+
+        .input-icon-right {
+            position: absolute;
+            right: 16px;
+            color: #94a3b8;
+            cursor: pointer;
+            display: flex;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 44px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background: var(--white);
+        }
+
+        .form-control::placeholder {
+            color: #94a3b8;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .error-msg {
+            font-size: 12px;
+            color: var(--danger-text);
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+            animation: fadeIn 0.2s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(2px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Role Selector Custom styling (Radio buttons) */
+        .role-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .role-radio {
+            display: none;
+        }
+
+        .role-label {
+            flex: 1;
+            text-align: center;
+            padding: 10px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            color: var(--text-gray);
+            background: var(--white);
+            transition: all 0.2s;
+        }
+
+        .role-radio:checked+.role-label {
+            background-color: var(--primary-blue);
+            border-color: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .checkbox-input {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .checkbox-label {
+            font-size: 13px;
+            color: var(--text-gray);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            text-align: center;
+            margin: 15px 0;
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: '';
+            flex: 1;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .divider::before {
+            margin-right: 16px;
+        }
+
+        .divider::after {
+            margin-left: 16px;
+        }
+
+        .btn-sso {
+            background-color: var(--white);
+            color: var(--text-dark);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-sso:hover {
+            background-color: #f8fafc;
+            border-color: #94a3b8;
+        }
+
+        .btn-sso svg {
+            color: var(--primary-blue);
+        }
+
+        /* Updated Contact Admin & Registration Links styling */
+        .contact-admin {
+            margin-top: 40px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-gray);
+        }
+
+        .contact-admin p {
+            margin-bottom: 8px;
+        }
+
+        .contact-admin a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .contact-admin a:hover {
+            text-decoration: underline;
+        }
+
+        /* --- RESPONSIVE DESIGN --- */
+        @media (max-width: 1024px) {
+            .hero-title {
+                font-size: 36px;
+            }
+
+            .stats-grid {
+                flex-direction: column;
+                display: flex;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                width: 100%;
+                padding: 3rem 2rem;
+                min-height: 100vh;
+            }
+
+            .right-panel {
+                width: 100%;
+                padding: 4rem 2rem;
+            }
+
+            .stats-grid {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .role-selector {
+                flex-wrap: wrap;
+            }
+
+            .role-label {
+                flex: 1 1 40%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Left Informational Panel -->
+    <div class="left-panel">
+        <div class="logo-area">
+            <div class="logo-icon">
+                <i class="bi bi-heart-pulse-fill"></i>
+            </div>
+            <div class="logo-text">
+                CareReach
+            </div>
+        </div>
+
+        <div class="hero-content">
+            <div class="badge">
+                <div class="badge-dot"></div>
+                Emergency Response Platform
+            </div>
+
+            <h1 class="hero-title">
+                Saving lives with<br>
+                <span class="text-blue">smarter care</span>
+            </h1>
+
+            <p class="hero-desc">
+                Connecting vulnerable patients, healthcare workers, and emergency responders across all 9 provinces.
+            </p>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">2,418</div>
+                    <div class="stat-label" style="color: #cbd5e1;">Patients</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">98.6%</div>
+                    <div class="stat-label" style="color: #cbd5e1;">Response Rate</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">
+                        <3 min</div>
+                            <div class="stat-label" style="color: #cbd5e1;">Avg. Response</div>
+                    </div>
+                </div>
+
+                <ul class="features-list">
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                        </div>
+                        HIPAA compliant & end-to-end encrypted
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <polyline points="12 6 12 12 16 14"></polyline>
+                            </svg>
+                        </div>
+                        24/7 live emergency monitoring
+                    </li>
+                    <li class="feature-item">
+                        <div class="feature-icon">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                </path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </div>
+                        Instant SOS dispatch & GPS tracking
+                    </li>
+                </ul>
+            </div>
+
+            <div class="footer-text">
+                © 2026 CARE REACH - Emergency Healthcare Response
+            </div>
+        </div>
+
+        <!-- Right Login Panel -->
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="form-header">
+                    <h2 class="form-title">Welcome back</h2>
+                    <p class="form-subtitle">Sign in to access your CARE REACH dashboard</p>
+                </div>
+
+                <form id="loginForm" onsubmit="submitLogin(event)">
+                    <div class="input-group">
+                        <div class="label-container">
+                            <label for="username" class="input-label">Username</label>
+                        </div>
+                        <div class="input-wrapper">
+                            <div class="input-icon-left">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                    <circle cx="12" cy="7" r="4"></circle>
+                                </svg>
+                            </div>
+                            <input type="text" id="username" class="form-control" placeholder="Enter your username"
+                                required>
+                        </div>
+                        <div class="error-msg" id="err-username"></div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="label-container">
+                            <label for="password" class="input-label">Password</label>
+                            <a href="forgot-password.html" class="forgot-link">Forgot password?</a>
+                        </div>
+                        <div class="input-wrapper">
+                            <div class="input-icon-left">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                                </svg>
+                            </div>
+                            <input type="password" id="password" class="form-control" placeholder="Enter your password"
+                                required>
+                            <div class="input-icon-right" onclick="togglePassword()">
+                                <svg id="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                                    stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="error-msg" id="err-password"></div>
+                    </div>
+
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="remember" class="checkbox-input">
+                        <label for="remember" class="checkbox-label">Keep me signed in for 30 days</label>
+                    </div>
+
+                    <div class="error-msg" id="err-login"
+                        style="color: var(--danger-text); font-size: 13px; font-weight: 500; margin-bottom: 20px; display: none; text-align: center;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        Sign In
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                </form>
+
+                <div class="divider">or</div>
+
+                <!-- Restructured Registration Links -->
+                <div class="contact-admin">
+                    <p>Are you a new patient? <a href="register.html">Register now</a></p>
+                    <p>Don't have a staff account? <a href="#">Contact your administrator</a></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password visibility toggle script -->
+        <script>
+            // Back-button Auth Guard
+            document.addEventListener("DOMContentLoaded", () => {
+                const existingUserId = localStorage.getItem('userId');
+                const existingUserRole = localStorage.getItem('userRole');
+                if (existingUserId && existingUserRole) {
+                    window.location.replace(`pages/${existingUserRole.toLowerCase()}/dashboard.html`);
+                }
+            });
+            function togglePassword() {
+                const passwordInput = document.getElementById('password');
+                const eyeIcon = document.getElementById('eye-icon');
+
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    eyeIcon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+                } else {
+                    passwordInput.type = 'password';
+                    eyeIcon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+                }
+            }
+
+            function submitLogin(event) {
+                event.preventDefault();
+                const errDiv = document.getElementById('err-login');
+                errDiv.style.display = 'none';
+
+                const username = document.getElementById('username').value;
+                const pass = document.getElementById('password').value;
+
+                fetch('http://localhost:8080/api/v1/users/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: username, password: pass })
+                })
+                    .then(async response => {
+                        if (!response.ok) {
+                            const errorMsg = await response.text();
+                            throw new Error(errorMsg || "Invalid credentials");
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        localStorage.setItem('userId', data.id);
+                        localStorage.setItem('userFullName', data.fullName);
+                        localStorage.setItem('username', data.username);
+                        localStorage.setItem('userRole', data.role);
+                        if (data.profilePhoto) {
+                            localStorage.setItem('profilePhoto', data.profilePhoto);
+                        }
+
+                        if (data.requiresCredentialReset === true) {
+                            window.location.replace('force-reset.html');
+                        } else {
+                            const role = data.role.toLowerCase();
+                            window.location.replace(`pages/${role}/dashboard.html`);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Login Error:', error);
+                        errDiv.innerText = error.message;
+                        errDiv.style.display = 'block';
+                    });
+            }
+        </script>
+</body>
+
+</html>

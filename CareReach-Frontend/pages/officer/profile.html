@@ -1,0 +1,1968 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Core Session Manager -->
+    <script>
+        (function() {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+    
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | GN Officer Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease;
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, 0.15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            /* Hide scrollbar for IE, Edge and Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .sidebar-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            opacity: 0.8;
+        }
+
+        .menu-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item.active i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .badge-alert {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+
+        /* --- MAIN CONTENT --- */
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      padding-left: 12px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* --- CONTENT AREA --- */
+    .content-area {
+      padding: 32px;
+      max-width: 1000px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+    }
+
+    /* Profile Layout */
+    .profile-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+    }
+
+    /* Panels */
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .panel-header-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .panel-header i {
+      color: var(--primary);
+      font-size: 18px;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    /* Top Horizontal Profile Header */
+    .profile-header-card {
+      background: var(--bg-surface);
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
+    }
+
+    .profile-header-left {
+      padding: 32px 24px;
+      text-align: center;
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .initials-avatar {
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: #073832;
+      color: white;
+      font-size: 48px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin: 0 auto 16px auto;
+    }
+
+    .edit-avatar-btn {
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      border: 2px solid white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+      z-index: 10;
+    }
+
+    .profile-header-left h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .profile-header-left .location {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      background: rgba(16, 185, 129, 0.1);
+      color: var(--success);
+    }
+
+    .profile-header-right {
+      padding: 32px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    .header-stats-top {
+      display: flex;
+      gap: 60px;
+    }
+
+    .header-stat-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-stat-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(49, 180, 152, 0.1);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .header-stat-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+      font-weight: 600;
+    }
+
+    .header-stat-text h4 {
+      font-size: 16px;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+
+    .quote-box {
+      background: linear-gradient(90deg, rgba(49, 180, 152, 0.05) 0%, rgba(49, 180, 152, 0) 100%);
+      border-radius: 12px;
+      padding: 28px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-dark);
+      font-weight: 600;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quote-box i {
+      font-size: 32px;
+      color: rgba(49, 180, 152, 0.4);
+    }
+
+    .stat-cards-bottom {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    .stat-card-clean {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .stat-card-clean .icon-circle {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .stat-card-clean h3 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .stat-card-clean p {
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Profile Layout Bottom Columns */
+    .profile-layout-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    /* Personal Info List View */
+    .info-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .info-row {
+      display: grid;
+      grid-template-columns: 40px 150px 1fr;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .info-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .info-row i {
+      color: var(--text-muted);
+      font-size: 18px;
+    }
+
+    .info-label {
+      color: var(--text-dark);
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .info-input {
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 14px;
+      font-weight: 500;
+      outline: none;
+      width: 100%;
+      font-family: var(--font-family);
+    }
+
+    .info-input.editing {
+      border: 1px solid var(--border);
+      background: var(--bg-page);
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: var(--text-dark);
+    }
+
+    .info-input.editing:focus {
+      border-color: var(--primary);
+    }
+
+    /* Security Styles */
+    .security-notice {
+      background: rgba(16, 185, 129, 0.05);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      border-radius: 8px;
+      padding: 16px 20px;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .security-notice i {
+      color: var(--success);
+      font-size: 20px;
+    }
+
+    .security-notice h5 {
+      color: var(--success);
+      font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 2px;
+    }
+
+    .security-notice p {
+      color: var(--text-dark);
+      font-size: 13px;
+    }
+
+    .password-checklist {
+      background: var(--bg-page);
+      border-radius: 8px;
+      padding: 20px;
+      margin-top: 24px;
+      margin-bottom: 16px;
+    }
+
+    .password-checklist h5 {
+      font-size: 13px;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    .password-checklist-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--success);
+      font-weight: 600;
+    }
+
+    /* Forms */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      color: var(--text-dark);
+      outline: none;
+      transition: all 0.2s;
+      background: #fff;
+      font-family: var(--font-family);
+    }
+
+    .form-icon-right {
+      position: absolute;
+      right: 16px;
+      bottom: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: #0b2e29;
+      color: white;
+      padding: 12px 24px;
+    }
+
+    .btn-primary:hover {
+      background: #073832;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-dark);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-page);
+    }
+
+    .btn-edit {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: white;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: var(--sidebar-width);
+        background: #0b2e29;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
+      }
+
+      .profile-header-card {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-header-right {
+        padding: 24px;
+      }
+
+      .header-stats-top {
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+
+      .profile-layout-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row,
+      .stat-cards-bottom,
+      .password-checklist-grid,
+      .info-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Logout Modal Styles */
+    .logout-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .logout-modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-modal-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+
+    .logout-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .logout-modal-text {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .logout-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .logout-btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-normal);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn-cancel:hover {
+      background: var(--bg-page);
+    }
+
+    .logout-btn-confirm {
+      flex: 1;
+      padding: 12px;
+      background: var(--danger);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn-confirm:hover {
+      background: #b91c1c;
+    }
+  
+    /* --- NOTIFICATION DROPDOWN --- */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 16px;
+      width: 380px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+    .notification-dropdown.active {
+      display: flex;
+    }
+    .notif-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .notif-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+    .notif-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .notif-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .notif-item:hover {
+      background: #f1f5f9;
+    }
+    .notif-item.unread {
+      background: #f8fafc;
+    }
+    .notif-footer {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .notif-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  </style>
+
+    <!-- Auth Guard for Browser Back Button -->
+    
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+        <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      <div style="display:flex; flex-direction:column; line-height: 1.2;">
+        <span style="color:#ffffff; font-weight:800; font-size:22px; letter-spacing:-0.5px;">CARE<span
+            style="font-weight:300; font-size:22px; color:#5eead4; margin-left:2px;">REACH</span></span>
+        <span style="font-size:11px; font-weight:500; color:#5eead4;">GN Operations Hub</span>
+      </div>
+    </div>
+        <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+            <div class="menu-title">GN Operations</div>
+            <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+
+            <a href="home-visits.html" class="menu-item">
+                <i class="bi bi-patch-check"></i> Verification Queue
+
+            </a>
+
+            <a href="patients.html" class="menu-item"><i class="bi bi-people"></i> Division Patients</a>
+
+            <!-- <a href="emergency.html" class="menu-item"><i class="bi bi-exclamation-triangle"></i> Local Emergencies</a> -->
+
+            <div class="menu-title">Administration</div>
+            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-bar-graph"></i> Activity Reports</a> -->
+            <a href="profile.html" class="menu-item active"><i class="bi bi-person-gear"></i> My Profile</a>
+        
+            <!-- Logout Button -->
+            <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn" style="color: #f97316; margin-top: auto; border: 1px solid rgba(249,115,22,0.2);"><i class="bi bi-box-arrow-right" style="color:#f97316;"></i> Sign Out</a>
+        </nav>
+    </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+      </div>
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div style="display:flex; align-items:center; gap:24px;">
+        <div style="position:relative; cursor:pointer;" class="nav-bell" id="bellIconWrapper">
+          <i class="bi bi-bell" style="font-size:22px; color:var(--text-normal);"></i>
+          <span id="notifBadge"
+            style="position:absolute; top:-4px; right:-4px; background:var(--danger); color:white; font-size:10px; font-weight:700; width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; box-shadow:0 0 0 2px var(--bg-surface);">0</span>
+
+          <div id="notifDropdown" class="notification-dropdown"
+            style="position: absolute; top: 100%; right: 0; margin-top: 16px; width: 380px; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; display: none; flex-direction: column;">
+            <div class="notif-header"
+              style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 15px; font-weight: 700; color: var(--text-dark); margin: 0;">Notifications</h3>
+            </div>
+            <div id="notifList" class="notif-list" style="max-height: 400px; overflow-y: auto;">
+              <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 14px;">
+                <i class="bi bi-arrow-repeat" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                Loading...
+              </div>
+            </div>
+            <div class="notif-footer" style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+              <a href="notifications.html"
+                style="color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600;">See All
+                Notifications</a>
+            </div>
+          </div>
+        </div>
+        
+        <a href="profile.html" class="user-profile" style="border:none; padding-left:0; gap:16px;">
+          <div class="user-info" style="text-align:right;">
+            <h4 id="nav-user-name" style="font-weight:700;"> hihewage Pasindu Kaushan Sathsara </h4>
+            <p style="color:var(--text-muted);">Grama Niladhari</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img id="nav-avatar-img" src="" alt="Volunteer"
+              style="background:#0b2e29; object-fit:cover; width:36px; height:36px; border-radius:50%;">
+          </div>
+        </a>
+      </div>
+    </div>
+        </header>
+    <div class="content-area">
+
+      <div class="page-header">
+        <div>
+          <h1>My Profile</h1>
+          <p>Manage your personal information and account settings.</p>
+        </div>
+      </div>
+
+      <!-- Top Profile Overview Card -->
+      <div class="profile-header-card">
+        <div class="profile-header-left">
+          <input type="file" id="profilePhotoUpload" style="display:none;" accept="image/*"
+            onchange="uploadProfilePhoto(event)">
+          <div class="initials-avatar" id="main-profile-initials">
+            WW
+            <div id="volunteer-upload-spinner"
+              style="display:none; position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 50%; align-items: center; justify-content: center; z-index: 5;">
+              <div
+                style="width: 32px; height: 32px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;">
+              </div>
+            </div>
+            <div class="edit-avatar-btn" onclick="document.getElementById('profilePhotoUpload').click()"><i
+                class="bi bi-camera-fill" style="font-size:12px;"></i></div>
+          </div>
+          <h2 id="main-profile-name">Loading...</h2>
+          <div class="location"><i class="bi bi-geo-alt"></i> <span id="main-profile-address">Location
+              fetching...</span></div>
+          <span class="badge"><i class="bi bi-patch-check-fill"></i> Active GN Officer</span>
+        </div>
+        <div class="profile-header-right">
+          <div class="header-stats-top">
+            <div class="header-stat-item">
+              <div class="header-stat-icon"><i class="bi bi-calendar-event"></i></div>
+              <div class="header-stat-text">
+                <p>Member Since</p>
+                <h4 id="stat-join-date">Jul 12, 2026</h4>
+              </div>
+            </div>
+            <div class="header-stat-item">
+              <div class="header-stat-icon"><i class="bi bi-shield-check"></i></div>
+              <div class="header-stat-text">
+                <p>Account Status</p>
+                <h4>Active</h4>
+              </div>
+            </div>
+            <div class="header-stat-item">
+              <div class="header-stat-icon"><i class="bi bi-people"></i></div>
+              <div class="header-stat-text">
+                <p>Role</p>
+                <h4 id="stat-time" style="text-transform:capitalize;">Officer</h4>
+              </div>
+            </div>
+          </div>
+
+          <div class="quote-box">
+            <i class="bi bi-quote" style="font-size: 28px;"></i>
+            <span style="position:relative; z-index:2;">Committed to serving our local community with integrity.</span>
+          </div>
+
+          <div class="stat-cards-bottom">
+            <div class="stat-card-clean">
+              <div class="icon-circle" style="background: rgba(16, 185, 129, 0.1); color: var(--success);"><i
+                  class="bi bi-calendar-check"></i></div>
+              <div>
+                <h3 id="stat-patients">0</h3>
+                <p>Verified Patients</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Layout Tabs -->
+      <div class="profile-layout-grid">
+
+        <!-- Personal Info Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <i class="bi bi-person-fill"></i> Personal Information
+            </div>
+            <button class="btn-edit" onclick="toggleEditMode()" id="editProfileToggleBtn" type="button">
+              <i class="bi bi-pencil"></i> Edit Information
+            </button>
+          </div>
+          <div class="panel-body">
+            <form id="personalInfoForm" onsubmit="saveProfile(event)">
+              <div class="info-list">
+                <div class="info-row">
+                  <i class="bi bi-person-check"></i>
+                  <span class="info-label">Full Name</span>
+                  <input type="text" id="profileFullName" class="info-input" readonly required>
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-telephone"></i>
+                  <span class="info-label">Mobile Number</span>
+                  <input type="tel" id="profilePhone" class="info-input" readonly required>
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-credit-card-2-front"></i>
+                  <span class="info-label">NIC number</span>
+                  <input type="text" id="profileNic" class="info-input" readonly disabled
+                    title="Contact admin to change NIC">
+                </div>
+                
+                <div class="info-row">
+                  <i class="bi bi-geo-alt-fill"></i>
+                  <span class="info-label">GN Division</span>
+                  <input type="text" id="profileGn" class="info-input" readonly disabled title="Locked Administrative Field" style="background:#e9ecef; border-radius:6px; padding:4px 8px;">
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-map"></i>
+                  <span class="info-label">DS Division</span>
+                  <input type="text" id="profileDs" class="info-input" readonly disabled style="background:#e9ecef; border-radius:6px; padding:4px 8px;">
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-pin-map-fill"></i>
+                  <span class="info-label">District</span>
+                  <input type="text" id="profileDistrict" class="info-input" readonly disabled style="background:#e9ecef; border-radius:6px; padding:4px 8px;">
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-envelope"></i>
+                  <span class="info-label">Email Address</span>
+                  <input type="email" id="profileEmail" class="info-input" readonly required>
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-house"></i>
+                  <span class="info-label">Residential Address</span>
+                  <input type="text" id="profileAddress" class="info-input" readonly required>
+                </div>
+                <div class="info-row">
+                  <i class="bi bi-person-badge"></i>
+                  <span class="info-label">System Username</span>
+                  <input type="text" id="profileUsername" class="info-input" readonly required>
+                </div>
+              </div>
+
+              <div id="saveActionContainer"
+                style="display:none; justify-content:flex-end; margin-top: 24px; padding-top:20px; border-top: 1px solid var(--border);">
+                <button type="submit" class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Account Security Panel -->
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <i class="bi bi-shield-lock-fill"></i> Account Security
+            </div>
+          </div>
+          <div class="panel-body">
+            <div class="security-notice">
+              <i class="bi bi-lock-fill"></i>
+              <div>
+                <h5>Keep your account secure</h5>
+                <p>Use a strong password and don't share it with anyone.</p>
+              </div>
+            </div>
+
+            <form onsubmit="changePassword(event)">
+              <div class="form-group">
+                <label class="form-label">Current Password</label>
+                <input type="password" id="currentPassword" class="form-control" placeholder="Enter current password"
+                  required>
+                <i class="bi bi-eye-slash form-icon-right" onclick="togglePasswordVis('currentPassword', this)"></i>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">New Password</label>
+                  <input type="password" id="newPassword" class="form-control" placeholder="Enter new password"
+                    required>
+                  <i class="bi bi-eye-slash form-icon-right" onclick="togglePasswordVis('newPassword', this)"></i>
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Confirm New Password</label>
+                  <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password"
+                    required>
+                  <i class="bi bi-eye-slash form-icon-right" onclick="togglePasswordVis('confirmPassword', this)"></i>
+                </div>
+              </div>
+              <p id="passwordErrorMsg"
+                style="color:var(--danger); font-size:13px; font-weight:600; margin-top:-8px; margin-bottom:16px; display:none;">
+              </p>
+
+              <div class="password-checklist">
+                <h5>Password must contain:</h5>
+                <div class="password-checklist-grid">
+                  <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> At least 8 characters</div>
+                  <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Include numbers</div>
+                  <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Uppercase & lowercase letters
+                  </div>
+                  <div class="checklist-item"><i class="bi bi-check-circle-fill"></i> Include symbols</div>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary" id="savePasswordBtn"><i class="bi bi-lock-fill"></i>
+                  Update Password</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Global Success Modal -->
+    <div id="successModalOverlay"
+      style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+      <div id="successModal"
+        style="background:var(--bg-surface); border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+        <div
+          style="width:72px; height:72px; border-radius:50%; background:rgba(16,185,129,0.1); color:var(--success); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <i class="bi bi-check-circle-fill"></i>
+        </div>
+        <h3 id="successModalTitle" style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">
+          Success</h3>
+        <p id="successModalMessage"
+          style="font-size:15px; color:var(--text-muted); margin-bottom:32px; font-weight:500;">Action completed
+          successfully.</p>
+        <button type="button" onclick="closeSuccessModal()" class="btn btn-primary"
+          style="width:100%; font-size:15px; padding:12px;">Continue</button>
+      </div>
+    </div>
+    
+    <!-- OTP Verification Modal -->
+    <div id="otpModalOverlay"
+      style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+      <div id="otpModal"
+        style="background:var(--bg-surface); border-radius:16px; padding:40px; width:450px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+        <div
+          style="width:72px; height:72px; border-radius:50%; background:rgba(15,118,110,0.1); color:var(--primary); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+          <i class="bi bi-envelope-check-fill"></i>
+        </div>
+        <h3 style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">
+          Verification Required</h3>
+        <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px; font-weight:500;">
+          For your security, we've sent a 6-digit PIN to your email.
+        </p>
+        <p style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">
+          Please enter it below to authorize this password change.
+        </p>
+
+        <div style="margin-bottom: 24px;">
+          <input type="text" id="otpInput" maxlength="6"
+            style="width:100%; text-align:center; font-size:24px; font-weight:700; letter-spacing:8px; padding:12px; border:2px solid var(--border); border-radius:8px; color:var(--text-dark);"
+            placeholder="------">
+        </div>
+
+        <p id="otpErrorMsg" style="color:var(--danger); font-size:13px; font-weight:600; margin-bottom:24px; display:none;"></p>
+
+        <div style="display:flex; gap:16px;">
+          <button type="button" onclick="closeOtpModal()" class="btn btn-outline"
+            style="flex:1;">Cancel</button>
+          <button type="button" onclick="verifyOtpAndChangePassword()" class="btn btn-primary" id="verifyOtpBtn"
+            style="flex:1;">Verify & Update</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    let pendingPasswordUpdate = null;
+    function showSuccessModal(title, message) {
+      document.getElementById('successModalTitle').innerText = title;
+      document.getElementById('successModalMessage').innerText = message;
+      const overlay = document.getElementById('successModalOverlay');
+      const modal = document.getElementById('successModal');
+
+      overlay.style.display = 'flex';
+      // force repaint
+      void overlay.offsetWidth;
+      overlay.style.opacity = '1';
+      modal.style.transform = 'scale(1) translateY(0)';
+    }
+
+    function closeSuccessModal() {
+      const overlay = document.getElementById('successModalOverlay');
+      const modal = document.getElementById('successModal');
+
+      overlay.style.opacity = '0';
+      modal.style.transform = 'scale(0.85) translateY(20px)';
+
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 300);
+    }
+
+    function toggleSidebar() {
+      document.getElementById('sidebar').classList.toggle('open');
+    }
+
+    const userId = localStorage.getItem("userId");
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const userFullName = localStorage.getItem("userFullName") || "Volunteer";
+
+      if (!userId) {
+        window.location.replace('../../login.html');
+        return;
+      }
+
+      document.getElementById("nav-user-name").innerText = userFullName;
+      document.getElementById("nav-avatar-img").src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userFullName)}&background=042f2e&color=fff`;
+
+      if (userId) {
+        fetch(`http://localhost:8080/api/v1/users/${userId}`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.profilePhoto) {
+              const navAvatarImg = document.getElementById("nav-avatar-img");
+              if (navAvatarImg) navAvatarImg.src = data.profilePhoto;
+
+              const profilePageAvatar = document.getElementById("profileAvatar");
+              if (profilePageAvatar) profilePageAvatar.src = data.profilePhoto;
+            }
+          }).catch(console.error);
+      }
+
+      // Fetch Profile Data
+      fetch(`http://localhost:8080/api/v1/users/${userId}/profile`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("profileFullName").value = data.fullName || "";
+          document.getElementById("profilePhone").value = data.phone || "";
+          document.getElementById("profileEmail").value = data.email || "";
+          document.getElementById("profileAddress").value = data.address || "";
+          document.getElementById("profileNic").value = data.nic || "N/A";
+          document.getElementById("profileUsername").value = data.username || "";
+          document.getElementById("profileGn").value = data.gnDivision || "N/A";
+          document.getElementById("profileDs").value = data.divisionalSecretariat || "N/A";
+          document.getElementById("profileDistrict").value = data.district || "N/A";
+
+          document.getElementById("main-profile-name").innerText = data.fullName || "Volunteer";
+          document.getElementById("main-profile-address").innerText = data.address || "Location Unknown";
+
+          if (data.profilePhoto) {
+            window.currentProfilePhoto = data.profilePhoto;
+            const avatarDiv = document.getElementById("main-profile-initials");
+            avatarDiv.style.backgroundImage = `url('${data.profilePhoto}')`;
+            avatarDiv.style.backgroundSize = "cover";
+            avatarDiv.style.backgroundPosition = "center";
+            avatarDiv.innerHTML = '<div id="volunteer-upload-spinner" style="display:none; position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 50%; align-items: center; justify-content: center; z-index: 5;"><div style="width: 32px; height: 32px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;"></div></div><div class="edit-avatar-btn" onclick="document.getElementById(\'profilePhotoUpload\').click()"><i class="bi bi-camera-fill" style="font-size:12px;"></i></div>';
+
+            const navImg = document.getElementById("nav-avatar-img");
+            if (navImg) navImg.src = data.profilePhoto;
+          } else {
+            const names = (data.fullName || "W W").split(" ");
+            const initials = (names[0][0] + (names.length > 1 ? names[names.length - 1][0] : "")).toUpperCase();
+            document.getElementById("main-profile-initials").innerHTML = initials + '<div id="volunteer-upload-spinner" style="display:none; position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 50%; align-items: center; justify-content: center; z-index: 5;"><div style="width: 32px; height: 32px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;"></div></div><div class="edit-avatar-btn" onclick="document.getElementById(\'profilePhotoUpload\').click()"><i class="bi bi-camera-fill" style="font-size:12px;"></i></div>';
+          }
+
+          document.getElementById("stat-time").innerText = data.role || "VOLUNTEER";
+
+          // Chain dependent fetch for Metrics
+          fetch('http://localhost:8080/api/v1/patients/all')
+            .then(res => res.json())
+            .then(allPatients => {
+              const verified = allPatients.filter(p => p.gnDivision === data.gnDivision && p.status === 'VERIFIED');
+              document.getElementById('stat-patients').innerText = verified.length;
+            })
+            .catch(console.error);
+        })
+        .catch(err => console.error(err));
+
+      // Fetch stats 
+      fetch(`http://localhost:8080/api/v1/volunteer/dashboard/${userId}`)
+        .then(res => res.json())
+        .then(data => {
+          document.getElementById("stat-patients").innerText = data.totalReported || "0";
+        })
+        .catch(err => console.error(err));
+    });
+
+    function toggleEditMode() {
+      const inputs = document.querySelectorAll('.info-input:not(#profileNic)');
+      const toggleBtn = document.getElementById('editProfileToggleBtn');
+      const saveContainer = document.getElementById('saveActionContainer');
+
+      const isEditing = inputs[0].classList.contains('editing');
+
+      if (isEditing) {
+        // Cancel Editing
+        inputs.forEach(input => {
+          input.classList.remove('editing');
+          input.readOnly = true;
+        });
+        toggleBtn.innerHTML = '<i class="bi bi-pencil"></i> Edit Information';
+        saveContainer.style.display = 'none';
+      } else {
+        // Start Editing
+        inputs.forEach(input => {
+          input.classList.add('editing');
+          input.readOnly = false;
+        });
+        toggleBtn.innerHTML = '<i class="bi bi-x-circle"></i> Cancel Editing';
+        saveContainer.style.display = 'flex';
+      }
+    }
+
+    function togglePasswordVis(inputId, iconEl) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        iconEl.classList.replace("bi-eye-slash", "bi-eye");
+      } else {
+        input.type = "password";
+        iconEl.classList.replace("bi-eye", "bi-eye-slash");
+      }
+    }
+
+    function saveProfile(e) {
+      e.preventDefault();
+
+      // Clear previous validation
+      document.querySelectorAll('.info-input').forEach(input => input.style.borderBottom = '');
+      document.querySelectorAll('.validation-err').forEach(err => err.remove());
+
+      const fullName = document.getElementById("profileFullName").value.trim();
+      const username = document.getElementById("profileUsername").value.trim();
+      const email = document.getElementById("profileEmail").value.trim();
+      const phone = document.getElementById("profilePhone").value.trim();
+      const address = document.getElementById("profileAddress").value.trim();
+
+      let hasError = false;
+
+      function showError(id, msg) {
+        hasError = true;
+        const el = document.getElementById(id);
+        const parent = el.closest('.info-row');
+        el.style.borderBottom = '2px solid var(--danger)';
+
+        let err = document.createElement('div');
+        err.className = 'validation-err';
+        err.style.color = 'var(--danger)';
+        err.style.fontSize = '12px';
+        err.style.marginTop = '-8px';
+        err.style.marginBottom = '8px';
+        err.style.paddingLeft = '50px';
+        err.style.fontWeight = '500';
+        err.innerHTML = `<i class="bi bi-exclamation-triangle-fill"></i> ${msg}`;
+
+        parent.insertAdjacentElement('afterend', err);
+      }
+
+      if (fullName.length < 3) showError('profileFullName', 'Full name must be at least 3 characters.');
+
+      const usernameRegex = /^[a-zA-Z0-9_\-]{4,20}$/;
+      if (!usernameRegex.test(username)) showError('profileUsername', 'Username must be 4-20 characters long and contain only letters, numbers, hyphens, or underscores.');
+
+      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,10}$/;
+      if (!emailRegex.test(email)) {
+        showError('profileEmail', 'Please enter a strictly valid email address format.');
+      } else {
+        // Smart Typo Detection for common domains
+        const domain = email.split('@')[1].toLowerCase();
+        const gmailTypos = ['gmai.com', 'gmal.com', 'gamil.com', 'gmaill.com', 'gmail.co', 'ail.com', 'gmail.con'];
+        if (gmailTypos.includes(domain)) {
+          showError('profileEmail', 'Did you mean @gmail.com? This domain appears to be misspelled.');
+        } else if (['yaho.com', 'yahooo.com', 'yaboo.com'].includes(domain)) {
+          showError('profileEmail', 'Did you mean @yahoo.com? This domain appears to be misspelled.');
+        }
+      }
+
+      const phoneRegex = /^(?:\+94|0)\d{9}$/;
+      if (!phoneRegex.test(phone)) showError('profilePhone', 'Mobile number must be a valid Sri Lankan number (e.g., 0771234567).');
+
+      if (address.length < 5) showError('profileAddress', 'Address must be at least 5 characters.');
+
+      if (hasError) return;
+
+      const btn = document.getElementById('saveProfileBtn');
+      const originalContent = btn.innerHTML;
+
+      btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
+      btn.disabled = true;
+
+      const payload = { fullName, username, email, phone, address };
+
+      fetch(`http://localhost:8080/api/v1/users/${userId}/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(async res => {
+          if (!res.ok) {
+            const errorMsg = await res.text();
+            if (errorMsg === "Username is already taken!") {
+              showError('profileUsername', 'This Username is already taken! Please choose a unique one.');
+            }
+            throw new Error(errorMsg);
+          }
+          return res.json();
+        })
+        .then(data => {
+
+          // Update LocalStorage and UI dynamically
+          localStorage.setItem("userFullName", data.fullName);
+          document.getElementById("nav-user-name").innerText = data.fullName;
+          document.getElementById("main-profile-name").innerText = data.fullName;
+
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+          toggleEditMode(); // exit edit mode automatically
+          showSuccessModal("Profile Updated", "Your personal information has been successfully saved.");
+        }).catch(err => {
+          btn.innerHTML = '<i class="bi bi-exclamation-circle-fill"></i> Failed';
+          btn.style.backgroundColor = 'var(--danger)';
+          setTimeout(() => {
+            btn.innerHTML = originalContent;
+            btn.style.backgroundColor = '';
+            btn.disabled = false;
+          }, 2000);
+        });
+    }
+
+    function changePassword(e) {
+      e.preventDefault();
+      const newPass = document.getElementById("newPassword").value;
+      const confirmPass = document.getElementById("confirmPassword").value;
+      const currentPass = document.getElementById("currentPassword").value;
+
+      const errorMsg = document.getElementById("passwordErrorMsg");
+      errorMsg.style.display = "none";
+
+      if (newPass !== confirmPass) {
+        errorMsg.innerText = "New passwords do not match!";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      if (newPass === currentPass) {
+        errorMsg.innerText = "New password cannot be the same as your old password!";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      showPasswordConfirmModal({ currentPassword: currentPass, newPassword: newPass });
+    }
+
+    function confirmChangePassword() {
+      if (!pendingPasswordUpdate) return;
+
+      const btn = document.getElementById('confirmPassUpdateBtn');
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Updating...';
+      btn.disabled = true;
+
+      const formBtn = document.getElementById('savePasswordBtn');
+      formBtn.disabled = true;
+
+      fetch(`http://localhost:8080/api/v1/users/${userId}/password`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pendingPasswordUpdate)
+      })
+        .then(res => {
+          if (!res.ok) throw new Error("Incorrect current password");
+
+          // Clear form and restore button
+          document.getElementById("currentPassword").value = "";
+          document.getElementById("newPassword").value = "";
+          document.getElementById("confirmPassword").value = "";
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+          formBtn.disabled = false;
+
+          closePasswordConfirmModal();
+
+          showSuccessModal("Password Updated", "Your account security has been strengthened. You will now be redirected to login.");
+          setTimeout(() => {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+          }, 3000);
+        }).catch(err => {
+          const errorMsg = document.getElementById("passwordErrorMsg");
+          errorMsg.innerText = "Error: " + err.message;
+          errorMsg.style.display = "block";
+
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+          formBtn.disabled = false;
+          closePasswordConfirmModal();
+        });
+    }
+
+    
+    function closeOtpModal() {
+      const overlay = document.getElementById("otpModalOverlay");
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.display = 'none'; }, 300);
+      pendingPasswordUpdate = null;
+      document.getElementById("otpInput").value = "";
+    }
+
+    function changePassword(e) {
+      e.preventDefault();
+      const newPass = document.getElementById("newPassword").value;
+      const confirmPass = document.getElementById("confirmPassword").value;
+      const currentPass = document.getElementById("currentPassword").value;
+
+      const errorMsg = document.getElementById("passwordErrorMsg");
+      errorMsg.style.display = "none";
+
+      if (newPass !== confirmPass) {
+        errorMsg.innerText = "New passwords do not match!";
+        errorMsg.style.display = "block";
+        return;
+      }
+      if (newPass === currentPass) {
+        errorMsg.innerText = "New password cannot be the same as your old password!";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById('savePasswordBtn');
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Requesting...';
+      btn.disabled = true;
+
+      fetch(`http://localhost:8080/api/v1/users/${userId}/request-password-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: currentPass })
+      })
+      .then(async res => {
+         if(!res.ok) {
+             const errorMsgPayload = await res.text();
+             throw new Error(errorMsgPayload);
+         }
+         return res.text();
+      })
+      .then(msg => {
+         btn.innerHTML = originalContent;
+         btn.disabled = false;
+         
+         pendingPasswordUpdate = { currentPassword: currentPass, newPassword: newPass };
+         const overlay = document.getElementById("otpModalOverlay");
+         document.getElementById("otpErrorMsg").style.display = 'none';
+         document.getElementById("otpInput").value = '';
+         overlay.style.display = 'flex';
+         // Trigger reflow
+         overlay.offsetHeight;
+         overlay.style.opacity = '1';
+         setTimeout(() => document.getElementById("otpInput").focus(), 100);
+      })
+      .catch(err => {
+         errorMsg.innerHTML = '<i class="bi bi-shield-x"></i> Error: ' + err.message;
+         errorMsg.style.display = "block";
+         btn.innerHTML = originalContent;
+         btn.disabled = false;
+      });
+    }
+
+    function verifyOtpAndChangePassword() {
+      if (!pendingPasswordUpdate) return;
+      const otpCode = document.getElementById("otpInput").value.trim();
+      const errorMsg = document.getElementById("otpErrorMsg");
+      
+      if (!otpCode || otpCode.length !== 6) {
+         errorMsg.innerText = "Please enter a valid 6-digit PIN.";
+         errorMsg.style.display = "block";
+         return;
+      }
+
+      const btn = document.getElementById('verifyOtpBtn');
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Verifying...';
+      btn.disabled = true;
+
+      pendingPasswordUpdate.otpCode = otpCode;
+
+      fetch(`http://localhost:8080/api/v1/users/${userId}/password`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pendingPasswordUpdate)
+      })
+      .then(async res => {
+          if (!res.ok) throw new Error(await res.text());
+          
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+
+          document.getElementById("currentPassword").value = "";
+          document.getElementById("newPassword").value = "";
+          document.getElementById("confirmPassword").value = "";
+          
+          closeOtpModal();
+          
+          showSuccessModal("Password Updated", "Your account security has been verified and updated. You will now be redirected to login.");
+          setTimeout(() => {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+          }, 3000);
+      })
+      .catch(err => {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+          errorMsg.innerText = "Verification failed: " + err.message;
+          errorMsg.style.display = "block";
+      });
+    }
+    
+    function uploadProfilePhoto(event) {
+      const file = event.target.files[0];
+      if (file) {
+        // Construct FormData for multipart API consumption
+        const formData = new FormData();
+        formData.append("file", file);
+
+        // Optimistically update the UI locally
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const previewURL = e.target.result;
+          const avatarDiv = document.getElementById("main-profile-initials");
+
+          avatarDiv.style.backgroundImage = `url('${previewURL}')`;
+          avatarDiv.style.backgroundSize = "cover";
+          avatarDiv.style.backgroundPosition = "center";
+
+          // Inject spinner and camera button back in
+          avatarDiv.innerHTML = '<div id="volunteer-upload-spinner" style="display:flex; position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 50%; align-items: center; justify-content: center; z-index: 5;"><div style="width: 32px; height: 32px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;"></div></div><div class="edit-avatar-btn" onclick="document.getElementById(\'profilePhotoUpload\').click()"><i class="bi bi-camera-fill" style="font-size:12px;"></i></div>';
+
+          const navImg = document.getElementById("nav-avatar-img");
+          if (navImg) navImg.src = previewURL;
+        };
+        reader.readAsDataURL(file);
+
+        // Dispatch real upload request to Cloudinary Gateway via Spring Boot
+        fetch(`http://localhost:8080/api/v1/users/${userId}/profile-photo`, {
+          method: 'POST',
+          body: formData
+        })
+          .then(res => res.json())
+          .then(data => {
+            if (data.url) {
+              window.currentProfilePhoto = data.url;
+              showSuccessModal("Upload Complete", "Your profile photo was successfully updated!");
+            }
+          })
+          .catch(err => {
+            console.error("Cloudinary upload failed: ", err);
+            alert("Error: " + err.message);
+          })
+          .finally(() => {
+            const spinner = document.getElementById('volunteer-upload-spinner');
+            if (spinner) spinner.style.display = 'none';
+          });
+      }
+    }
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const uId = localStorage.getItem("userId");
+      const wrapperElement = document.getElementById("bellIconWrapper");
+      const dropdownElement = document.getElementById("notifDropdown");
+      const badgeElement = document.getElementById("notifBadge");
+      const listElement = document.getElementById("notifList");
+      let dropdownOpen = false;
+
+      if (wrapperElement && dropdownElement) {
+        wrapperElement.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdownOpen = !dropdownOpen;
+          if (dropdownOpen) {
+            dropdownElement.classList.add("active");
+            dropdownElement.style.display = "flex";
+          } else {
+            dropdownElement.classList.remove("active");
+            dropdownElement.style.display = "none";
+          }
+        });
+
+        document.addEventListener("click", () => {
+          if (dropdownOpen) {
+            dropdownOpen = false;
+            dropdownElement.classList.remove("active");
+            dropdownElement.style.display = "none";
+          }
+        });
+        dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+      }
+
+      function fetchNotifications() {
+        if (!uId) return;
+        fetch(`http://localhost:8080/api/v1/notifications/user/${uId}/latest`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.unreadCount > 0) {
+              if (badgeElement) {
+                badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                badgeElement.style.display = 'flex';
+              }
+            } else {
+              if (badgeElement) badgeElement.style.display = 'none';
+            }
+
+            if (!data.notifications || data.notifications.length === 0) {
+              if (listElement) {
+                listElement.innerHTML = `
+                  <div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;">
+                      <i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                      No new notifications
+                  </div>`;
+              }
+            } else {
+              if (listElement) listElement.innerHTML = "";
+              data.notifications.forEach(notif => {
+                let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+
+                const date = new Date(notif.createdAt);
+                let secs = Math.floor((new Date() - date) / 1000);
+                if (secs < 0) secs = 0;
+                let timeStr = secs + " secs ago";
+                if (secs <= 10) timeStr = "just now";
+                else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+
+                const item = document.createElement("div");
+                item.className = `notif-item ${!notif.read ? 'unread' : ''}`;
+                item.style.padding = "16px 20px";
+                item.style.borderBottom = "1px solid #f1f5f9";
+                item.style.display = "flex";
+                item.style.gap = "16px";
+                item.style.cursor = "pointer";
+                if (!notif.read) item.style.background = "#f8fafc";
+
+                item.innerHTML = `
+                  <div style="flex-shrink: 0; margin-top: 2px;">${iconHtml}</div>
+                  <div style="flex-grow: 1;">
+                      <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.5; font-weight: ${!notif.read ? '700' : '500'};">
+                          ${notif.message}
+                      </p>
+                      <span style="display: block; margin-top: 6px; font-size: 11px; color: #94a3b8;">${timeStr}</span>
+                  </div>
+                  ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                `;
+
+                item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+
+                item.addEventListener("click", () => {
+                  if (!notif.read) {
+                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                      .then(() => {
+                        notif.read = true;
+                        item.classList.remove("unread");
+                        item.style.background = "transparent";
+                        const dot = item.querySelector(".u-dot");
+                        if (dot) dot.remove();
+
+                        if (badgeElement) {
+                          let curr = parseInt(badgeElement.textContent);
+                          if (!isNaN(curr) && curr > 0) {
+                            curr--;
+                            if (curr === 0) badgeElement.style.display = 'none';
+                            else badgeElement.textContent = curr;
+                          }
+                        }
+                      });
+                  }
+                });
+                if (listElement) listElement.appendChild(item);
+              });
+            }
+          })
+          .catch(console.error);
+      }
+
+      if (uId) {
+        fetchNotifications();
+        setInterval(fetchNotifications, 5000);
+      }
+    });
+  </script>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="logout-modal-overlay" id="logoutModal">
+    <div class="logout-modal-content">
+      <div class="logout-modal-icon">
+        <i class="bi bi-box-arrow-right"></i>
+      </div>
+      <h3 class="logout-modal-title">Sign Out</h3>
+      <p class="logout-modal-text">Are you sure you want to sign out of your account?</p>
+      <div class="logout-modal-actions">
+        <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+        <button class="logout-btn-confirm" onclick="confirmLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showLogoutModal(e) {
+      if (e) e.preventDefault();
+      document.getElementById('logoutModal').style.display = 'flex';
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'none';
+    }
+    function confirmLogout() {
+      localStorage.clear();
+      window.location.replace('../../login.html');
+    }
+  </script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+</body>
+
+</html>

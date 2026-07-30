@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Core Session Manager -->
+    <script>
+        (function() {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+    
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | Volunteer Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background: #112F28;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .brand-icon {
+      background: #0A7265;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .brand span {
+      color: #31B498;
+    }
+
+    .sidebar-menu {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 800;
+      color: #31B498;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 4px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: #e5e7eb;
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 20px;
+      color: #9ca3af;
+      transition: all 0.2s;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+
+    .menu-item:hover i {
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: #127161;
+      color: #ffffff;
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 16px;
+      width: 380px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .notification-dropdown.active {
+      display: flex;
+    }
+
+    .notif-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notif-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+
+    .notif-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .notif-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .notif-item:hover {
+      background: #f1f5f9;
+    }
+
+    .notif-item.unread {
+      background: #f8fafc;
+    }
+
+    .notif-footer {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .notif-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      padding: 10px 20px;
+      border-radius: 99px;
+      width: 380px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 13px;
+      color: var(--text-dark);
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .welcome-banner {
+      background: linear-gradient(120deg, #134e4a 0%, #0f766e 50%, #0d9488 100%);
+      box-shadow: 0 12px 24px -8px rgba(13, 148, 136, 0.4);
+      border-radius: 16px;
+      padding: 32px;
+      color: #ffffff;
+      margin-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .welcome-banner::after {
+      content: '';
+      position: absolute;
+      top: -40px;
+      right: -40px;
+      width: 200px;
+      height: 200px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    .welcome-banner h1 {
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .welcome-banner p {
+      font-size: 15px;
+      opacity: 0.85;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid rgba(229, 231, 235, 0.6);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+      border-color: rgba(15, 118, 110, 0.15);
+    }
+
+    .metric-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .icon-teal {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .icon-red {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .icon-green {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .metric-info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+    }
+
+    .metric-info h3 {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .metric-info p {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+
+    /* Primary CTA Card Styling */
+    .primary-cta-card {
+      background: #f4fefc;
+      border: 1px solid rgba(15, 118, 110, 0.15);
+      border-radius: 20px;
+      padding: 24px 32px;
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: var(--text-dark);
+      text-decoration: none;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .primary-cta-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px -3px rgba(15, 118, 110, 0.1);
+      border-color: rgba(15, 118, 110, 0.3);
+    }
+
+    .cta-content {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .cta-icon-container {
+      width: 64px;
+      height: 64px;
+      background: var(--sidebar-bg);
+      color: white;
+      border-radius: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      flex-shrink: 0;
+    }
+
+    .cta-content h2 {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      letter-spacing: -0.3px;
+    }
+
+    .cta-content p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 500px;
+      line-height: 1.5;
+    }
+
+    .cta-btn {
+      background: var(--primary);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+
+    .primary-cta-card:hover .cta-btn {
+      background: var(--primary-hover);
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    .activity-item {
+      display: flex;
+      gap: 14px;
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .activity-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .activity-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    .dot-green {
+      background: var(--success);
+    }
+
+    .dot-blue {
+      background: var(--info);
+    }
+
+    .dot-red {
+      background: var(--danger);
+    }
+
+    .dot-orange {
+      background: var(--warning);
+    }
+
+    .activity-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .activity-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .link-btn {
+      color: var(--primary);
+      font-weight: 600;
+      font-size: 13px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .link-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* Premium Patient Report Card Styling */
+    .report-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .report-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--primary);
+      transition: width 0.2s;
+    }
+
+    .report-card.status-pending::before {
+      background: var(--warning);
+    }
+
+    .report-card.status-verified::before {
+      background: var(--success);
+    }
+
+    .report-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+      border-color: rgba(15, 118, 110, 0.2);
+    }
+
+    .report-card:last-child {
+      margin-bottom: 0;
+    }
+
+    .report-content-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .report-avatar {
+      width: 48px;
+      height: 48px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .report-details h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .report-details h4 span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: var(--bg-page);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    .report-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      font-size: 13px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .report-meta i {
+      color: var(--primary);
+      opacity: 0.7;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+    }
+
+    .badge-pending {
+      background-color: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .badge-verified {
+      background-color: var(--success-bg);
+      color: var(--success);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+
+      .primary-cta-card {
+        flex-direction: column;
+        text-align: left;
+        gap: 16px;
+        align-items: flex-start;
+      }
+
+      .cta-content {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    /* Logout Modal Styles */
+    .logout-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .logout-modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-modal-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+
+    .logout-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .logout-modal-text {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .logout-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .logout-btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-normal);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn-cancel:hover {
+      background: var(--bg-page);
+    }
+
+    .logout-btn-confirm {
+      flex: 1;
+      padding: 12px;
+      background: var(--danger);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn-confirm:hover {
+      background: #b91c1c;
+    }
+  </style>
+
+    <!-- Auth Guard for Browser Back Button -->
+    
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      <div style="display:flex; flex-direction:column; line-height: 1.2;">
+        <span style="color:#ffffff; font-weight:800; font-size:22px; letter-spacing:-0.5px;">CARE<span
+            style="font-weight:300; font-size:22px; color:#31B498; margin-left:2px;">REACH</span></span>
+        <span style="font-size:11px; font-weight:500; color:#31B498;">Community Volunteer Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div>
+        <a href="dashboard.html" class="menu-item active"><i class="bi bi-layout-sidebar-inset"></i> Dashboard</a>
+        <a href="activities.html" class="menu-item"><i class="bi bi-journal-text"></i> My Activities</a>
+        <div class="menu-title" style="margin-top:24px;">ACCOUNT</div>
+        <a href="profile.html" class="menu-item"><i class="bi bi-person"></i> My Profile</a>
+      </div>
+      <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn"
+        style="color: #f97316; margin-top: auto; border:1px solid rgba(249,115,22,0.2);"><i
+          class="bi bi-box-arrow-right" style="color:#f97316;"></i> Sign Out</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+      </div>
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div style="position:relative; cursor:pointer;" class="nav-bell" id="bellIconWrapper">
+          <i class="bi bi-bell" style="font-size:22px; color:var(--text-normal);"></i>
+          <span id="notifBadge"
+            style="position:absolute; top:-4px; right:-4px; background:var(--danger); color:white; font-size:10px; font-weight:700; width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; box-shadow:0 0 0 2px var(--bg-surface);">0</span>
+
+          <div id="notifDropdown" class="notification-dropdown">
+            <div class="notif-header">
+              <h3>Notifications</h3>
+            </div>
+            <div id="notifList" class="notif-list">
+              <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 14px;">
+                <i class="bi bi-arrow-repeat" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                Loading...
+              </div>
+            </div>
+            <div class="notif-footer">
+              <a href="notifications.html">See All Notifications</a>
+            </div>
+          </div>
+        </div>
+        <div style="width:1px; height:32px; background:rgba(0,0,0,0.1);"></div>
+        <a href="profile.html" class="user-profile" style="border:none; padding-left:0; gap:16px;">
+          <div class="user-info" style="text-align:right;">
+            <h4 id="nav-user-name" style="font-weight:700;"> hihewage Pasindu Kaushan Sathsara </h4>
+            <p style="color:var(--text-muted);">Community Volunteer</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img id="nav-avatar-img" src="" alt="Volunteer"
+              style="background:#0b2e29; object-fit:cover; width:36px; height:36px; border-radius:50%;">
+          </div>
+        </a>
+      </div>
+    </header>
+    <div class="content-area">
+      <div class="welcome-banner"
+        style="background:#0a5c56; display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <p style="font-size: 16px; margin-bottom: 2px; font-weight: 500;">Welcome back,</p>
+          <h1 id="welcome-message" style="color: #5eead4; display:flex; align-items:center; gap:8px;">hihewage Pasindu
+            Kaushan Sathsara <span>👋</span></h1>
+          <div style="margin-top: 12px; opacity: 0.9;">
+            <p>Thank you for being a community volunteer.</p>
+            <p>Here's your activity overview.</p>
+          </div>
+        </div>
+        <div style="margin-right:24px; opacity:0.25; font-size:120px;">
+          <i class="bi bi-shield-fill-plus"></i>
+        </div>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-icon icon-teal"><i class="bi bi-people-fill"></i></div>
+          <div class="metric-info">
+            <h3 id="stat-total">0</h3>
+            <p>Patients Reported</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-red"><i class="bi bi-person-fill-exclamation"></i></div>
+          <div class="metric-info">
+            <h3 id="stat-pending">0</h3>
+            <p>Reported Not Verified Patients</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-green"><i class="bi bi-check-circle-fill"></i></div>
+          <div class="metric-info">
+            <h3 id="stat-verified">0</h3>
+            <p>Verified Reports</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-blue"><i class="bi bi-calendar3"></i></div>
+          <div class="metric-info">
+            <h3 id="stat-active-since">0 days</h3>
+            <p>Active Since</p>
+            <span style="font-size:10px; font-weight:600; color:#3b82f6; margin-top:6px;">Keep going! 💙</span>
+          </div>
+        </div>
+      </div>
+      <!-- Primary Action CTA -->
+      <a href="report-patient.html" class="primary-cta-card">
+        <div class="cta-content">
+          <div class="cta-icon-container">
+            <i class="bi bi-heart-pulse"></i>
+          </div>
+          <div>
+            <h2>Report a Vulnerable Patient</h2>
+            <p>Identify and report individuals in your community who need medical care or emergency assistance.</p>
+          </div>
+        </div>
+        <div class="cta-btn">
+          Report Now <i class="bi bi-arrow-right"></i>
+        </div>
+      </a>
+      <div class="grid-2col" style="grid-template-columns: 1fr;">
+        <!-- Today Reported Patient Details -->
+        <div class="panel">
+          <div class="panel-header" style="justify-content: space-between;">
+            <h2 class="panel-title"><i class="bi bi-people-fill"></i> Today's Reported Patient Details</h2>
+            <a href="activities.html"
+              style="background:var(--bg-page); color:var(--primary); font-weight:600; border:1px solid rgba(15,118,110,0.15); border-radius:8px; padding:6px 16px; font-size:13px; cursor:pointer; text-decoration:none;"
+              onmouseover="this.style.background='var(--primary-light)'"
+              onmouseout="this.style.background='var(--bg-page)'">View All</a>
+          </div>
+          <div class="panel-body" id="recent-reports-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 20px;">
+              Loading recent reports...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const userId = localStorage.getItem('userId');
+      const userFullName = localStorage.getItem('userFullName') || 'Volunteer';
+
+      let sessionUsername = localStorage.getItem('username');
+      if (!sessionUsername || sessionUsername === 'undefined' || sessionUsername === 'null') {
+        sessionUsername = userFullName.split(' ')[0];
+      }
+
+      const welcomeEl = document.getElementById('welcome-message');
+      if (welcomeEl) {
+        welcomeEl.innerHTML = `${sessionUsername} <span>👋</span>`;
+      }
+
+      const navUserName = document.getElementById('nav-user-name');
+      if (navUserName) navUserName.innerText = userFullName;
+
+      const navAvatarImg = document.getElementById('nav-avatar-img');
+      if (navAvatarImg) {
+        navAvatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(userFullName)}&background=042f2e&color=fff`;
+        if (userId) {
+          fetch(`http://localhost:8080/api/v1/users/${userId}/profile`)
+            .then(res => res.json())
+            .then(data => { if (data.profilePhoto) navAvatarImg.src = data.profilePhoto; })
+            .catch(e => console.error(e));
+        }
+      }
+
+      if (!userId) {
+        window.location.replace('../../login.html');
+        return;
+      }
+
+      fetch(`http://localhost:8080/api/v1/volunteer/dashboard/${userId}?t=${new Date().getTime()}`, { cache: 'no-store' })
+        .then(res => {
+          if (!res.ok) throw new Error("Failed to load dashboard data");
+          return res.json();
+        })
+        .then(data => {
+          document.getElementById('stat-total').innerText = data.totalReported;
+          document.getElementById('stat-pending').innerText = data.pendingVerify;
+          document.getElementById('stat-verified').innerText = data.verified;
+          document.getElementById('stat-active-since').innerText = data.activeSince;
+
+          const reportsContainer = document.getElementById('recent-reports-list');
+          reportsContainer.innerHTML = '';
+
+          const today = new Date();
+          const todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+          const todaysReports = (data.recentReports || []).filter(report => report.createdAt && report.createdAt.startsWith(todayStr));
+
+          if (todaysReports.length === 0) {
+            reportsContainer.innerHTML = `<div style="text-align: center; color: var(--text-muted); padding: 20px;">No recent reports found for today.</div>`;
+            return;
+          }
+
+          todaysReports.forEach(report => {
+            let statusClass = '';
+            let badgeClass = '';
+            let statusIcon = '';
+            let statusText = 'Unknown';
+
+            if (report.status === 'PENDING_VERIFY') {
+              statusClass = 'status-pending';
+              badgeClass = 'badge-pending';
+              statusText = 'Pending Verification';
+              statusIcon = '<i class="bi bi-clock-history"></i>';
+            } else if (report.status === 'VERIFIED') {
+              statusClass = 'status-verified';
+              badgeClass = 'badge-verified';
+              statusText = 'Verified';
+              statusIcon = '<i class="bi bi-check-circle-fill"></i>';
+            }
+
+            const timeStr = new Date(report.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const dateStr = new Date(report.createdAt).toLocaleDateString();
+
+            const item = document.createElement('div');
+            item.className = `report-card ${statusClass}`;
+            item.innerHTML = `
+              <div class="report-content-wrapper">
+                <div class="report-avatar">
+                   <i class="bi ${report.gender === 'Female' ? 'bi-person-standing-dress' : 'bi-person-standing'}"></i>
+                </div>
+                <div class="report-details">
+                  <h4>${report.name} <span>${report.gender || '-'}, ${report.age || '-'} Yrs</span></h4>
+                  <div class="report-meta">
+                    <span><i class="bi bi-geo-alt-fill"></i> ${report.address || 'Location Unknown'}</span>
+                    <span><i class="bi bi-calendar-event-fill"></i> ${dateStr} • ${timeStr}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="status-badge ${badgeClass}">
+                ${statusIcon} ${statusText}
+              </div>
+            `;
+            reportsContainer.appendChild(item);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          document.getElementById('recent-reports-list').innerHTML = `<div style="text-align: center; color: var(--danger); padding: 20px;">Error loading data.</div>`;
+        });
+    });
+
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const uId = localStorage.getItem("userId");
+      const wrapperElement = document.getElementById("bellIconWrapper");
+      const dropdownElement = document.getElementById("notifDropdown");
+      const badgeElement = document.getElementById("notifBadge");
+      const listElement = document.getElementById("notifList");
+      let dropdownOpen = false;
+
+      if (wrapperElement && dropdownElement) {
+        wrapperElement.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdownOpen = !dropdownOpen;
+          if (dropdownOpen) {
+            dropdownElement.classList.add("active");
+            dropdownElement.style.display = "flex";
+          } else {
+            dropdownElement.classList.remove("active");
+            dropdownElement.style.display = "none";
+          }
+        });
+
+        document.addEventListener("click", () => {
+          if (dropdownOpen) {
+            dropdownOpen = false;
+            dropdownElement.classList.remove("active");
+            dropdownElement.style.display = "none";
+          }
+        });
+        dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+      }
+
+      function fetchNotifications() {
+        if (!uId) return;
+        fetch(`http://localhost:8080/api/v1/notifications/user/${uId}/latest`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.unreadCount > 0) {
+              if (badgeElement) {
+                badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                badgeElement.style.display = 'flex';
+              }
+            } else {
+              if (badgeElement) badgeElement.style.display = 'none';
+            }
+
+            if (!data.notifications || data.notifications.length === 0) {
+              if (listElement) {
+                listElement.innerHTML = `
+                  <div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;">
+                      <i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                      No new notifications
+                  </div>`;
+              }
+            } else {
+              if (listElement) listElement.innerHTML = "";
+              data.notifications.forEach(notif => {
+                let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+
+                const date = new Date(notif.createdAt);
+                let secs = Math.floor((new Date() - date) / 1000);
+                if (secs < 0) secs = 0;
+                let timeStr = secs + " secs ago";
+                if (secs <= 10) timeStr = "just now";
+                else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+
+                const item = document.createElement("div");
+                item.className = `notif-item ${!notif.read ? 'unread' : ''}`;
+                item.style.padding = "16px 20px";
+                item.style.borderBottom = "1px solid #f1f5f9";
+                item.style.display = "flex";
+                item.style.gap = "16px";
+                item.style.cursor = "pointer";
+                if (!notif.read) item.style.background = "#f8fafc";
+
+                item.innerHTML = `
+                  <div style="flex-shrink: 0; margin-top: 2px;">${iconHtml}</div>
+                  <div style="flex-grow: 1;">
+                      <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.5; font-weight: ${!notif.read ? '700' : '500'};">
+                          ${notif.message}
+                      </p>
+                      <span style="display: block; margin-top: 6px; font-size: 11px; color: #94a3b8;">${timeStr}</span>
+                  </div>
+                  ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                `;
+
+                item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+
+                item.addEventListener("click", () => {
+                  if (!notif.read) {
+                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                      .then(() => {
+                        notif.read = true;
+                        item.classList.remove("unread");
+                        item.style.background = "transparent";
+                        const dot = item.querySelector(".u-dot");
+                        if (dot) dot.remove();
+
+                        if (badgeElement) {
+                          let curr = parseInt(badgeElement.textContent);
+                          if (!isNaN(curr) && curr > 0) {
+                            curr--;
+                            if (curr === 0) badgeElement.style.display = 'none';
+                            else badgeElement.textContent = curr;
+                          }
+                        }
+                      });
+                  }
+                });
+                if (listElement) listElement.appendChild(item);
+              });
+            }
+          })
+          .catch(console.error);
+      }
+
+      if (uId) {
+        fetchNotifications();
+        setInterval(fetchNotifications, 5000);
+      }
+    });
+  </script>
+  </script>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="logout-modal-overlay" id="logoutModal">
+    <div class="logout-modal-content">
+      <div class="logout-modal-icon">
+        <i class="bi bi-box-arrow-right"></i>
+      </div>
+      <h3 class="logout-modal-title">Sign Out</h3>
+      <p class="logout-modal-text">Are you sure you want to sign out of your account?</p>
+      <div class="logout-modal-actions">
+        <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+        <button class="logout-btn-confirm" onclick="confirmLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showLogoutModal(e) {
+      if (e) e.preventDefault();
+      document.getElementById('logoutModal').style.display = 'flex';
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'none';
+    }
+    function confirmLogout() {
+      localStorage.clear();
+      window.location.replace('../../login.html');
+    }
+  </script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+</body>
+
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Auth setup -->
+    <script>
+        // Force-reset requires a temporary session, so we do not enforce public rejection here.
+        // The script at the bottom of the body handles unauthorized access.
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Action Required - CareReach</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-blue: #0f766e;
+            --primary-dark: #094740;
+            --bg-light: #f1f5f9;
+            --text-dark: #0f172a;
+            --text-gray: #64748b;
+            --border-color: #e2e8f0;
+            --danger: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
+            background: linear-gradient(135deg, #f0fdfa 0%, #ccfbf1 100%);
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1.5' fill='%230f766e' fill-opacity='0.1'/%3E%3C/svg%3E");
+            background-size: 20px 20px;
+            z-index: -1;
+        }
+
+        .auth-container {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 900px;
+            min-height: 480px;
+        }
+
+        /* LEFT SIDEBAR */
+        .auth-sidebar {
+            background-color: var(--primary-dark);
+            background-image:
+                linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 30px 30px;
+            width: 45%;
+            padding: 45px;
+            display: flex;
+            flex-direction: column;
+            color: white;
+            box-sizing: border-box;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 40px;
+        }
+
+        .brand-icon {
+            width: 52px;
+            height: 52px;
+            background: #0f766e;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .brand-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin: 0;
+            color: white;
+            letter-spacing: 0.5px;
+        }
+
+        .brand-text h1 span {
+            color: #2dd4bf;
+            font-weight: 400;
+        }
+
+        .brand-text p {
+            font-size: 14px;
+            font-weight: 500;
+            color: #34d399;
+            margin: 0;
+        }
+
+        .shield-graphic {
+            align-self: center;
+            width: 150px;
+            height: 150px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .status-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+            max-width: 260px;
+            align-self: center;
+            margin-bottom: 40px;
+        }
+
+        .status-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .status-icon {
+            display: flex;
+            align-items: center;
+            color: #4ade80;
+        }
+
+        .status-card:nth-child(2) .status-icon {
+            color: #60a5fa;
+        }
+
+        .status-card:nth-child(3) .status-icon {
+            color: #a78bfa;
+        }
+
+        .status-text h4 {
+            margin: 0;
+            font-size: 10px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-text p {
+            margin: 2px 0 0 0;
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+
+        .sidebar-footer {
+            margin-top: auto;
+            font-size: 12px;
+            color: #94a3b8;
+            line-height: 1.6;
+        }
+
+        .sidebar-footer cite {
+            display: inline-block;
+            margin-top: 5px;
+            color: #2dd4bf;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        /* RIGHT FORM SECTION */
+        .auth-form-section {
+            width: 55%;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            border-top: 6px solid #f59e0b;
+            box-sizing: border-box;
+        }
+
+        .badge-warning {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #d97706;
+            border: 1px solid #fde68a;
+            background: #fffbeb;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            align-self: flex-start;
+        }
+
+        .auth-form-section h2 {
+            margin: 0 0 10px 0;
+            font-size: 32px;
+            color: var(--text-dark);
+            line-height: 1.2;
+            font-weight: 800;
+        }
+
+        .auth-form-section>p {
+            color: var(--text-gray);
+            font-size: 14px;
+            line-height: 1.6;
+            margin: 0 0 30px 0;
+        }
+
+        .warning-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-radius: 8px;
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+        }
+
+        .warning-box p {
+            margin: 0;
+            font-size: 13px;
+            color: #b45309;
+            line-height: 1.5;
+        }
+
+        .warning-box p strong {
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: flex;
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--text-gray);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-label span {
+            color: var(--danger);
+            margin-left: 4px;
+        }
+
+        .input-group {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            color: #94a3b8;
+            pointer-events: none;
+            display: flex;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 40px;
+            border: 1px solid var(--border-color);
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            color: var(--text-dark);
+            transition: all 0.2s;
+            box-sizing: border-box;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px #ccfbf1;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 14px;
+            color: #94a3b8;
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            display: flex;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary-blue);
+        }
+
+        .hint-text {
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 6px;
+            display: block;
+        }
+
+        .btn-submit {
+            background-color: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+            margin-top: 15px;
+        }
+
+        .btn-submit:hover {
+            background-color: #e2e8f0;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: #94a3b8;
+            margin-top: 25px;
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 13px;
+            font-weight: 500;
+            text-align: center;
+            margin-bottom: 20px;
+            display: none;
+            background: #fef2f2;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #fecaca;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                flex-direction: column;
+            }
+
+            .auth-sidebar,
+            .auth-form-section {
+                width: 100%;
+                padding: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <!-- LEFT SIDEBAR -->
+        <div class="auth-sidebar">
+            <div class="brand-header">
+                <div class="brand-icon">
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path fill="white" stroke="white" stroke-width="1"
+                            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z">
+                        </path>
+                        <path stroke="#0f766e" stroke-width="2" stroke-linejoin="round" d="M4 11h3l2 5 3-10 2 5h6">
+                        </path>
+                    </svg>
+                </div>
+                <div class="brand-text">
+                    <h1>CARE<span>REACH</span></h1>
+                    <p>CareReach Security</p>
+                </div>
+            </div>
+
+            <div class="shield-graphic" style="margin: auto 0; opacity: 0.6; align-self: center;">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    <polyline points="9 12 11 14 15 10"></polyline>
+                </svg>
+            </div>
+
+            <div class="sidebar-footer">
+                <cite>— CareReach Security Policy</cite>
+            </div>
+        </div>
+
+        <!-- RIGHT FORM SECTION -->
+        <div class="auth-form-section">
+            <div class="badge-warning">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                ACTION REQUIRED
+            </div>
+
+            <h2>Secure Your Account</h2>
+            <p>Your account was provisioned by an administrator. Set your own private credentials to activate it.</p>
+
+            <div class="warning-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px;">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                    </path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+                <p>You will be <strong>logged out immediately</strong> after submission. Sign in with your new
+                    credentials.</p>
+            </div>
+
+            <div class="error-msg" id="errMsg"></div>
+
+            <form id="resetForm" onsubmit="submitReset(event)">
+                <div class="form-group">
+                    <label class="form-label">New Username<span>*</span></label>
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                                <circle cx="12" cy="7" r="4"></circle>
+                            </svg>
+                        </span>
+                        <input type="text" id="newUsername" class="form-control" placeholder="Choose a username"
+                            required>
+                    </div>
+                    <span class="hint-text">Min. 4 characters, no spaces.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">New Password<span>*</span></label>
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                                </path>
+                            </svg>
+                        </span>
+                        <input type="password" id="newPassword" class="form-control"
+                            placeholder="Create a strong password" required>
+                        <button type="button" class="toggle-password"
+                            onclick="togglePasswordVisibility('newPassword', 'eyeIcon1')">
+                            <svg id="eyeIcon1" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <label class="form-label">Confirm Password<span>*</span></label>
+                    <div class="input-group">
+                        <span class="input-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4">
+                                </path>
+                            </svg>
+                        </span>
+                        <input type="password" id="confirmPassword" class="form-control"
+                            placeholder="Re-enter your password" required>
+                        <button type="button" class="toggle-password"
+                            onclick="togglePasswordVisibility('confirmPassword', 'eyeIcon2')">
+                            <svg id="eyeIcon2" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+                        <polyline points="10 17 15 12 10 7"></polyline>
+                        <line x1="15" y1="12" x2="3" y2="12"></line>
+                    </svg>
+                    Secure Account & Log Out
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Global Toast Notification -->
+    <style>
+        .toast-notification {
+            position: fixed;
+            bottom: 30px;
+            right: -350px;
+            width: 320px;
+            background: white;
+            border-left: 5px solid #10b981;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            z-index: 10000;
+            transition: right 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .toast-notification.show {
+            right: 30px;
+        }
+
+        .toast-icon {
+            color: #10b981;
+        }
+
+        .toast-content h4 {
+            margin: 0 0 5px 0;
+            color: #0f172a;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .toast-content p {
+            margin: 0;
+            color: #64748b;
+            font-size: 13px;
+        }
+    </style>
+    <div id="toastSuccess" class="toast-notification">
+        <div class="toast-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+        </div>
+        <div class="toast-content">
+            <h4>Success</h4>
+            <p>Credentials strictly secured. Redirecting...</p>
+        </div>
+    </div>
+
+    <script>
+        // Security logic check 
+        if (!localStorage.getItem('userId')) {
+            window.location.href = 'login.html';
+        }
+
+        function togglePasswordVisibility(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>';
+            } else {
+                input.type = 'password';
+                icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>';
+            }
+        }
+
+        function submitReset(event) {
+            event.preventDefault();
+            const errDiv = document.getElementById('errMsg');
+            errDiv.style.display = 'none';
+
+            const newUsername = document.getElementById('newUsername').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (newPassword !== confirmPassword) {
+                errDiv.innerText = "Passwords do not match.";
+                errDiv.style.display = 'block';
+                return;
+            }
+
+            if (!/^[a-zA-Z0-9_]{4,20}$/.test(newUsername)) {
+                errDiv.innerText = "Username must be 4-20 characters long and contain NO spaces or special characters (Except underscores).";
+                errDiv.style.display = 'block';
+                return;
+            }
+
+            if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/.test(newPassword)) {
+                errDiv.innerText = "Password must be at least 8 characters long, bringing at least 1 uppercase letter, 1 lowercase letter, and 1 number.";
+                errDiv.style.display = 'block';
+                return;
+            }
+
+            const userId = localStorage.getItem('userId');
+
+            fetch(`http://localhost:8080/api/v1/users/${userId}/force-reset`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ newUsername: newUsername, newPassword: newPassword })
+            })
+                .then(async response => {
+                    if (!response.ok) {
+                        const err = await response.text();
+                        throw new Error(err || "Failed to secure credentials.");
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    localStorage.removeItem('userId');
+                    localStorage.removeItem('userFullName');
+                    localStorage.removeItem('username');
+                    localStorage.removeItem('userRole');
+
+                    const toast = document.getElementById('toastSuccess');
+                    toast.classList.add('show');
+
+                    setTimeout(() => {
+                        window.location.href = 'login.html';
+                    }, 2500);
+                })
+                .catch(error => {
+                    errDiv.innerText = error.message;
+                    errDiv.style.display = 'block';
+                });
+        }
+    </script>
+</body>
+
+</html>

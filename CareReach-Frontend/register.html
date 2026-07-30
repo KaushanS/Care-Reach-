@@ -1,0 +1,1334 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Core Session Manager -->
+  <script>
+    (function () {
+      function enforcePublicSession() {
+        const userId = localStorage.getItem('userId');
+        const userRole = localStorage.getItem('userRole');
+        if (userId && userRole) {
+          const role = userRole.toLowerCase();
+          const prefix = window.location.pathname.includes('/pages/') ? '../../' : '';
+          window.location.replace(prefix + 'pages/' + role + '/dashboard.html');
+        }
+      }
+      enforcePublicSession();
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+          enforcePublicSession();
+        }
+      });
+    })();
+  </script>
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | Create Account</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-light: #f4fffd;
+      --panel-light: #ffffff;
+      --panel-soft: rgba(255, 255, 255, 0.8);
+      --primary-blue: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #ccfbf1;
+      --text-dark: #123;
+      --text-gray: #475569;
+      --text-light: #64748b;
+      --white: #ffffff;
+      --border-color: #cbd5e1;
+      --border-light: rgba(255, 255, 255, 0.15);
+      --danger-bg: #fef2f2;
+      --danger-text: #dc2626;
+      --danger-border: #fca5a5;
+      --success-green: #10b981;
+
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      background: var(--bg-light);
+      color: var(--text-dark);
+      overflow-x: hidden;
+    }
+
+    /* --- LEFT PANEL --- */
+    .left-panel {
+      width: 45%;
+      background: linear-gradient(135deg, rgba(15, 118, 110, 0.92), rgba(10, 92, 86, 0.98)),
+        url('https://images.unsplash.com/photo-1587559070757-f72a388edbba?q=80&w=1200&auto=format&fit=crop') center/cover no-repeat;
+      color: var(--white);
+      padding: 4rem 10%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 3rem;
+    }
+
+    .logo-icon {
+      width: 44px;
+      height: 44px;
+      background-color: rgba(255, 255, 255, 0.14);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .logo-text {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: 0.5px;
+    }
+
+    .logo-text span {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .hero-title {
+      font-size: 40px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -1px;
+    }
+
+    .text-accent {
+      color: #5eead4;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #ccfbf1;
+      max-width: 400px;
+      margin-bottom: 40px;
+    }
+
+    /* Vertical Stepper (Left) */
+    .v-stepper {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+
+    .v-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      opacity: 0.5;
+      transition: all 0.3s ease;
+    }
+
+    .v-step.active {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .v-step.completed {
+      opacity: 0.8;
+    }
+
+    .v-step-num {
+      font-size: 14px;
+      font-weight: 700;
+      color: #5eead4;
+      width: 24px;
+    }
+
+    .v-step.completed .v-step-num {
+      color: var(--success-green);
+    }
+
+    .v-step-content h4 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: var(--white);
+    }
+
+    .v-step-content p {
+      font-size: 13px;
+      color: #a7f3d0;
+      margin: 0;
+    }
+
+    .completed-icon {
+      display: none;
+      color: var(--success-green);
+      font-size: 18px;
+      margin-left: auto;
+    }
+
+    .v-step.completed .completed-icon {
+      display: block;
+    }
+
+    .footer-text {
+      font-size: 12px;
+      color: #99f6e4;
+      margin-top: 40px;
+      opacity: 0.7;
+    }
+
+    /* --- RIGHT PANEL --- */
+    .right-panel {
+      width: 55%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      background: var(--bg-light);
+    }
+
+    .form-container {
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .form-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      letter-spacing: -0.5px;
+    }
+
+    .form-subtitle {
+      font-size: 14px;
+      color: var(--text-gray);
+      margin-bottom: 32px;
+      font-weight: 500;
+    }
+
+    /* Horizontal Stepper (Right) */
+    .h-stepper {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+
+    .h-step {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-light);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .h-step-circle {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .h-step.active {
+      color: var(--text-dark);
+    }
+
+    .h-step.active .h-step-circle {
+      background: var(--primary-blue);
+      color: var(--white);
+    }
+
+    .h-step.completed {
+      color: var(--primary-blue);
+    }
+
+    .h-step.completed .h-step-circle {
+      background: var(--success-green);
+      color: var(--white);
+    }
+
+    .h-line {
+      flex: 1;
+      height: 1px;
+      background: #e2e8f0;
+      margin: 0 12px;
+    }
+
+    /* Form Elements */
+    .form-step {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .form-step.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(5px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-icon-left {
+      position: absolute;
+      left: 16px;
+      color: #94a3b8;
+      pointer-events: none;
+      display: flex;
+      font-size: 16px;
+    }
+
+    .input-icon-right {
+      position: absolute;
+      right: 16px;
+      color: #94a3b8;
+      cursor: pointer;
+      display: flex;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 14px 44px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-dark);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: var(--white);
+    }
+
+    .form-control::placeholder {
+      color: #cbd5e1;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    }
+
+    .input-hint {
+      font-size: 12px;
+      color: var(--text-light);
+      margin-top: 6px;
+      display: block;
+    }
+
+    .error-msg {
+      font-size: 12px;
+      color: var(--danger-text);
+      margin-top: 6px;
+      display: none;
+      font-weight: 500;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+
+    /* Buttons */
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      margin-top: 32px;
+    }
+
+    .btn {
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      flex: 1;
+      background-color: var(--primary-blue);
+      color: var(--white);
+      box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+    }
+
+    .btn-primary:hover {
+      background-color:
+        var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: var(--white);
+      color: var(--text-dark);
+      border: 1px solid var(--border-color);
+      width: 120px;
+    }
+
+    .btn-secondary:hover {
+      background-color: #f8fafc;
+      border-color: #94a3b8;
+    }
+
+    /* Account Summary Card */
+    .summary-card {
+      background-color: var(--primary-light);
+      border: 1px solid rgba(15, 118, 110, 0.2);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 24px;
+    }
+
+    .summary-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--primary-blue);
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+
+    .summary-row {
+      display: flex;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .summary-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .summary-key {
+      width: 100px;
+      color: var(--text-gray);
+      font-weight: 500;
+    }
+
+    .summary-val {
+      flex: 1;
+      color: var(--text-dark);
+      font-weight: 600;
+    }
+
+    /* Password Requirements */
+    .req-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+
+    .req-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-gray);
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .req-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .req-item {
+      font-size: 13px;
+      color: var(--text-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .req-item i {
+      font-size: 14px;
+      color: #cbd5e1;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+      margin-top: 24px;
+    }
+
+    .checkbox-input {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--primary-blue);
+      cursor: pointer;
+      margin-top: 2px;
+    }
+
+    .checkbox-label {
+      font-size: 13px;
+      color: var(--text-gray);
+      font-weight: 500;
+      cursor: pointer;
+      line-height: 1.5;
+    }
+
+    .checkbox-label a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .checkbox-label a:hover {
+      text-decoration: underline;
+    }
+
+    .auth-link {
+      margin-top: 24px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-gray);
+      font-weight: 500;
+    }
+
+    .auth-link a {
+      color: var(--primary-blue);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    @media (max-width: 992px) {
+      body {
+        flex-direction: column;
+      }
+
+      .left-panel {
+        width: 100%;
+        padding: 3rem 2rem;
+      }
+
+      .right-panel {
+        width: 100%;
+        padding: 3rem 2rem;
+      }
+
+      .v-stepper {
+        display: none;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .role-selector {
+        flex-wrap: wrap;
+      }
+
+      .role-label {
+        flex: 1 1 40%;
+      }
+    }
+
+    /* Loading Overlay */
+    .loading-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(5px);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .loading-overlay.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary-blue);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 20px;
+    }
+
+    .success-check {
+      width: 50px;
+      height: 50px;
+      background-color: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 24px;
+      margin-bottom: 20px;
+      display: none;
+      animation: zoomIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .loading-text {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes zoomIn {
+      0% {
+        transform: scale(0);
+      }
+
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    /* Custom Dropdown for District */
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-dropdown-btn {
+      width: 100%;
+      padding: 14px 16px 14px 44px;
+      /* Space for the left icon */
+      background: var(--white);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-dark);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .custom-dropdown-btn.open {
+      border-color: var(--primary-blue);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      margin-top: 5px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .dropdown-menu.show {
+      display: block;
+    }
+
+    .dropdown-search {
+      padding: 10px;
+      border-bottom: 1px solid #f1f5f9;
+    }
+
+    .dropdown-search input {
+      width: 100%;
+      padding: 8px 12px 8px 32px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+    }
+
+    .dropdown-search-wrapper {
+      position: relative;
+    }
+
+    .dropdown-search-wrapper i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #94a3b8;
+    }
+
+    .dropdown-list {
+      list-style: none;
+      max-height: 180px;
+      /* Approximately 5 items at 36px each */
+      overflow-y: auto;
+      padding: 5px 0;
+    }
+
+    .dropdown-list li {
+      padding: 10px 16px;
+      font-size: 14px;
+      color: var(--text-gray);
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .dropdown-list li:hover {
+      background: #f8fafc;
+      color: var(--text-dark);
+    }
+
+    /* Scrollbar styling */
+    .dropdown-list::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .dropdown-list::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Loading Overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner" id="loadingSpinner"></div>
+    <div class="success-check" id="successCheck"><i class="bi bi-check-lg"></i></div>
+    <div class="loading-text" id="loadingText">Creating your account...</div>
+  </div>
+  <div class="left-panel">
+    <div class="logo-area">
+      <div class="logo-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      <div class="logo-text">CARE<span>REACH</span></div>
+    </div>
+
+    <h1 class="hero-title">Join the network<br><span class="text-accent">protecting lives</span></h1>
+    <p class="hero-desc">Register as a healthcare professional and gain access to real-time emergency alerts, patient
+      records, and province-wide coordination tools.</p>
+
+    <div class="v-stepper">
+
+      <div class="v-step active" id="v-step-1">
+        <div class="v-step-num">01</div>
+        <div class="v-step-content">
+          <h4>Account Setup</h4>
+          <p>Username, email & district</p>
+        </div>
+        <i class="bi bi-check-circle-fill completed-icon"></i>
+      </div>
+
+      <div class="v-step" id="v-step-2">
+        <div class="v-step-num">02</div>
+        <div class="v-step-content">
+          <h4>Personal Details</h4>
+          <p>Full name, NIC & contact number</p>
+        </div>
+        <i class="bi bi-check-circle-fill completed-icon"></i>
+      </div>
+
+      <div class="v-step" id="v-step-3">
+        <div class="v-step-num">03</div>
+        <div class="v-step-content">
+          <h4>Secure Password</h4>
+          <p>Create a strong password</p>
+        </div>
+        <i class="bi bi-check-circle-fill completed-icon"></i>
+      </div>
+    </div>
+
+    <div class="footer-text">© 2026 CARE REACH - Emergency Healthcare Response</div>
+  </div>
+
+  <div class="right-panel">
+    <div class="form-container">
+
+      <h2 class="form-title">Create account</h2>
+      <div class="form-subtitle" id="step-subtitle">Step 1 of 3 — Account</div>
+
+      <div class="h-stepper">
+        <div class="h-step active" id="h-step-1">
+          <div class="h-step-circle">1</div>
+          <span>Account</span>
+        </div>
+
+        <div class="h-line"></div>
+
+        <div class="h-step" id="h-step-2">
+          <div class="h-step-circle">2</div>
+          <span>Personal</span>
+        </div>
+
+        <div class="h-line"></div>
+
+        <div class="h-step" id="h-step-3">
+          <div class="h-step-circle">3</div>
+          <span>Security</span>
+        </div>
+      </div>
+
+      <form id="registrationForm" onsubmit="submitRegistration(event)">
+
+        <div class="form-step active" id="step1">
+          <div class="input-group">
+            <label class="input-label">Username</label>
+            <div class="input-wrapper">
+              <i class="bi bi-person input-icon-left"></i>
+              <input type="text" id="username" class="form-control" placeholder="e.g. dr.ravi_kumar">
+            </div>
+            <span class="input-hint">Used to sign in — no spaces allowed.</span>
+            <div class="error-msg" id="err-username"></div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Email Address</label>
+            <div class="input-wrapper">
+              <i class="bi bi-envelope input-icon-left"></i>
+              <input type="email" id="email" class="form-control" placeholder="you@hospital.lk">
+            </div>
+            <div class="error-msg" id="err-email"></div>
+          </div>
+
+
+          <div class="input-group">
+            <label class="input-label">Account Role</label>
+            <div class="input-wrapper">
+              <i class="bi bi-person-workspace input-icon-left"></i>
+              <select id="role" class="form-control" disabled
+                style="appearance: none; background-color: #f8fafc; opacity: 1; cursor: not-allowed; color: var(--text-dark);">
+                <option value="VOLUNTEER" selected>Volunteer (Public Registration)</option>
+              </select>
+              <i class="bi bi-lock input-icon-right" style="pointer-events: none;"></i>
+            </div>
+            <span class="input-hint">This page is exclusively for Volunteer registration.</span>
+          </div>
+          <div class="input-group">
+            <label class="input-label">District</label>
+            <div class="custom-dropdown" id="district-dropdown-container">
+              <input type="hidden" id="district" value="">
+
+              <div class="custom-dropdown-btn" id="district-btn" onclick="toggleDistrictDropdown()">
+                <div>
+                  <i class="bi bi-geo-alt input-icon-left"></i>
+                  <span id="district-selected-text" style="color: #cbd5e1;">Select your district</span>
+                </div>
+                <i class="bi bi-chevron-down" style="color: #94a3b8; font-size: 12px;"></i>
+              </div>
+
+              <div class="dropdown-menu" id="district-menu">
+                <div class="dropdown-search">
+                  <div class="dropdown-search-wrapper">
+                    <i class="bi bi-search"></i>
+                    <input type="text" id="district-search" placeholder="Search districts..."
+                      onkeyup="filterDistricts()">
+                  </div>
+                </div>
+                <ul class="dropdown-list" id="district-list">
+                  <li style="color: #94a3b8; text-align: center;">Loading...</li>
+                </ul>
+              </div>
+            </div>
+            <span class="input-hint">Select the primary district you operate in.</span>
+            <div class="error-msg" id="err-district"></div>
+          </div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" onclick="nextStep(2)">
+              Continue <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step2">
+          <div class="input-group">
+            <label class="input-label">Full Name</label>
+            <div class="input-wrapper">
+              <i class="bi bi-person-badge input-icon-left"></i>
+              <input type="text" id="fullName" class="form-control" placeholder="e.g. Dr. Ravi Kumar">
+            </div>
+            <span class="input-hint">As it appears on your official ID.</span>
+            <div class="error-msg" id="err-fullName"></div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Mobile Number</label>
+            <div class="input-wrapper">
+              <i class="bi bi-telephone input-icon-left"></i>
+              <input type="text" id="phone" class="form-control" placeholder="+94 77 000 0000">
+            </div>
+            <div class="error-msg" id="err-phone"></div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">NIC Number</label>
+            <div class="input-wrapper">
+              <i class="bi bi-card-heading input-icon-left"></i>
+              <input type="text" id="nic" class="form-control" placeholder="e.g. 901234567V">
+            </div>
+            <span class="input-hint">National Identity Card — used for verification only.</span>
+            <div class="error-msg" id="err-nic"></div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Residential Address</label>
+            <div class="input-wrapper">
+              <i class="bi bi-house-door input-icon-left"></i>
+              <input type="text" id="address" class="form-control" placeholder="123 Example Street, City Name">
+            </div>
+            <span class="input-hint">Your complete residential mailing address.</span>
+            <div class="error-msg" id="err-address"></div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-title">Account Summary</div>
+            <div class="summary-row">
+              <div class="summary-key">Username</div>
+              <div class="summary-val" id="sum-user">-</div>
+            </div>
+            <div class="summary-row">
+              <div class="summary-key">Email</div>
+              <div class="summary-val" id="sum-email">-</div>
+            </div>
+            <div class="summary-row">
+              <div class="summary-key">Province</div>
+              <div class="summary-val" id="sum-prov">-</div>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="nextStep(1)">
+              <i class="bi bi-arrow-left"></i> Back
+            </button>
+            <button type="button" class="btn btn-primary" onclick="nextStep(3)">
+              Continue <i class="bi bi-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-step" id="step3">
+          <div class="input-group">
+            <label class="input-label">Password</label>
+            <div class="input-wrapper">
+              <i class="bi bi-lock input-icon-left"></i>
+              <input type="password" id="pass1" class="form-control" placeholder="Min. 8 characters">
+              <i class="bi bi-eye input-icon-right" onclick="togglePassword('pass1', this)"></i>
+            </div>
+            <div class="error-msg" id="err-pass1"></div>
+          </div>
+
+          <div class="input-group">
+            <label class="input-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <i class="bi bi-lock input-icon-left"></i>
+              <input type="password" id="pass2" class="form-control" placeholder="Re-enter password">
+              <i class="bi bi-eye input-icon-right" onclick="togglePassword('pass2', this)"></i>
+            </div>
+            <div class="error-msg" id="err-pass2"></div>
+          </div>
+
+          <div class="req-card">
+            <div class="req-title">Requirements</div>
+            <ul class="req-list">
+              <li class="req-item"><i class="bi bi-check-circle"></i> At least 8 characters</li>
+              <li class="req-item"><i class="bi bi-check-circle"></i> One uppercase letter (A-Z)</li>
+              <li class="req-item"><i class="bi bi-check-circle"></i> One number (0-9)</li>
+              <li class="req-item"><i class="bi bi-check-circle"></i> One special character (!@#$...)</li>
+            </ul>
+          </div>
+
+          <div class="checkbox-container">
+            <input type="checkbox" id="terms" class="checkbox-input">
+            <label for="terms" class="checkbox-label">
+              I agree to the <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>. My data will be
+              handled in compliance with HIPAA regulations.
+            </label>
+          </div>
+          <div class="error-msg" id="err-terms" style="margin-top: -15px; margin-bottom: 20px;"></div>
+
+          <div class="btn-group">
+            <button type="button" class="btn btn-secondary" onclick="nextStep(2)">
+              <i class="bi bi-arrow-left"></i> Back
+            </button>
+            <button type="submit" class="btn btn-primary">
+              Create Account <i class="bi bi-shield-check"></i>
+            </button>
+          </div>
+        </div>
+
+      </form>
+
+      <div class="auth-link">
+        Already have an account? <a href="login.html">Sign in</a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+
+    let allDistricts = [];
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Fetch districts API
+      fetch('http://localhost:8080/api/v1/locations/districts')
+        .then(res => res.json())
+        .then(data => {
+          allDistricts = data.map(d => d.name || d);
+          renderDistricts(allDistricts);
+        })
+        .catch(err => {
+          console.error("Districts load fail:", err);
+          document.getElementById('district-list').innerHTML = '<li style="color:red;text-align:center;">Load failed.</li>';
+        });
+
+      // Close dropdown when clicking outside
+      document.addEventListener('click', function (e) {
+        if (!e.target.closest('#district-dropdown-container')) {
+          document.getElementById('district-menu')?.classList.remove('show');
+          document.getElementById('district-btn')?.classList.remove('open');
+        }
+      });
+    });
+
+    function toggleDistrictDropdown() {
+      const menu = document.getElementById('district-menu');
+      const btn = document.getElementById('district-btn');
+      const isOpen = menu.classList.contains('show');
+
+      if (!isOpen) {
+        menu.classList.add('show');
+        btn.classList.add('open');
+        document.getElementById('district-search').focus();
+      } else {
+        menu.classList.remove('show');
+        btn.classList.remove('open');
+      }
+    }
+
+    function renderDistricts(list) {
+      const ul = document.getElementById('district-list');
+      ul.innerHTML = '';
+      if (list.length === 0) {
+        ul.innerHTML = '<li style="color:#94a3b8; text-align:center;">No results found</li>';
+        return;
+      }
+
+      list.forEach(districtName => {
+        const li = document.createElement('li');
+        li.textContent = districtName;
+        li.onclick = () => selectDistrict(districtName);
+        ul.appendChild(li);
+      });
+    }
+
+    function filterDistricts() {
+      const val = document.getElementById('district-search').value.toLowerCase();
+      const filtered = allDistricts.filter(d => d.toLowerCase().includes(val));
+      renderDistricts(filtered);
+    }
+
+    function selectDistrict(val) {
+      // Set hidden input
+      document.getElementById('district').value = val;
+
+      // Set visual text
+      const textSpan = document.getElementById('district-selected-text');
+      textSpan.textContent = val;
+      textSpan.style.color = "var(--text-dark)";
+
+      // Close menu
+      document.getElementById('district-menu').classList.remove('show');
+      document.getElementById('district-btn').classList.remove('open');
+
+      // Clear error style if any
+      document.getElementById('err-district').style.display = 'none';
+
+      // Clear search
+      document.getElementById('district-search').value = '';
+      renderDistricts(allDistricts);
+    }
+
+    const stepTitles = ["Account", "Personal", "Security"];
+
+    function showError(id, msg) {
+      const el = document.getElementById(id);
+      el.innerText = msg;
+      el.style.display = 'block';
+    }
+
+    function clearErrors() {
+      document.querySelectorAll('.error-msg').forEach(el => el.style.display = 'none');
+    }
+
+    function nextStep(stepNumber) {
+      clearErrors();
+      let hasError = false;
+
+      // Validations before moving to next step
+      if (stepNumber === 2) {
+        const username = document.getElementById('username').value;
+        const email = document.getElementById('email').value;
+        const district = document.getElementById('district').value;
+
+        // Strict Gmail validation as requested
+        const emailRegex = /^[^\s@]+@gmail\.com$/i;
+
+        if (!username) { showError('err-username', "Username is required."); hasError = true; }
+
+        if (!email) { showError('err-email', "Email is required."); hasError = true; }
+        else if (!emailRegex.test(email)) { showError('err-email', "Please enter a valid Gmail address (must end in @gmail.com)."); hasError = true; }
+
+        if (!district) { showError('err-district', "Please select your District."); hasError = true; }
+
+        if (hasError) return;
+      }
+
+      if (stepNumber === 3) {
+        const fullName = document.getElementById('fullName').value;
+        const phone = document.getElementById('phone').value;
+        const nic = document.getElementById('nic').value;
+
+        const phoneRegex = /^(?:0|\+94)[0-9]{9}$/;
+        const nicRegex = /^([0-9]{9}[vVxX]|[0-9]{12})$/;
+
+        if (!fullName) { showError('err-fullName', "Full Name is required."); hasError = true; }
+
+        if (!phone) { showError('err-phone', "Mobile Number is required."); hasError = true; }
+        else if (!phoneRegex.test(phone)) { showError('err-phone', "Please enter a valid Sri Lankan mobile number (e.g. 0771234567)."); hasError = true; }
+
+        if (!nic) { showError('err-nic', "NIC Number is required."); hasError = true; }
+        else if (!nicRegex.test(nic)) { showError('err-nic', "Please enter a valid NIC number (9 digits + V/X, or 12 digits)."); hasError = true; }
+
+        if (hasError) return;
+      }
+
+      // 1. Hide all steps
+      document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+      // 2. Show target step
+      document.getElementById('step' + stepNumber).classList.add('active');
+
+      // 3. Update subtitle text
+      document.getElementById('step-subtitle').innerText = `Step ${stepNumber} of 3 — ${stepTitles[stepNumber - 1]}`;
+
+      // 4. Update Horizontal Stepper
+      document.querySelectorAll('.h-step').forEach((el, index) => {
+        let circle = el.querySelector('.h-step-circle');
+        el.classList.remove('active', 'completed');
+
+        if (index + 1 === stepNumber) {
+          el.classList.add('active');
+          circle.innerHTML = index + 1;
+        } else if (index + 1 < stepNumber) {
+          el.classList.add('completed');
+          circle.innerHTML = '<i class="bi bi-check2"></i>';
+        } else {
+          circle.innerHTML = index + 1;
+        }
+      });
+
+      // 5. Update Vertical Stepper
+      document.querySelectorAll('.v-step').forEach((el, index) => {
+        el.classList.remove('active', 'completed');
+        if (index + 1 === stepNumber) el.classList.add('active');
+        if (index + 1 < stepNumber) el.classList.add('completed');
+      });
+
+      // 6. Populate Summary if moving to Step 2
+      if (stepNumber === 2) {
+        document.getElementById('sum-user').innerText = document.getElementById('username').value || 'Not provided';
+        document.getElementById('sum-email').innerText = document.getElementById('email').value || 'Not provided';
+
+
+        const districtText = document.getElementById('district-selected-text').innerText;
+        document.getElementById('sum-prov').innerText = document.getElementById('district').value ? districtText : 'Not selected';
+      }
+    }
+
+    // Password Toggle Functionality
+    function togglePassword(inputId, iconEl) {
+      const input = document.getElementById(inputId);
+      if (input.type === "password") {
+        input.type = "text";
+        iconEl.classList.replace("bi-eye", "bi-eye-slash");
+      } else {
+        input.type = "password";
+        iconEl.classList.replace("bi-eye-slash", "bi-eye");
+      }
+    }
+    function submitRegistration(event) {
+      event.preventDefault();
+      clearErrors();
+      let hasError = false;
+
+      const pass1 = document.getElementById('pass1').value;
+      const pass2 = document.getElementById('pass2').value;
+      const terms = document.getElementById('terms').checked;
+
+      // Requires at least 1 uppercase, 1 number, 1 special character, and min 8 total characters
+      const passRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
+
+      if (!pass1) {
+        showError('err-pass1', "Password is required."); hasError = true;
+      } else if (!passRegex.test(pass1)) {
+        showError('err-pass1', "Password must be at least 8 characters, contain an uppercase letter, a number, and a special character!");
+        hasError = true;
+      }
+
+      if (pass1 !== pass2) {
+        showError('err-pass2', "Passwords do not match!");
+        hasError = true;
+      }
+      if (!terms) {
+        showError('err-terms', "Please agree to the Terms of Service.");
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      const data = {
+        fullName: document.getElementById('fullName').value || document.getElementById('username').value,
+        username: document.getElementById('username').value,
+        email: document.getElementById('email').value,
+        password: pass1,
+        nic: document.getElementById('nic') ? document.getElementById('nic').value : "NOT_SPECIFIED",
+        phone: document.getElementById('phone') ? document.getElementById('phone').value : "",
+        address: document.getElementById('address') ? document.getElementById('address').value : "",
+        role: "VOLUNTEER",
+        district: document.getElementById('district').value
+      };
+
+      // Show Loading Overlay
+      const overlay = document.getElementById('loadingOverlay');
+      const spinner = document.getElementById('loadingSpinner');
+      const successCheck = document.getElementById('successCheck');
+      const loadingText = document.getElementById('loadingText');
+
+      overlay.classList.add('active');
+      spinner.style.display = 'block';
+      successCheck.style.display = 'none';
+      loadingText.innerText = 'Creating your account...';
+
+      fetch('http://localhost:8080/api/v1/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+        .then(async response => {
+          if (!response.ok) {
+            const errorMsg = await response.text();
+            throw new Error(errorMsg || "Registration failed. Please try again.");
+          }
+          return response.text();
+        })
+        .then(text => {
+          // Show Success state in Overlay
+          spinner.style.display = 'none';
+          successCheck.style.display = 'flex';
+          loadingText.innerText = 'Registration Successful!';
+
+          // Wait 1.5 seconds then redirect
+          setTimeout(() => {
+            window.location.href = "login.html";
+          }, 1500);
+        })
+        .catch(error => {
+          // Hide overlay on error
+          overlay.classList.remove('active');
+
+          console.error('Error:', error);
+          const errMsg = error.message;
+
+          if (errMsg.toLowerCase().includes("email")) {
+            nextStep(1);
+            // Small timeout ensures the DOM has fully switched steps before rendering error
+            setTimeout(() => {
+              showError('err-email', 'Error: ' + errMsg);
+              document.getElementById('email').focus();
+            }, 50);
+          } else if (errMsg.toLowerCase().includes("nic")) {
+            nextStep(2);
+            setTimeout(() => {
+              showError('err-nic', 'Error: ' + errMsg);
+              document.getElementById('nic').focus();
+            }, 50);
+          } else {
+            showError('err-terms', 'Error: ' + errMsg);
+          }
+        });
+    }
+  </script>
+</body>
+
+</html>

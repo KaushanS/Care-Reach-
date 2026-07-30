@@ -1,0 +1,2520 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Core Session Manager -->
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Manage Patients</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* CareReach Theme Colors */
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+
+            /* Sidebar Specific Colors */
+            --sidebar-bg: #042f2e;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+
+            --bg-page: #f0f7f6;
+            --bg-surface: #ffffff;
+            --text-dark: #0f172a;
+            --text-normal: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+
+            /* Status Colors */
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --secondary: #64748b;
+            --secondary-bg: #f1f5f9;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+
+            --sidebar-width: 260px;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, 0.15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            /* Hide scrollbar for IE, Edge and Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .sidebar-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            transition: color 0.2s;
+            opacity: 0.8;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .menu-item:hover i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .menu-item.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item.active i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .badge-alert {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .top-header {
+            height: 72px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-page);
+            padding: 8px 16px;
+            border-radius: 99px;
+            width: 320px;
+        }
+
+        .header-search i {
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .action-icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon:hover {
+            color: var(--primary);
+        }
+
+        .action-icon .dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+            text-decoration: none;
+        }
+
+        .admin-profile:hover .admin-info h4 {
+            color: var(--primary);
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: color 0.2s;
+        }
+
+        .admin-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- CONTENT AREA & METRICS --- */
+        .content-area {
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: var(--bg-surface);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(15, 118, 110, 0.08);
+        }
+
+        .metric-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-blue {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .icon-teal {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .icon-green {
+            background: var(--success-bg);
+            color: var(--success);
+        }
+
+        .icon-red {
+            background: var(--danger-bg);
+            color: var(--danger);
+        }
+
+        .metric-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .metric-info p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-normal);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* --- DATA TABLES --- */
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        /* Updated Filter Group */
+        .panel-header {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .filter-select {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-dark);
+            outline: none;
+            background-color: var(--bg-surface);
+            flex: 1;
+            min-width: 140px;
+            cursor: pointer;
+        }
+
+        .filter-select:focus {
+            border-color: var(--primary);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .profile-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 14px;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .profile-id {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .contact-info span {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .medical-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .badge-blood {
+            background: var(--danger-bg);
+            color: var(--danger);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .badge-condition {
+            background: var(--info-bg);
+            color: var(--info);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+        }
+
+        .actions-cell {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--border);
+        }
+
+        .icon-btn.delete:hover {
+            color: var(--danger);
+            background: var(--danger-bg);
+            border-color: rgba(239, 68, 68, 0.2);
+        }
+
+        .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block;
+            }
+
+            .header-search {
+                display: none;
+            }
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-box h3 {
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            outline: none;
+            background: #f8fafc;
+            color: var(--text-dark);
+            box-sizing: border-box;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        /* Notifications */
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon-bell {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon-bell:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+            <div><div style="line-height: 1.2;">CARE<span>REACH</span></div><div style="font-size: 11px; font-weight: 500; color: #5eead4; opacity: 0.7; letter-spacing: 0.3px;">Admin Control Center</div></div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <div class="menu-title">Main</div>
+            <a href="dashboard.html" class="menu-item">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+            <a href="emergency.html" class="menu-item">
+                <i class="bi bi-exclamation-triangle"></i> Emergencies
+                
+            </a>
+
+            <div class="menu-title">Network Management</div>
+            <!-- PATIENTS MENU ACTIVE -->
+            <a href="patients.html" class="menu-item active">
+                <i class="bi bi-person-rolodex"></i> Patients
+            </a>
+            <a href="doctors.html" class="menu-item">
+                <i class="bi bi-heart-pulse"></i> Doctors
+            </a>
+            <a href="guardians.html" class="menu-item">
+                <i class="bi bi-shield-check"></i> Guardians
+            </a>
+            <a href="officers.html" class="menu-item">
+                <i class="bi bi-person-badge"></i> Officers
+            </a>
+            <a href="volunteers.html" class="menu-item">
+                <i class="bi bi-people"></i> Volunteers
+            </a>
+
+            <div class="menu-title">Insights & Reports</div>
+            <a href="analytics.html" class="menu-item">
+                <i class="bi bi-graph-up"></i> Analytics
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i> Reports
+            </a>
+
+            <div class="menu-title" style="margin-top:auto;">Account</div>
+            <a href="#" class="menu-item" onclick="logout()" style="color: #fca5a5; margin-bottom: 24px;">
+                <i class="bi bi-box-arrow-left" style="color: #fca5a5;"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+
+        <header class="top-header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+                <div class="header-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search by name, ID, or phone...">
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <!-- Notifications Icon -->
+                <div class="notification-wrapper">
+                    <div class="notification-icon-bell" onclick="toggleNotifications()" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge-new">2</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark
+                                all read</a>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i
+                                        class="bi bi-calendar-event"></i></div>
+                                <div class="noti-content">
+                                    <h4>New Registration</h4>
+                                    <p>Dr. Silva has submitted registration for approval.</p>
+                                    <span style="font-size:11px;color:var(--text-muted);">2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+                            <a href="notifications.html"
+                                style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See
+                                all notifications</a>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="settings.html" class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
+                    <div class="admin-info">
+                        <h4>System Admin</h4>
+                        <p>Colombo HQ</p>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <div class="page-header">
+                <div>
+                    <h1>Patient Management</h1>
+                    <p>Manage all registered patients, view medical profiles, and update emergency contacts.</p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon icon-teal"><i class="bi bi-person-lines-fill"></i></div>
+                    <div class="metric-info">
+                        <h3 id="totalPatientsCount">0</h3>
+                        <p>Total Registered Patients</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                        <h2 class="panel-title">Registered Patients</h2>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;"
+                            onclick="resetFilters()"><i class="bi bi-arrow-counterclockwise"></i> Reset Filters</button>
+                    </div>
+
+                    <!-- Account Generation Tabs -->
+                    <div
+                        style="display: flex; gap: 12px; background: #f1f5f9; padding: 4px; border-radius: 10px; width: fit-content; margin-bottom: 8px; margin-top: 4px;">
+                        <input type="hidden" id="accountTabFilter" value="pending">
+                        <button id="tabPending" onclick="switchAccountTab('pending')"
+                            style="border: none; background: white; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.1); cursor: pointer; transition: 0.2s;">Needs
+                            Patient Account</button>
+                        <button id="tabGenerated" onclick="switchAccountTab('generated')"
+                            style="border: none; background: transparent; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer; transition: 0.2s;">Needs
+                            Guardian Account</button>
+                        <button id="tabAllDone" onclick="switchAccountTab('allDone')"
+                            style="border: none; background: transparent; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 500; color: #64748b; cursor: pointer; transition: 0.2s;">All
+                            Accounts Created</button>
+                    </div>
+
+                    <!-- Expanded Filter Group -->
+                    <div class="filter-group" style="display: flex; flex-wrap: wrap; gap: 12px; width: 100%;">
+                        <div id="districtFilterContainer" style="flex:1; min-width: 150px; position: relative;"></div>
+                        <div id="dsFilterContainer" style="flex:1; min-width: 150px; position: relative;"></div>
+                        <div id="gnFilterContainer" style="flex:1; min-width: 150px; position: relative;"></div>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table id="patientsTable">
+                        <thead>
+                            <tr>
+                                <th>Count</th>
+                                <th>Patient Name</th>
+                                <th>Age</th>
+                                <th>Location</th>
+                                <th>Guardian & Contact</th>
+                                <th>Verified GN Devition</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamic Content Rendered via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination -->
+                <div
+                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+                    <p style="font-size: 13px; color: var(--text-muted);" id="pageCountText">Showing patients</p>
+                    <div style="display: flex; gap: 8px;">
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;"
+                            disabled>Previous</button>
+                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 13px;">1</button>
+                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">Next</button>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <!-- Modern Overlays -->
+    <div id="modernConfirm" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Delete Patient Profile?</h3>
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;">Are you sure you
+                want to remove this patient profile? This action will also unlink associated guardians and cannot be
+                undone.</p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="btn btn-outline"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 15px; border: 1px solid var(--border); color: var(--text-dark); background: transparent;"
+                    onclick="document.getElementById('modernConfirm').style.display='none'">Cancel</button>
+                <button class="btn btn-primary"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 15px; background: #ef4444; color: white; border: none;"
+                    onclick="executeDeleteRow()">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="modernLoader" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 24px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <div
+                style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;">
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+            <h3 style="font-size: 16px; color: var(--text-dark); margin: 0;">Creating Account...</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0 0 0;">Please wait while we secure
+                credentials.</p>
+        </div>
+    </div>
+
+    <div id="modernSuccess" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3 id="modernSuccessTitle" style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Success
+            </h3>
+            <p id="modernSuccessMsg"
+                style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;"></p>
+            <button class="btn btn-primary"
+                style="width: 100%; padding: 10px; border-radius: 8px; font-size: 15px; color: white;"
+                onclick="document.getElementById('modernSuccess').style.display='none'">Awesome</button>
+        </div>
+    </div>
+
+    <div id="modernError" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Request Failed</h3>
+            <p id="modernErrorMsg"
+                style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;"></p>
+            <button class="btn btn-primary"
+                style="width: 100%; padding: 10px; border-radius: 8px; font-size: 15px; background: #dc2626; border: none; color: white;"
+                onclick="document.getElementById('modernError').style.display='none'">OK</button>
+        </div>
+    </div>
+
+
+    <!-- PROFILE MODAL (READONLY) -->
+    <div class="modal-overlay" id="profileModal">
+        <div class="modal-box" style="padding:0; overflow:hidden; max-width:600px; width:100%;">
+            <div style="background:#0f766e; color:white; padding:24px; display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div style="display:flex; align-items:center; gap:16px;">
+                        <div
+                            style="background:rgba(255,255,255,0.15); width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px;">
+                            <i class="bi bi-file-earmark-person"></i>
+                        </div>
+                        <div>
+                            <h2 style="margin:0; font-size:18px; font-weight:800;">Patient Profile Overview</h2>
+                            <p style="margin:2px 0 0 0; font-size:13px; opacity:0.8; font-weight:500;">Comprehensive
+                                patient record</p>
+                        </div>
+                    </div>
+                    <button class="icon-btn" onclick="closeModal('profileModal')"
+                        style="color:white; background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <div
+                    style="background:rgba(0,0,0,0.15); padding:10px 16px; border-radius:8px; font-size:12px; font-weight:600; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                    <div><i class="bi bi-clock"></i> <span id="vpCreatedAt"></span></div>
+                    <div><span id="vpStatusBadge"
+                            style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:700;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:0; background:#f8fafc; overflow-y:auto; max-height:70vh;">
+                <!-- SYSTEM META / REPORTER SECTION -->
+                <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        REPORTING VOLUNTEER
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div id="vpRepPhoto"
+                            style="width:36px; height:36px; border-radius:50%; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:bold;">
+                        </div>
+                        <div style="display:flex; flex-direction:column;">
+                            <span
+                                style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Volunteer
+                                Name</span>
+                            <span id="vpRepName" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PATIENT SECTION -->
+                <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-activity"></i>
+                        </div>
+                        PATIENT INFORMATION
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 20px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Full
+                                    Name</span>
+                                <span id="vpName" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-credit-card-2-front"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">NIC
+                                    Number</span>
+                                <span id="vpNic" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Age
+                                    & Gender</span>
+                                <span id="vpAgeGender" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Contact</span>
+                                <span id="vpPhone" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Email</span>
+                                <span id="vpEmail"
+                                    style="font-size:14px; font-weight:700; color:#0f172a; word-break: break-all;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Account
+                                    Status</span>
+                                <span id="vpRegStatus" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div
+                            style="display:flex; align-items:flex-start; gap:12px; grid-column: 1 / -1; margin-top:8px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:flex-start; justify-content:center; font-size:16px; flex-shrink:0; padding-top: 6px;">
+                                <i class="bi bi-card-text"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Situation
+                                    Description</span>
+                                <span id="vpDesc"
+                                    style="font-size:14px; font-weight:500; color:#475569; line-height:1.5;">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GUARDIAN SECTION -->
+                <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        GUARDIAN INFORMATION
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-person-bounding-box"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Guardian
+                                    Name</span>
+                                <span id="vpGuardName" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Contact
+                                    Number</span>
+                                <span id="vpGuardPhone" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Email</span>
+                                <span id="vpGuardEmail"
+                                    style="font-size:14px; font-weight:700; color:#0f172a; word-break: break-all;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">System
+                                    Access</span>
+                                <span id="vpGuardStatus"
+                                    style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOCATION SECTION -->
+                <div style="padding:24px; background:white;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        LOCATION INFORMATION
+                    </div>
+
+                    <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:24px;">
+                        <div
+                            style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                            <i class="bi bi-pin-map"></i>
+                        </div>
+                        <div style="display:flex; flex-direction:column;">
+                            <span
+                                style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Physical
+                                Address</span>
+                            <span id="vpAddress" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-bottom:24px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">District</span>
+                                <span id="vpDistrict" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-buildings"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Divisional
+                                    Secretariat</span>
+                                <span id="vpDs" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">GN
+                                    Division</span>
+                                <span id="vpGn" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Block Upgrade -->
+                    <div id="vpGpsContainer"
+                        style="display:none; background: #e6f7ec; margin: 16px 0; border-radius: 12px; flex-wrap: wrap; border: 1px solid #cbf0d8; position: relative; overflow: hidden; min-height: 150px;">
+                        <div id="vpGpsIframe" style="flex: 1; border-right: 1px solid #cbf0d8; min-width: 200px;"></div>
+                        <div
+                            style="padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 180px; z-index: 1;">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <strong style="color: #0d9488; font-size: 14px; font-weight: 800;">Location
+                                    Preview</strong>
+                                <span style="color: #0d9488; font-size: 12px; font-weight: 500;">View exact
+                                    location</span>
+                            </div>
+                            <button class="btn" id="vpGpsBtn"
+                                style="background: #0d9488; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; display: inline-flex; gap: 8px; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(13,148,136,0.2); cursor: pointer;"><i
+                                    class="bi bi-map-fill"></i> View on Map</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal-overlay" id="patientModal">
+        <div class="modal-box" style="width: 600px;">
+            <h3>Create Patient Account</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Review details before sending
+                auto-generated credentials via email.</p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                <h4
+                    style="grid-column: span 2; font-size: 14px; margin-bottom: 0px; padding-bottom: 4px; border-bottom: 1px solid var(--border); color: var(--text-dark);">
+                    Patient Details</h4>
+
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" id="pmName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="pmPhone" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="text" id="pmAge" readonly>
+                </div>
+                <div class="form-group">
+                    <label>NIC Number</label>
+                    <input type="text" id="pmNic" readonly>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Gmail Address</label>
+                    <input type="text" id="pmEmail" readonly>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Address</label>
+                    <input type="text" id="pmAddress" readonly>
+                </div>
+                <div class="form-group">
+                    <label>GN Division</label>
+                    <input type="text" id="pmGnDivision" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Location (District)</label>
+                    <input type="text" id="pmLocation" readonly>
+                </div>
+
+                <h4
+                    style="grid-column: span 2; font-size: 14px; margin-bottom: 0px; padding-bottom: 4px; border-bottom: 1px solid var(--border); margin-top: 8px; color: var(--text-dark);">
+                    Guardian Details</h4>
+
+                <div class="form-group">
+                    <label>Guardian Name</label>
+                    <input type="text" id="pmGuardianName" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Guardian Phone</label>
+                    <input type="text" id="pmGuardianPhone" readonly>
+                </div>
+                <div class="form-group" style="grid-column: span 2;">
+                    <label>Guardian Gmail</label>
+                    <input type="text" id="pmGuardianEmail" readonly>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn btn-outline"
+                    style="padding: 8px 16px; border: 1px solid var(--border); background: transparent; border-radius: 6px; cursor: pointer; color: var(--text-dark); font-weight: 500;"
+                    onclick="closeModal('patientModal')">Cancel</button>
+                <button class="btn btn-primary" id="pmSubmitBtn" style="color: white;"
+                    onclick="submitPatientAccount()">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="guardianModal">
+        <div class="modal-box">
+            <h3>Create Guardian Account</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 24px;">Credentials will be securely
+                auto-generated and emailed to the assigned guardian.</p>
+            <div class="form-group">
+                <label>Guardian Name</label>
+                <input type="text" id="gmName" readonly>
+            </div>
+            <div class="form-group">
+                <label>Guardian Contact</label>
+                <input type="text" id="gmPhone" readonly>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline"
+                    style="padding: 8px 16px; border: 1px solid var(--border); background: transparent; border-radius: 6px; cursor: pointer; color: var(--text-dark); font-weight: 500;"
+                    onclick="closeModal('guardianModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitModal('guardianModal', 'Guardian')">Create
+                    Account</button>
+            </div>
+            <!-- Store active nic for guardian logic -->
+            <input type="hidden" id="gmTargetNic" value="">
+        </div>
+    </div>
+
+    <script>
+        window.allLocations = [];
+
+        document.addEventListener("DOMContentLoaded", async () => {
+            try {
+                const [incidentsRes, locationsRes] = await Promise.all([
+                    fetch('http://localhost:8080/api/v1/patients/all'),
+                    fetch('http://localhost:8080/api/v1/locations/divisions').catch(e => null)
+                ]);
+
+                if (!incidentsRes.ok) throw new Error("Failed connecting to API.");
+                const data = await incidentsRes.json();
+                window.patientsData = data;
+
+                let masterLocationsData = [];
+                if (locationsRes && locationsRes.ok) {
+                    const divisions = await locationsRes.json();
+                    masterLocationsData = divisions.map(d => ({
+                        dist: d.districtName || "N/A",
+                        ds: d.dsName || "",
+                        gn: d.name || ""
+                    }));
+                }
+
+                if (masterLocationsData.length > 0) {
+                    window.allLocations = masterLocationsData;
+                }
+
+                // Update Metrics
+                const verifiedPatients = data.filter(pt => pt.status === 'VERIFIED');
+                document.getElementById('totalPatientsCount').textContent = verifiedPatients.length.toLocaleString();
+
+
+
+                const tbody = document.querySelector('#patientsTable tbody');
+                tbody.innerHTML = '';
+
+                document.getElementById('pageCountText').textContent = `Showing ${verifiedPatients.length} verified patients`;
+
+                if (verifiedPatients.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 30px; color: #94a3b8;">No verified patients found</td></tr>`;
+                    return;
+                }
+
+                verifiedPatients.forEach((pt, index) => {
+                    const tr = document.createElement('tr');
+                    // Use data attributes for filtering
+                    tr.setAttribute('data-district', (pt.district || '').toLowerCase());
+                    tr.setAttribute('data-ds', (pt.divisionalSecretariat || '').toLowerCase());
+                    tr.setAttribute('data-gn', (pt.gnDivision || '').toLowerCase());
+                    tr.setAttribute('data-hasaccount', pt.hasAccount ? 'true' : 'false');
+                    // Mock: if they already had an account, let's pretend guardian account isn't made yet.
+                    tr.setAttribute('data-hasguardianaccount', pt.hasGuardianAccount ? 'true' : 'false');
+                    tr.id = 'patient-row-' + pt.nic;
+
+                    if (masterLocationsData.length === 0 && pt.district) {
+                        window.allLocations.push({
+                            dist: pt.district,
+                            ds: pt.divisionalSecretariat || "",
+                            gn: pt.gnDivision || ""
+                        });
+                    }
+
+                    const initials = pt.name ? pt.name.substring(0, 2).toUpperCase() : 'PT';
+                    const hue = (initials.charCodeAt(0) * 17) % 360;
+                    const bgColor = `hsl(${hue}, 80%, 90%)`;
+                    const fgColor = `hsl(${hue}, 80%, 30%)`;
+
+                    tr.innerHTML = `
+                            <td>
+                                <div style="font-weight: 700; color: var(--text-muted);">${index + 1}</div>
+                            </td>
+                            <td>
+                                <div class="profile-cell">
+                                    <img src="${pt.profilePhoto || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(pt.name || 'Unknown') + '&background=e0f2fe&color=0369a1'}" alt="Photo" class="profile-avatar" style="object-fit:cover; flex-shrink:0;">
+                                    <div>
+                                        <span class="profile-name">${pt.name || 'Unknown'}</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500; color: var(--text-dark);">${pt.age || '-'} Yrs</div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 500; color: var(--text-dark);">${pt.divisionalSecretariat || 'Unknown'}</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">${pt.district || ''}</div>
+                            </td>
+                            <td>
+                                <div class="contact-info">
+                                    <span style="color: var(--text-dark); font-weight: 500;">${pt.guardianName || 'None'}</span>
+                                    <span><i class="bi bi-telephone"></i> ${pt.guardianPhone || '-'}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <div style="font-weight: 600; color: #0f766e; background: #e0f2fe; padding: 4px 10px; border-radius: 6px; display: inline-block; font-size: 12px;">
+                                    <i class="bi bi-shield-check" style="margin-right: 4px;"></i>${pt.gnDivision || 'Unknown GN'}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="actions-cell">
+                                    <button class="icon-btn" title="View Profile" onclick="openProfileModal('${pt.nic}')"><i class="bi bi-eye"></i></button>
+                                    ${!pt.hasAccount ? `<button class="icon-btn" title="Create Patient Account" onclick="openPatientModalByNic('${pt.nic}')"><i class="bi bi-person-plus"></i></button>` : ''}
+                                    ${(pt.hasAccount && !pt.hasGuardianAccount) ? `<button class="icon-btn guardian-btn" title="Create Guardian Account" onclick="openGuardianModal('${pt.guardianName}', '${pt.guardianPhone}', 'CR-${1000 + pt.id}', '${pt.nic}')"><i class="bi bi-shield-plus"></i></button>` : ''}
+                                    <button class="icon-btn delete" title="Remove Patient" onclick="deleteRow(this, ${pt.id})"><i class="bi bi-trash"></i></button>
+                                </div>
+                            </td>
+                        `;
+                    tbody.appendChild(tr);
+                });
+                // Initialize custom dropdowns
+                createDropdownUI('districtFilterContainer', 'district', 'Districts');
+                createDropdownUI('dsFilterContainer', 'ds', 'Divisional Sec.');
+                createDropdownUI('gnFilterContainer', 'gn', 'GN Divisions');
+
+                updateFilterOptions();
+                filterTable(); // Run filters initially to apply default tab
+
+            } catch (err) {
+                console.error("Failed to load patients", err);
+                document.querySelector('#patientsTable tbody').innerHTML = '<tr><td colspan="7" style="text-align:center; padding: 30px; color: #ef4444;">Error loading patient list.</td></tr>';
+            }
+        });
+
+        function openPatientModalByNic(nic) {
+            const pt = window.patientsData.find(p => p.nic === nic);
+            if (!pt) return;
+            window.activePatientSelection = pt;
+
+            document.getElementById('pmName').value = pt.name || '';
+            document.getElementById('pmPhone').value = pt.patientPhone || '';
+            document.getElementById('pmAge').value = pt.age || '';
+            document.getElementById('pmNic').value = pt.nic || '';
+            document.getElementById('pmEmail').value = pt.patientEmail || '';
+            document.getElementById('pmAddress').value = pt.address || '';
+            document.getElementById('pmGnDivision').value = pt.gnDivision || '';
+            document.getElementById('pmLocation').value = pt.district || pt.divisionalSecretariat || '';
+
+            document.getElementById('pmGuardianName').value = pt.guardianName || '';
+            document.getElementById('pmGuardianPhone').value = pt.guardianPhone || '';
+            document.getElementById('pmGuardianEmail').value = pt.guardianEmail || '';
+
+            document.getElementById('patientModal').classList.add('active');
+        }
+
+        async function submitPatientAccount() {
+            const pt = window.activePatientSelection;
+            if (!pt) return;
+
+            // Hide main modal and show loader
+            document.getElementById('patientModal').classList.remove('active');
+            const loader = document.getElementById('modernLoader');
+            loader.style.display = 'flex';
+
+            const payload = {
+                patientId: pt.id,
+                fullName: pt.name,
+                nic: pt.nic,
+                email: pt.patientEmail,
+                phone: pt.patientPhone,
+                address: pt.address,
+                role: 'PATIENT'
+            };
+
+            try {
+                const res = await fetch('http://localhost:8080/api/v1/users/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const text = await res.text();
+                loader.style.display = 'none'; // Hide loader
+
+                if (res.ok) {
+                    // Show Modern Success Modal
+                    document.getElementById('modernSuccessMsg').textContent = 'Login credentials have been securely emailed to ' + (pt.patientEmail || 'the patient.');
+                    document.getElementById('modernSuccess').style.display = 'flex';
+
+                    // Dynamically update the row so it immediately moves to the other tab
+                    const activeRow = document.getElementById('patient-row-' + pt.nic);
+                    if (activeRow) {
+                        activeRow.setAttribute('data-hasaccount', 'true');
+                        const createBtn = activeRow.querySelector('button[title="Create Patient Account"]');
+                        if (createBtn) createBtn.remove();
+                        const actionsCell = activeRow.querySelector('.actions-cell');
+                        const deleteBtn = activeRow.querySelector('.delete');
+                        if (actionsCell && deleteBtn) {
+                            const shieldHtml = `<button class="icon-btn guardian-btn" title="Create Guardian Account" onclick="openGuardianModal('${pt.guardianName}', '${pt.guardianPhone}', 'CR-${1000 + pt.id}', '${pt.nic}')"><i class="bi bi-shield-plus"></i></button>`;
+                            deleteBtn.insertAdjacentHTML('beforebegin', shieldHtml);
+                        }
+                    }
+                    pt.hasAccount = true;
+                    filterTable();
+                    // Switch UI automatically
+                    // switchAccountTab('generated');
+                } else {
+                    document.getElementById('modernErrorMsg').textContent = 'Failed to Create account: ' + text;
+                    document.getElementById('modernError').style.display = 'flex';
+                }
+            } catch (e) {
+                loader.style.display = 'none';
+                document.getElementById('modernErrorMsg').textContent = 'Connection error: ' + e.message;
+                document.getElementById('modernError').style.display = 'flex';
+            }
+        }
+
+        function openGuardianModal(name, phone, registerId, nic) {
+            document.getElementById('gmName').value = name;
+            document.getElementById('gmPhone').value = phone;
+            document.getElementById('gmTargetNic').value = nic;
+            document.getElementById('guardianModal').classList.add('active');
+        }
+
+        function openProfileModal(nic) {
+            const pt = window.patientsData.find(p => p.nic === nic);
+            if (!pt) return;
+
+            document.getElementById('vpName').textContent = pt.name || '-';
+            document.getElementById('vpNic').textContent = pt.nic || '-';
+            document.getElementById('vpAgeGender').textContent = `${pt.age ? pt.age + ' Yrs' : '-'} / ${pt.gender || '-'}`;
+            document.getElementById('vpPhone').textContent = pt.patientPhone || '-';
+            document.getElementById('vpEmail').textContent = pt.patientEmail || '-';
+
+            // Reg Status
+            const regBadge = document.getElementById('vpRegStatus');
+            if (pt.hasAccount) {
+                regBadge.innerHTML = `<span style="color:#059669;"><i class="bi bi-check-circle-fill"></i> Account Active</span>`;
+            } else {
+                regBadge.innerHTML = `<span style="color:#f59e0b;"><i class="bi bi-clock-history"></i> Needs Account</span>`;
+            }
+
+            document.getElementById('vpAddress').textContent = pt.address || '-';
+            document.getElementById('vpDistrict').textContent = pt.district || '-';
+            document.getElementById('vpGn').textContent = pt.gnDivision || '-';
+            document.getElementById('vpDs').textContent = pt.divisionalSecretariat || '-';
+
+            const latLng = pt.gpsCoordinates || '';
+            const gpsContainer = document.getElementById('vpGpsContainer');
+            if (latLng) {
+                const mapLink = `https://maps.google.com/?q=${latLng}`;
+                gpsContainer.style.display = 'flex';
+                document.getElementById('vpGpsIframe').innerHTML = `<iframe src="https://maps.google.com/maps?q=${latLng}&z=14&output=embed" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>`;
+                document.getElementById('vpGpsBtn').onclick = () => window.open(mapLink, '_blank');
+            } else {
+                gpsContainer.style.display = 'none';
+            }
+
+            document.getElementById('vpGuardName').textContent = pt.guardianName || '-';
+            document.getElementById('vpGuardPhone').textContent = pt.guardianPhone || '-';
+            document.getElementById('vpGuardEmail').textContent = pt.guardianEmail || '-';
+
+            const gRegBadge = document.getElementById('vpGuardStatus');
+            if (pt.hasGuardianAccount) {
+                gRegBadge.innerHTML = `<span style="color:#059669;"><i class="bi bi-shield-check"></i> Connected & Active</span>`;
+            } else {
+                gRegBadge.innerHTML = `<span style="color:#f59e0b;"><i class="bi bi-shield-exclamation"></i> Not Provisioned</span>`;
+            }
+
+            if (pt.reportedBy) {
+                document.getElementById('vpRepName').textContent = pt.reportedBy.fullName || 'System Source';
+                const avatar = document.getElementById('vpRepPhoto');
+                if (pt.reportedBy.profilePhoto) {
+                    avatar.innerHTML = `<img src="${pt.reportedBy.profilePhoto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                } else {
+                    const initials = (pt.reportedBy.fullName || 'S').substring(0, 2).toUpperCase();
+                    avatar.innerHTML = initials;
+                    avatar.style.background = '#e2e8f0';
+                    avatar.style.color = '#475569';
+                }
+            } else {
+                document.getElementById('vpRepName').textContent = 'System Data';
+                document.getElementById('vpRepPhoto').innerHTML = 'S';
+            }
+
+            const statusBadge = document.getElementById('vpStatusBadge');
+            if (pt.status === 'VERIFIED') {
+                statusBadge.textContent = 'VERIFIED';
+                statusBadge.style.background = '#dcfce7';
+                statusBadge.style.color = '#16a34a';
+            } else if (pt.status === 'REJECTED') {
+                statusBadge.textContent = 'REJECTED';
+                statusBadge.style.background = '#fee2e2';
+                statusBadge.style.color = '#dc2626';
+            } else {
+                statusBadge.textContent = 'PENDING VERIFY';
+                statusBadge.style.background = '#fef3c7';
+                statusBadge.style.color = '#d97706';
+            }
+
+            document.getElementById('vpCreatedAt').textContent = pt.createdAt ? new Date(pt.createdAt).toLocaleString() : '-';
+            document.getElementById('vpDesc').textContent = pt.description || 'No description provided by the reporter/officer.';
+
+            document.getElementById('profileModal').classList.add('active');
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        async function submitModal(id, type) {
+            if (type === 'Guardian') {
+                const nic = document.getElementById('gmTargetNic').value;
+                const pt = window.patientsData.find(p => p.nic === nic);
+                closeModal(id);
+                const loader = document.getElementById('modernLoader');
+                loader.style.display = 'flex';
+
+                const payload = {
+                    patientId: pt.id,
+                    fullName: document.getElementById('gmName').value,
+                    phone: document.getElementById('gmPhone').value,
+                    email: pt.guardianEmail,
+                    role: 'GUARDIAN'
+                };
+
+                try {
+                    const res = await fetch('http://localhost:8080/api/v1/users/register', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const text = await res.text();
+                    loader.style.display = 'none';
+
+                    if (res.ok) {
+                        document.getElementById('modernSuccessTitle').textContent = 'Account Created!';
+                        document.getElementById('modernSuccessMsg').textContent = 'Guardian login credentials have been securely emailed to ' + (pt.guardianEmail || 'the guardian.');
+                        document.getElementById('modernSuccess').style.display = 'flex';
+
+                        const activeRow = document.getElementById('patient-row-' + nic);
+                        if (activeRow) {
+                            activeRow.setAttribute('data-hasguardianaccount', 'true');
+                            const createGuardianBtn = activeRow.querySelector('.guardian-btn');
+                            if (createGuardianBtn) createGuardianBtn.remove();
+                        }
+                        if (pt) {
+                            pt.hasGuardianAccount = true;
+                        }
+                        filterTable();
+                    } else {
+                        document.getElementById('modernErrorMsg').textContent = 'Failed to create Guardian Account: ' + text;
+                        document.getElementById('modernError').style.display = 'flex';
+                    }
+                } catch (e) {
+                    loader.style.display = 'none';
+                    document.getElementById('modernErrorMsg').textContent = 'Connection error: ' + e.message;
+                    document.getElementById('modernError').style.display = 'flex';
+                }
+            } else {
+                document.getElementById('modernSuccessTitle').textContent = 'Account Created!';
+                document.getElementById('modernSuccessMsg').textContent = type + ' account created successfully!';
+                document.getElementById('modernSuccess').style.display = 'flex';
+                closeModal(id);
+            }
+        }
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        window.rowToDelete = null;
+
+
+        let currentPatientIdToDelete = null;
+        function deleteRow(btn, id) {
+            currentPatientIdToDelete = id;
+            window.rowToDelete = btn.closest('tr');
+            document.getElementById('modernConfirm').style.display = 'flex';
+        }
+
+        async function executeDeleteRow() {
+            if (!currentPatientIdToDelete) return;
+            const id = currentPatientIdToDelete;
+
+            document.getElementById('modernConfirm').style.display = 'none';
+            const loader = document.getElementById('modernLoader');
+            loader.querySelector('h3').textContent = 'Deleting Patient...';
+            loader.style.display = 'flex';
+
+            try {
+                const res = await fetch('http://localhost:8080/api/v1/patients/' + id, {
+                    method: 'DELETE'
+                });
+
+                const text = await res.text();
+                loader.style.display = 'none';
+
+                if (res.ok) {
+                    if (window.rowToDelete) {
+                        window.rowToDelete.remove();
+                        window.rowToDelete = null;
+                    }
+                    if (window.patientsData) {
+                        window.patientsData = window.patientsData.filter(p => p.id !== id);
+                        // Make sure to re-apply filterTable so all stats update correctly 
+                        if (typeof filterTable === 'function') {
+                            filterTable();
+                        }
+                    }
+                    document.getElementById('modernSuccessTitle').textContent = 'Profile Removed';
+                    document.getElementById('modernSuccessMsg').textContent = 'Patient profile was successfully removed from the system.';
+                    document.getElementById('modernSuccess').style.display = 'flex';
+                } else {
+                    document.getElementById('modernErrorMsg').textContent = 'Failed to delete patient: ' + text;
+                    document.getElementById('modernError').style.display = 'flex';
+                }
+            } catch (e) {
+                console.error(e);
+                loader.style.display = 'none';
+                document.getElementById('modernErrorMsg').textContent = 'Connection error: ' + e.message;
+                document.getElementById('modernError').style.display = 'flex';
+            }
+        }
+
+        // --- GENERIC DROPDOWN LOGIC ---
+        function createDropdownUI(containerId, prefix, title) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            container.innerHTML = `<input type="hidden" id="${prefix}Filter" value="all">
+                <div id="${prefix}DropdownHeader" onclick="toggleDropdown('${prefix}')"
+                    style="padding:8px 12px; background:white; border:1px solid var(--border); border-radius:8px; font-size:13px; font-weight:600; color:var(--text); cursor:pointer; display:flex; justify-content:space-between; align-items:center; user-select:none; height:100%;">
+                    <span id="${prefix}DropdownText" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:140px;">All ${title}</span>
+                    <i class="bi bi-chevron-down" style="font-size:12px; color:var(--text-muted);"></i>
+                </div>
+                <div id="${prefix}DropdownList"
+                    style="display:none; position:absolute; top:100%; left:0; width:100%; background:white; border:1px solid var(--border); border-radius:8px; margin-top:6px; box-shadow:0 10px 15px -3px rgba(0,0,0,0.1); z-index:100; overflow:hidden;">
+                    <div style="padding:10px; border-bottom:1px solid var(--border); background:#f8fafc;">
+                        <div style="position:relative;">
+                            <i class="bi bi-search" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); font-size:12px; color:#94a3b8;"></i>
+                            <input type="text" id="${prefix}Search" autocomplete="off"
+                                onkeyup="filterDropdownOptions('${prefix}')" placeholder="Search..."
+                                style="width:100%; padding:8px 10px 8px 30px; border:1px solid #cbd5e1; border-radius:6px; font-size:12px; outline:none; box-sizing:border-box;">
+                        </div>
+                    </div>
+                    <div id="${prefix}OptionsContainer" style="max-height:195px; overflow-y:auto; padding:4px 0;">
+                    </div>
+                </div>`;
+        }
+
+        function toggleDropdown(prefix) {
+            ['district', 'ds', 'gn'].forEach(p => {
+                if (p !== prefix) {
+                    const l = document.getElementById(p + 'DropdownList');
+                    if (l) l.style.display = 'none';
+                }
+            });
+            const list = document.getElementById(`${prefix}DropdownList`);
+            const searchBox = document.getElementById(`${prefix}Search`);
+            if (list.style.display === 'none') {
+                list.style.display = 'block';
+                if (searchBox) searchBox.focus();
+            } else {
+                list.style.display = 'none';
+            }
+        }
+
+        function selectOption(prefix, value, label) {
+            document.getElementById(`${prefix}Filter`).value = value;
+            document.getElementById(`${prefix}DropdownText`).textContent = label;
+            document.getElementById(`${prefix}DropdownList`).style.display = 'none';
+            document.getElementById(`${prefix}Search`).value = '';
+            filterDropdownOptions(prefix);
+
+            if (prefix === 'district') {
+                document.getElementById('dsFilter').value = 'all';
+                document.getElementById('dsDropdownText').textContent = 'All Divisional Sec.';
+                document.getElementById('gnFilter').value = 'all';
+                document.getElementById('gnDropdownText').textContent = 'All GN Divisions';
+            } else if (prefix === 'ds') {
+                document.getElementById('gnFilter').value = 'all';
+                document.getElementById('gnDropdownText').textContent = 'All GN Divisions';
+
+                if (value !== 'all') {
+                    const loc = window.allLocations.find(l => l.ds.toLowerCase() === value.toLowerCase());
+                    if (loc && loc.dist) {
+                        document.getElementById('districtFilter').value = loc.dist.toLowerCase();
+                        document.getElementById('districtDropdownText').textContent = loc.dist;
+                    }
+                }
+            } else if (prefix === 'gn') {
+                if (value !== 'all') {
+                    const loc = window.allLocations.find(l => l.gn.toLowerCase() === value.toLowerCase());
+                    if (loc) {
+                        if (loc.dist) {
+                            document.getElementById('districtFilter').value = loc.dist.toLowerCase();
+                            document.getElementById('districtDropdownText').textContent = loc.dist;
+                        }
+                        if (loc.ds) {
+                            document.getElementById('dsFilter').value = loc.ds.toLowerCase();
+                            document.getElementById('dsDropdownText').textContent = loc.ds;
+                        }
+                    }
+                }
+            }
+            updateFilterOptions();
+            filterTable();
+        }
+
+        function filterDropdownOptions(prefix) {
+            const input = document.getElementById(`${prefix}Search`).value.toLowerCase();
+            const container = document.getElementById(`${prefix}OptionsContainer`);
+            if (!container) return;
+            const opts = container.querySelectorAll('.dropdown-opt');
+            opts.forEach(opt => {
+                if (opt.getAttribute('data-val') === 'all' || opt.innerText.toLowerCase().includes(input)) {
+                    opt.style.display = 'block';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        }
+
+        function updateFilterOptions() {
+            const curDist = document.getElementById('districtFilter').value;
+            const curDS = document.getElementById('dsFilter').value;
+
+            const availableDists = new Set();
+            const availableDS = new Set();
+            const availableGN = new Set();
+
+            window.allLocations.forEach(loc => {
+                if (loc.dist) availableDists.add(loc.dist);
+
+                const distMatch = (curDist === 'all' || (loc.dist && loc.dist.toLowerCase() === curDist));
+                const dsMatch = (curDS === 'all' || (loc.ds && loc.ds.toLowerCase() === curDS));
+
+                if (distMatch && loc.ds) availableDS.add(loc.ds);
+                if (distMatch && dsMatch && loc.gn) availableGN.add(loc.gn);
+            });
+
+            populateDropdownOptions('district', availableDists, 'All Districts');
+            populateDropdownOptions('ds', availableDS, 'All Divisional Sec.');
+            populateDropdownOptions('gn', availableGN, 'All GN Divisions');
+        }
+
+        function populateDropdownOptions(prefix, itemSet, allText) {
+            const container = document.getElementById(`${prefix}OptionsContainer`);
+            if (!container) return;
+            let currentVal = document.getElementById(`${prefix}Filter`).value;
+
+            let html = `<div class="dropdown-opt" data-val="all" onclick="selectOption('${prefix}', 'all', '${allText}')"
+                style="padding:8px 12px; font-size:13px; font-weight:600; cursor:pointer; color:var(--primary);">
+                ${allText}
+            </div>`;
+
+            let hasCurrent = false;
+
+            Array.from(itemSet).sort().forEach(item => {
+                const val = item.toLowerCase();
+                const isSelected = (val === currentVal);
+                if (isSelected) hasCurrent = true;
+                html += `<div class="dropdown-opt" data-val="${val}" onclick="selectOption('${prefix}', '${val}', '${item.replace(/'/g, "\\'")}')"
+                    style="padding:8px 12px; font-size:13px; cursor:pointer; transition:background 0.2s; color:var(--text-dark); background:${isSelected ? '#f1f5f9' : 'transparent'};"
+                    onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='${isSelected ? '#f1f5f9' : 'transparent'}'">
+                    ${item}
+                </div>`;
+            });
+
+            if (currentVal !== 'all' && !hasCurrent) {
+                document.getElementById(`${prefix}Filter`).value = 'all';
+                document.getElementById(`${prefix}DropdownText`).textContent = allText;
+                currentVal = 'all';
+            }
+
+            container.innerHTML = html;
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrappers = [
+                { id: 'districtDropdownList', head: 'districtDropdownHeader' },
+                { id: 'dsDropdownList', head: 'dsDropdownHeader' },
+                { id: 'gnDropdownList', head: 'gnDropdownHeader' }
+            ];
+
+            wrappers.forEach(w => {
+                const list = document.getElementById(w.id);
+                const head = document.getElementById(w.head);
+                if (list && head) {
+                    if (!head.contains(e.target) && !list.contains(e.target)) {
+                        list.style.display = 'none';
+                    }
+                }
+            });
+        });
+
+        function switchAccountTab(tab) {
+            const tabFilterElement = document.getElementById('accountTabFilter');
+            if (tabFilterElement) tabFilterElement.value = tab;
+
+            const btnPending = document.getElementById('tabPending');
+            const btnGenerated = document.getElementById('tabGenerated');
+            const btnAllDone = document.getElementById('tabAllDone');
+
+            // Reset all styles
+            [btnPending, btnGenerated, btnAllDone].forEach(btn => {
+                if (btn) {
+                    btn.style.background = 'transparent';
+                    btn.style.fontWeight = '500';
+                    btn.style.color = '#64748b';
+                    btn.style.boxShadow = 'none';
+                }
+            });
+
+            // Activate target tab
+            let targetBtn = null;
+            if (tab === 'pending') targetBtn = btnPending;
+            else if (tab === 'generated') targetBtn = btnGenerated;
+            else if (tab === 'allDone') targetBtn = btnAllDone;
+
+            if (targetBtn) {
+                targetBtn.style.background = 'white';
+                targetBtn.style.fontWeight = '600';
+                targetBtn.style.color = 'var(--primary)';
+                targetBtn.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
+            }
+
+            if (typeof filterTable === 'function') filterTable();
+        }
+
+        function filterTable() {
+            const distFilterElem = document.getElementById("districtFilter");
+            const dsFilterElem = document.getElementById("dsFilter");
+            const gnFilterElem = document.getElementById("gnFilter");
+
+            const distFilter = distFilterElem ? distFilterElem.value : 'all';
+            const dsFilter = dsFilterElem ? dsFilterElem.value : 'all';
+            const gnFilter = gnFilterElem ? gnFilterElem.value : 'all';
+
+            const rows = document.querySelectorAll("#patientsTable tbody tr");
+            let visibleCount = 0;
+
+            rows.forEach(row => {
+                const rDist = row.getAttribute('data-district') || "none";
+                const rDs = row.getAttribute('data-ds') || "none";
+                const rGn = row.getAttribute('data-gn') || "none";
+
+                const matchDist = (distFilter === 'all' || rDist === distFilter);
+                const matchDs = (dsFilter === 'all' || rDs === dsFilter);
+                const matchGn = (gnFilter === 'all' || rGn === gnFilter);
+
+                const tabFilterElement = document.getElementById('accountTabFilter');
+                let matchTab = true;
+
+                if (tabFilterElement) {
+                    const tabFilter = tabFilterElement.value;
+                    const rHasAccount = row.getAttribute('data-hasaccount') === 'true';
+                    const rHasGuardianAccount = row.getAttribute('data-hasguardianaccount') === 'true';
+
+                    if (tabFilter === 'pending') {
+                        matchTab = !rHasAccount;
+                    } else if (tabFilter === 'generated') {
+                        matchTab = (rHasAccount && !rHasGuardianAccount);
+                    } else if (tabFilter === 'allDone') {
+                        matchTab = (rHasAccount && rHasGuardianAccount);
+                    }
+                }
+
+                if (matchDist && matchDs && matchGn && matchTab) {
+                    row.style.display = '';
+                    visibleCount++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            const pageTxt = document.getElementById('pageCountText');
+            if (pageTxt) {
+                pageTxt.textContent = 'Showing ' + visibleCount + ' filtered patients';
+            }
+
+            // Global Updates
+            if (window.patientsData) {
+                const allLength = window.patientsData.length.toLocaleString();
+                const vCount = window.patientsData.filter(p => p.status === 'VERIFIED').length.toLocaleString();
+                const pCount = window.patientsData.filter(p => p.status === 'PENDING').length.toLocaleString();
+
+                const ptCard = document.getElementById('totalPatientsCount');
+                if (ptCard) ptCard.textContent = allLength;
+
+                const vrCard = document.getElementById('verifiedCount');
+                if (vrCard) vrCard.textContent = vCount;
+
+                const pdCard = document.getElementById('pendingCount');
+                if (pdCard) pdCard.textContent = pCount;
+            }
+        }
+
+        function resetFilters() {
+            if (document.getElementById("districtFilter")) selectOption('district', 'all', 'All Districts');
+            if (document.getElementById("dsFilter")) selectOption('ds', 'all', 'All Divisional Sec.');
+            if (document.getElementById("gnFilter")) selectOption('gn', 'all', 'All GN Divisions');
+            filterTable();
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        document.addEventListener('click', function (event) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+    <!-- Logout Confirmation Modal -->
+    <style>
+        .logout-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .logout-cancel {
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+        }
+
+        .logout-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .logout-confirm {
+            border: none;
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-confirm:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        #logoutModal .modal-content {
+            border-radius: 16px !important;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: logoutModalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes logoutModalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+    </style>
+    </style>
+    <div id="logoutModal"
+        style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        <div class="modal-content"
+            style="background: white; max-width: 380px; text-align: center; padding: 32px 24px; align-items: center;">
+            <div
+                style="width: 64px; height: 64px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; color: #ef4444; margin-left: auto; margin-right: auto;">
+                <i class="bi bi-box-arrow-right" style="position: relative; left: 2px;"></i>
+            </div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Confirm Logout</h2>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 28px; line-height: 1.5; padding: 0 10px;">Are you
+                sure you want to log out of the admin portal? You will need to enter your credentials to return.</p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="logout-btn logout-cancel"
+                    onclick="document.getElementById('logoutModal').style.display='none'">Cancel</button>
+                <button class="logout-btn logout-confirm" onclick="confirmLogout()">Yes, Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+            window.location.replace(targetLogin);
+        }
+    </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const adminProfile = document.querySelector('.admin-profile');
+    if (adminProfile) {
+        const fullName = localStorage.getItem('userFullName') || 'System Admin';
+        const photo = localStorage.getItem('profilePhoto');
+        const role = localStorage.getItem('userRole') || 'Administrator';
+
+        const nameEl = adminProfile.querySelector('.admin-info h4');
+        if (nameEl) nameEl.textContent = fullName;
+        
+        const roleEl = adminProfile.querySelector('.admin-info p');
+        if (roleEl) {
+            // some pages have location instead of role here, but we will put role for now, or just leave it
+            // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+        }
+
+        const imgEl = adminProfile.querySelector('img');
+        if (imgEl) {
+            if (photo) {
+                imgEl.src = photo;
+            } else {
+                const initials = fullName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                imgEl.src = 'https://ui-avatars.com/api/?name=' + initials + '&background=0f766e&color=fff';
+            }
+        }
+    }
+});
+</script>
+
+
+
+
+<script>
+    function toggleNotifications() { } 
+    document.addEventListener('click', function (event) { });
+
+    function setupNotifications(userId) {
+        let dropdownOpen = false;
+        const wrapperElement = document.querySelector('.notification-wrapper');
+        const dropdownElement = document.getElementById('notificationDropdown') || document.querySelector('.notification-dropdown');
+        const badgeElement = document.querySelector('.notification-badge-new') || document.querySelector('.notification-badge');
+        const listElement = document.querySelector('.notification-list');
+        
+        if (wrapperElement && dropdownElement) {
+            const iconEl = wrapperElement.querySelector('.notification-icon') || wrapperElement.querySelector('.notification-icon-bell') || wrapperElement;
+            iconEl.removeAttribute('onclick');
+            wrapperElement.addEventListener("click", (e) => {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                if (dropdownOpen) dropdownElement.classList.add("show");
+                else dropdownElement.classList.remove("show");
+            });
+            document.addEventListener("click", () => {
+                if (dropdownOpen) {
+                    dropdownOpen = false;
+                    dropdownElement.classList.remove("show");
+                }
+            });
+            dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+        }
+
+        function fetchNotifications() {
+            if (!userId) return;
+            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.unreadCount > 0) {
+                        if (badgeElement) {
+                            badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                            badgeElement.style.display = 'flex';
+                        }
+                    } else {
+                        if (badgeElement) badgeElement.style.display = 'none';
+                    }
+                    if (!data.notifications || data.notifications.length === 0) {
+                        if (listElement) listElement.innerHTML = `<div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;"><i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>No new notifications</div>`;
+                    } else {
+                        if (listElement) listElement.innerHTML = "";
+                        data.notifications.forEach(notif => {
+                            let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                            if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                            if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                            if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+                            
+                            const date = new Date(notif.createdAt);
+                            let secs = Math.floor((new Date() - date) / 1000);
+                            if (secs < 0) secs = 0;
+                            let timeStr = secs + " secs ago";
+                            if (secs <= 10) timeStr = "just now";
+                            else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                            else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                            else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+                            
+                            const item = document.createElement("div");
+                            item.className = 'notification-item ' + (!notif.read ? 'unread' : '');
+                            item.style.padding = "16px";
+                            item.style.borderBottom = "1px solid var(--border)";
+                            item.style.display = "flex";
+                            item.style.gap = "12px";
+                            item.style.cursor = "pointer";
+                            item.style.transition = "0.2s";
+                            if (!notif.read) item.style.background = "#f8fafc";
+                            
+                            item.innerHTML = `
+                                <div class="noti-icon" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: ${notif.type === 'SUCCESS' ? 'var(--success-bg)' : notif.type === 'WARNING' ? 'var(--warning-bg)' : notif.type === 'ALERT' ? 'var(--danger-bg)' : '#eff6ff'}; color: ${notif.type === 'SUCCESS' ? 'var(--success)' : notif.type === 'WARNING' ? 'var(--warning)' : notif.type === 'ALERT' ? 'var(--danger)' : '#3b82f6'};">${iconHtml}</div>
+                                <div class="noti-content" style="flex-grow: 1;">
+                                    <h4 style="font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark);">${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                    <p style="font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                    <span class="noti-time" style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;">${timeStr}</span>
+                                </div>
+                                ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                            `;
+                            item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                            item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+                            
+                            item.addEventListener("click", () => {
+                                if (!notif.read) {
+                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        .then(() => {
+                                            notif.read = true;
+                                            item.classList.remove("unread");
+                                            item.style.background = "transparent";
+                                            const dot = item.querySelector(".u-dot");
+                                            if (dot) dot.remove();
+                                            if (badgeElement) {
+                                                let curr = parseInt(badgeElement.textContent);
+                                                if (!isNaN(curr) && curr > 0) {
+                                                    curr--;
+                                                    if (curr === 0) badgeElement.style.display = 'none';
+                                                    else badgeElement.textContent = curr;
+                                                }
+                                            }
+                                        });
+                                }
+                            });
+                            
+                            if (listElement) listElement.appendChild(item);
+                        });
+                    }
+                })
+                .catch(err => console.error("Notification load error:", err));
+        }
+        fetchNotifications();
+    }
+    function initNotifications() {
+        const userId = localStorage.getItem('userId') || '1';
+        setupNotifications(userId);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNotifications);
+    } else {
+        initNotifications();
+    }
+</script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+

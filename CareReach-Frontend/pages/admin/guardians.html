@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Core Session Manager -->
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Manage Guardians</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* CareReach Theme Colors */
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+
+            /* Sidebar Specific Colors (Dark Highlighted) */
+            --sidebar-bg: #042f2e;
+            --sidebar-hover: rgba(255, 255, 255, 0.1);
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+
+            --bg-page: #f0f7f6;
+            --bg-surface: #ffffff;
+            --text-dark: #0f172a;
+            --text-normal: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+
+            /* Status Colors */
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+
+            --sidebar-width: 260px;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family);
+        }
+
+        body {
+            background-color: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, 0.15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto;
+            /* Hide scrollbar for IE, Edge and Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .sidebar-menu::-webkit-scrollbar {
+            display: none;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: 0.7;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            transition: color 0.2s;
+            opacity: 0.8;
+        }
+
+        .menu-item:hover {
+            background-color: var(--sidebar-hover);
+            color: #ffffff;
+        }
+
+        .menu-item:hover i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        /* GUARDIANS MENU ACTIVE */
+        .menu-item.active {
+            background-color: var(--primary);
+            color: #ffffff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .menu-item.active i {
+            color: #ffffff;
+            opacity: 1;
+        }
+
+        .badge-alert {
+            margin-left: auto;
+            background: var(--danger);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 99px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+
+        /* --- MAIN CONTENT --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* TOP HEADER */
+        .top-header {
+            height: 72px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: var(--bg-page);
+            padding: 8px 16px;
+            border-radius: 99px;
+            width: 320px;
+        }
+
+        .header-search i {
+            color: var(--text-muted);
+            margin-right: 8px;
+        }
+
+        .header-search input {
+            border: none;
+            background: transparent;
+            outline: none;
+            width: 100%;
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .action-icon {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-icon:hover {
+            color: var(--primary);
+        }
+
+        .action-icon .dot {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 8px;
+            height: 8px;
+            background: var(--danger);
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+            text-decoration: none;
+        }
+
+        .admin-profile:hover .admin-info h4 {
+            color: var(--primary);
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .admin-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            transition: color 0.2s;
+        }
+
+        .admin-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* --- CONTENT AREA & METRICS --- */
+        .content-area {
+            padding: 32px;
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Metric Cards */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .metric-card {
+            background: var(--bg-surface);
+            padding: 24px;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(15, 118, 110, 0.08);
+        }
+
+        .metric-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .icon-teal {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        .icon-blue {
+            background: #eff6ff;
+            color: #3b82f6;
+        }
+
+        .metric-info h3 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            line-height: 1.2;
+        }
+
+        .metric-info p {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* Panels & Tables */
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 16px;
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 600;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px;
+            font-size: 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .user-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 13px;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: var(--text-dark);
+            display: block;
+        }
+
+        .user-id {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .contact-info span {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: 1px solid transparent;
+            color: var(--text-muted);
+            font-size: 16px;
+            cursor: pointer;
+            padding: 6px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .icon-btn:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--border);
+        }
+
+        .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+        }
+
+        /* Notifications */
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon-bell {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon-bell:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-box {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            width: 400px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+            <div><div style="line-height: 1.2;">CARE<span>REACH</span></div><div style="font-size: 11px; font-weight: 500; color: #5eead4; opacity: 0.7; letter-spacing: 0.3px;">Admin Control Center</div></div>
+        </div>
+
+        <nav class="sidebar-menu">
+            <div class="menu-title">Main</div>
+            <a href="dashboard.html" class="menu-item">
+                <i class="bi bi-grid-1x2-fill"></i> Dashboard
+            </a>
+            <a href="emergency.html" class="menu-item">
+                <i class="bi bi-exclamation-triangle"></i> Emergencies
+                
+            </a>
+
+            <div class="menu-title">Network Management</div>
+            <a href="patients.html" class="menu-item">
+                <i class="bi bi-person-rolodex"></i> Patients
+            </a>
+            <a href="doctors.html" class="menu-item">
+                <i class="bi bi-heart-pulse"></i> Doctors
+            </a>
+            <a href="guardians.html" class="menu-item active">
+                <i class="bi bi-shield-check"></i> Guardians
+            </a>
+            <a href="officers.html" class="menu-item">
+                <i class="bi bi-person-badge"></i> Officers
+            </a>
+            <a href="volunteers.html" class="menu-item">
+                <i class="bi bi-people"></i> Volunteers
+            </a>
+
+            <div class="menu-title">Insights & Reports</div>
+            <a href="analytics.html" class="menu-item">
+                <i class="bi bi-graph-up"></i> Analytics
+            </a>
+            <a href="reports.html" class="menu-item">
+                <i class="bi bi-file-earmark-text"></i> Reports
+            </a>
+
+            <div class="menu-title" style="margin-top:auto;">Account</div>
+            <a href="#" class="menu-item" onclick="logout()" style="color: #fca5a5; margin-bottom: 24px;">
+                <i class="bi bi-box-arrow-left" style="color: #fca5a5;"></i> Logout
+            </a>
+        </nav>
+    </aside>
+
+    <div id="modernConfirm" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fee2e2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Delete Guardian Profile?</h3>
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;">Are you sure you
+                want to remove this patient profile? This action will also unlink associated guardians and cannot be
+                undone.</p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="btn btn-outline"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 15px; border: 1px solid var(--border); color: var(--text-dark); background: transparent;"
+                    onclick="document.getElementById('modernConfirm').style.display='none'">Cancel</button>
+                <button class="btn btn-primary"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 15px; background: #ef4444; color: white; border: none;"
+                    onclick="executeDeleteGuardian()">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div id="modernLoader" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 24px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <div
+                style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;">
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            </style>
+            <h3 style="font-size: 16px; color: var(--text-dark); margin: 0;">Creating Account...</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0 0 0;">Please wait while we secure
+                credentials.</p>
+        </div>
+    </div>
+
+    <div id="modernSuccess" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Account Created!</h3>
+            <p id="modernSuccessMsg"
+                style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;"></p>
+            <button class="btn btn-primary"
+                style="width: 100%; padding: 10px; border-radius: 8px; font-size: 15px; color: white;"
+                onclick="document.getElementById('modernSuccess').style.display='none'">Awesome</button>
+        </div>
+    </div>
+
+    <div id="modernError" class="modal-overlay"
+        style="display: none; z-index: 1000; align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Request Failed</h3>
+            <p id="modernErrorMsg"
+                style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;"></p>
+            <button class="btn btn-primary"
+                style="width: 100%; padding: 10px; border-radius: 8px; font-size: 15px; background: #dc2626; border: none; color: white;"
+                onclick="document.getElementById('modernError').style.display='none'">OK</button>
+        </div>
+    </div>
+
+    <!-- Guardian Profile Modal -->
+    <div id="viewGuardianProfileModal" class="modal-overlay"
+        style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+        <div class="modal-box hf-modal"
+            style="width: 100%; max-width: 900px; max-height: 90vh; overflow-y: auto; overflow-x: hidden; padding: 24px 30px; border-radius: 16px; background: #fafcfa; position: relative;">
+            <button class="icon-btn"
+                style="position: absolute; right: 24px; top: 24px; background: white; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.02); width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.2s; z-index: 10;"
+                onclick="document.getElementById('viewGuardianProfileModal').style.display='none'">
+                <i class="bi bi-x" style="font-size: 20px;"></i>
+            </button>
+
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div id="vgpAvatar"
+                        style="width: 80px; height: 80px; border-radius: 50%; background: #0f766e; color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 700; box-shadow: 0 4px 15px rgba(15,118,110,0.2);">
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <h2 id="vgpName"
+                            style="font-size: 24px; font-weight: 800; color: var(--text-dark); margin: 0; letter-spacing: -0.5px;">
+                        </h2>
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="bi bi-shield-check" style="color: #0f766e;"></i>
+                            <span style="font-size: 14px; color: #0f766e; font-weight: 600;">Guardian Profile</span>
+                            <span style="color: var(--text-muted);">•</span>
+                            <span id="vgpIdBadge"
+                                style="font-size: 13px; color: var(--text-muted); font-weight: 600;"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: flex; gap: 12px;">
+                    <!-- Metric 1 -->
+                    <div
+                        style="background: white; border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; min-width: 140px;">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 50%; background: #eff6ff; color: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                            <i class="bi bi-link-45deg"></i>
+                        </div>
+                        <div>
+                            <div id="vgpKpiLinked" style="font-size: 15px; font-weight: 700; color: var(--text-dark);">0
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Linked Patients</div>
+                        </div>
+                    </div>
+                    <!-- Metric 2 -->
+                    <div
+                        style="background: white; border: 1px solid var(--border); padding: 12px 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; min-width: 130px;">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 50%; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                            <i class="bi bi-patch-check"></i>
+                        </div>
+                        <div>
+                            <div style="font-size: 15px; font-weight: 700; color: var(--text-dark);">Verified</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Status</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Details Section -->
+            <div
+                style="background: white; padding: 24px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 16px;">
+                <h6
+                    style="color: #0f766e; font-size: 15px; margin: 0 0 20px 0; font-weight: 700; display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                    <i class="bi bi-person"></i> Identity & Contact
+                </h6>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <!-- Email -->
+                    <div
+                        style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px;">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+                        <div>
+                            <span
+                                style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600;">Email
+                                Address</span>
+                            <span id="vgpEmail"
+                                style="font-size: 14px; color: var(--text-dark); font-weight: 600;"></span>
+                        </div>
+                    </div>
+                    <!-- Phone -->
+                    <div
+                        style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <div
+                                style="width: 36px; height: 36px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div>
+                                <span
+                                    style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600;">Phone
+                                    Number</span>
+                                <span id="vgpPhone"
+                                    style="font-size: 14px; color: var(--text-dark); font-weight: 600;"></span>
+                            </div>
+                        </div>
+                        <a id="vgpCallBtn" href="#"
+                            style="width: 32px; height: 32px; border-radius: 8px; background: #dcfce7; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 14px; text-decoration: none;"
+                            title="Call"><i class="bi bi-telephone-outbound"></i></a>
+                    </div>
+                    <!-- NIC -->
+                    <div
+                        style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px;">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                            <i class="bi bi-credit-card-2-front"></i>
+                        </div>
+                        <div>
+                            <span
+                                style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600;">National
+                                Identity Card</span>
+                            <span id="vgpNic"
+                                style="font-size: 14px; color: var(--text-dark); font-weight: 600;"></span>
+                        </div>
+                    </div>
+                    <!-- Location -->
+                    <div
+                        style="display: flex; align-items: center; gap: 16px; border-bottom: 1px solid #f1f5f9; padding-bottom: 16px;">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 8px; background: #f0fdf4; color: #16a34a; display: flex; align-items: center; justify-content: center; font-size: 16px;">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        <div>
+                            <span
+                                style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600;">Address
+                                & Region</span>
+                            <span id="vgpAddress"
+                                style="font-size: 14px; color: var(--text-dark); font-weight: 600;"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Banner -->
+            <div
+                style="margin-top: 16px; background: white; border: 1px solid var(--border); border-radius: 12px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div
+                        style="width: 44px; height: 44px; border-radius: 50%; background: #0f766e; color: white; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; font-weight: 700; color: #0f766e;">Trusted Guardian Identity</div>
+                        <div style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">This profile is
+                            verified and safely linked.</div>
+                    </div>
+                </div>
+                <div
+                    style="background: #f0fdf4; color: #16a34a; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 600; border: 1px solid #dcfce7; display: flex; align-items: center; gap: 6px;">
+                    <i class="bi bi-check-circle"></i> Identity Verified
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div style="margin-top: 16px; display: flex; justify-content: flex-end; gap: 12px;">
+                <button id="vgpViewPatientsBtn"
+                    style="padding: 10px 24px; border: none; background: #0f766e; color: white; font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                    <i class="bi bi-people"></i> View Linked Patients
+                </button>
+                <button onclick="document.getElementById('viewGuardianProfileModal').style.display='none'"
+                    style="padding: 10px 24px; border: 1px solid var(--border); background: white; color: var(--text-dark); font-size: 14px; font-weight: 600; border-radius: 8px; cursor: pointer;">
+                    <i class="bi bi-x"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="profileModal"
+        style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 1050; align-items: center; justify-content: center; display: none;">
+        <div class="modal-box" style="padding:0; overflow:hidden; max-width:600px; width:100%;">
+            <div style="background:#0f766e; color:white; padding:24px; display:flex; flex-direction:column; gap:16px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div style="display:flex; align-items:center; gap:16px;">
+                        <div
+                            style="background:rgba(255,255,255,0.15); width:52px; height:52px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px;">
+                            <i class="bi bi-file-earmark-person"></i>
+                        </div>
+                        <div>
+                            <h2 style="margin:0; font-size:18px; font-weight:800;">Patient Profile Overview</h2>
+                            <p style="margin:2px 0 0 0; font-size:13px; opacity:0.8; font-weight:500;">Comprehensive
+                                patient record</p>
+                        </div>
+                    </div>
+                    <button class="icon-btn" onclick="closeModal('profileModal')"
+                        style="color:white; background:rgba(255,255,255,0.15); border:none; width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:0.2s;"><i
+                            class="bi bi-x-lg"></i></button>
+                </div>
+                <div
+                    style="background:rgba(0,0,0,0.15); padding:10px 16px; border-radius:8px; font-size:12px; font-weight:600; display:flex; justify-content:space-between; align-items:center; gap:8px;">
+                    <div><i class="bi bi-clock"></i> <span id="vpCreatedAt"></span></div>
+                    <div><span id="vpStatusBadge"
+                            style="display:inline-block; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:700;"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding:0; background:#f8fafc; overflow-y:auto; max-height:70vh;">
+                <!-- SYSTEM META / REPORTER SECTION -->
+                <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-person-fill"></i>
+                        </div>
+                        REPORTING VOLUNTEER
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div id="vpRepPhoto"
+                            style="width:36px; height:36px; border-radius:50%; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:bold;">
+                        </div>
+                        <div style="display:flex; flex-direction:column;">
+                            <span
+                                style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Volunteer
+                                Name</span>
+                            <span id="vpRepName" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PATIENT SECTION -->
+                <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-activity"></i>
+                        </div>
+                        PATIENT INFORMATION
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 20px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-person-badge"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Full
+                                    Name</span>
+                                <span id="vpName" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-credit-card-2-front"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">NIC
+                                    Number</span>
+                                <span id="vpNic" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Age
+                                    & Gender</span>
+                                <span id="vpAgeGender" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Contact</span>
+                                <span id="vpPhone" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Email</span>
+                                <span id="vpEmail"
+                                    style="font-size:14px; font-weight:700; color:#0f172a; word-break: break-all;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-person-check"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Account
+                                    Status</span>
+                                <span id="vpRegStatus" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div
+                            style="display:flex; align-items:flex-start; gap:12px; grid-column: 1 / -1; margin-top:8px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:flex-start; justify-content:center; font-size:16px; flex-shrink:0; padding-top: 6px;">
+                                <i class="bi bi-card-text"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Situation
+                                    Description</span>
+                                <span id="vpDesc"
+                                    style="font-size:14px; font-weight:500; color:#475569; line-height:1.5;">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GUARDIAN SECTION -->
+                <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-shield-check"></i>
+                        </div>
+                        GUARDIAN INFORMATION
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-person-bounding-box"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Guardian
+                                    Name</span>
+                                <span id="vpGuardName" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-telephone"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Contact
+                                    Number</span>
+                                <span id="vpGuardPhone" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-envelope"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Email</span>
+                                <span id="vpGuardEmail"
+                                    style="font-size:14px; font-weight:700; color:#0f172a; word-break: break-all;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-shield-lock"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">System
+                                    Access</span>
+                                <span id="vpGuardStatus"
+                                    style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- LOCATION SECTION -->
+                <div style="padding:24px; background:white;">
+                    <div
+                        style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
+                        <div
+                            style="background:#0f766e; color:white; width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px;">
+                            <i class="bi bi-geo-alt"></i>
+                        </div>
+                        LOCATION INFORMATION
+                    </div>
+
+                    <div style="display:flex; align-items:flex-start; gap:12px; margin-bottom:24px;">
+                        <div
+                            style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                            <i class="bi bi-pin-map"></i>
+                        </div>
+                        <div style="display:flex; flex-direction:column;">
+                            <span
+                                style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Physical
+                                Address</span>
+                            <span id="vpAddress" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                        </div>
+                    </div>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:24px 20px; margin-bottom:24px;">
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">District</span>
+                                <span id="vpDistrict" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-buildings"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">Divisional
+                                    Secretariat</span>
+                                <span id="vpDs" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                        <div style="display:flex; align-items:flex-start; gap:12px;">
+                            <div
+                                style="background:#f1f5f9; color:#0f766e; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;">
+                                <i class="bi bi-diagram-3"></i>
+                            </div>
+                            <div style="display:flex; flex-direction:column;">
+                                <span
+                                    style="font-size:11px; font-weight:800; color:#64748b; margin-bottom:4px; text-transform:uppercase;">GN
+                                    Division</span>
+                                <span id="vpGn" style="font-size:14px; font-weight:700; color:#0f172a;">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Map Block Upgrade -->
+                    <div id="vpGpsContainer"
+                        style="display:none; background: #e6f7ec; margin: 16px 0; border-radius: 12px; flex-wrap: wrap; border: 1px solid #cbf0d8; position: relative; overflow: hidden; min-height: 150px;">
+                        <div id="vpGpsIframe" style="flex: 1; border-right: 1px solid #cbf0d8; min-width: 200px;"></div>
+                        <div
+                            style="padding: 16px; display: flex; flex-direction: column; justify-content: center; gap: 12px; min-width: 180px; z-index: 1;">
+                            <div style="display: flex; flex-direction: column; gap: 4px;">
+                                <strong style="color: #0d9488; font-size: 14px; font-weight: 800;">Location
+                                    Preview</strong>
+                                <span style="color: #0d9488; font-size: 12px; font-weight: 500;">View exact
+                                    location</span>
+                            </div>
+                            <button class="btn" id="vpGpsBtn"
+                                style="background: #0d9488; color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; display: inline-flex; gap: 8px; align-items: center; justify-content: center; box-shadow: 0 4px 6px -1px rgba(13,148,136,0.2); cursor: pointer;"><i
+                                    class="bi bi-map-fill"></i> View on Map</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <main class="main-content">
+
+        <header class="top-header">
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+                <div class="header-search">
+                    <i class="bi bi-search"></i>
+                    <input type="text" placeholder="Search guardians by name or ID...">
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <!-- Notifications Icon -->
+                <div class="notification-wrapper">
+                    <div class="notification-icon-bell" onclick="toggleNotifications()" title="Notifications">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge-new">2</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark
+                                all read</a>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i
+                                        class="bi bi-calendar-event"></i></div>
+                                <div class="noti-content">
+                                    <h4>New Registration</h4>
+                                    <p>Dr. Silva has submitted registration for approval.</p>
+                                    <span style="font-size:11px;color:var(--text-muted);">2 hours ago</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+                            <a href="notifications.html"
+                                style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See
+                                all notifications</a>
+                        </div>
+                    </div>
+                </div>
+                <a href="settings.html" class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
+                    <div class="admin-info">
+                        <h4>System Admin</h4>
+                        <p>Colombo HQ</p>
+                    </div>
+                </a>
+            </div>
+        </header>
+
+        <div class="content-area">
+
+            <div class="page-header">
+                <div>
+                    <h1>Guardian Management</h1>
+                    <p>Manage family guardians and their linked patient profiles.</p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-icon icon-teal"><i class="bi bi-shield-check"></i></div>
+                    <div class="metric-info">
+                        <h3 id="statTotalGuardians">0</h3>
+                        <p>Total Guardians</p>
+                    </div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-icon icon-blue"><i class="bi bi-link-45deg"></i></div>
+                    <div class="metric-info">
+                        <h3 id="statLinkedPatients">0</h3>
+                        <p>Total Linked Patients</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <h2 class="panel-title">Registered Guardians</h2>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Guardian Info</th>
+                                <th>Linked Patient</th>
+                                <th>Contact Details</th>
+                                <th>View Patient Details</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="guardianTableBody">
+                            <!-- Populated dynamically via JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+        }
+        document.addEventListener('click', function (event) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", () => {
+            loadGuardians();
+        });
+
+        // Global state
+        window.allGuardiansData = [];
+
+        async function loadGuardians() {
+            try {
+                const res = await fetch('http://localhost:8080/api/v1/admin/guardians');
+                if (!res.ok) throw new Error("Failed to fetch guardian data");
+                const data = await res.json();
+                window.allGuardiansData = data;
+                renderGuardians(data);
+
+                // Update stats
+                document.getElementById('statTotalGuardians').innerText = data.length;
+                const totalLinked = data.reduce((sum, g) => sum + (g.linkedPatientsCount || 0), 0);
+                document.getElementById('statLinkedPatients').innerText = totalLinked;
+            } catch (error) {
+                console.error("Error loading guardians:", error);
+            }
+        }
+
+        function renderGuardians(guardians) {
+            const tbody = document.getElementById('guardianTableBody');
+            tbody.innerHTML = '';
+
+            guardians.forEach((g, index) => {
+                const initials = g.fullName.substring(0, 2).toUpperCase();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="user-cell" style="display: flex; align-items: center; gap: 12px;">
+                            <img src="${g.profilePhoto || g.profileImage || 'https://ui-avatars.com/api/?name=' + encodeURIComponent(g.fullName) + '&background=ccfbf1&color=0f766e'}" alt="${g.fullName}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; flex-shrink: 0; background: #ccfbf1;">
+                            <div>
+                                <span class="user-name" style="font-weight: 600; color: var(--text-dark); display: block;">${g.fullName}</span>
+                                <span class="user-id" style="font-size: 12px; color: var(--text-muted);">GUA-${g.id.toString().padStart(4, '0')}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="font-weight: 600; color: #0f766e;">${g.linkedPatientsCount} Linked</span>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <span><i class="bi bi-envelope"></i> ${g.email}</span>
+                            <span>lasi-telephone"></i> ${g.phone || 'N/A'}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn" style="padding: 6px 14px; font-size: 13px; border: 1px solid var(--border); background: white; color: var(--text-dark);" onclick="viewGuardianDetails(${index})">
+                            <i class="bi bi-eye"></i> View Profile
+                        </button>
+                    </td>
+                    <td>
+                        <button class="icon-btn delete" title="Remove Guardian" onclick="deleteGuardian(${g.id})"><i class="bi bi-trash"></i></button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function viewGuardianDetails(index) {
+            const gua = window.allGuardiansData[index];
+            if (!gua) return;
+
+            document.getElementById('vgpAvatar').textContent = gua.fullName.substring(0, 2).toUpperCase();
+            document.getElementById('vgpName').textContent = gua.fullName;
+            document.getElementById('vgpIdBadge').textContent = 'GUA-' + gua.id.toString().padStart(4, '0');
+            document.getElementById('vgpKpiLinked').textContent = gua.linkedPatientsCount || 0;
+
+            document.getElementById('vgpEmail').textContent = gua.email;
+            document.getElementById('vgpPhone').textContent = gua.phone || 'N/A';
+            document.getElementById('vgpCallBtn').href = `tel:${gua.phone}`;
+            document.getElementById('vgpNic').textContent = gua.nic || 'N/A';
+
+            let addr = gua.address || 'No Address Provided';
+            if (gua.district) addr += `, ${gua.district}`;
+            document.getElementById('vgpAddress').textContent = addr;
+
+            document.getElementById('vgpViewPatientsBtn').onclick = async () => {
+                const btn = document.getElementById('vgpViewPatientsBtn');
+                btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Loading...';
+
+                try {
+                    const res = await fetch('http://localhost:8080/api/v1/patients/all');
+                    if (!res.ok) throw new Error("Failed to load");
+                    const patients = await res.json();
+
+                    const linkedPatients = patients.filter(p => p.guardianEmail && p.guardianEmail.toLowerCase() === gua.email.toLowerCase());
+
+                    btn.innerHTML = '<i class="bi bi-people"></i> View Linked Patients';
+
+                    if (linkedPatients.length > 0) {
+                        document.getElementById('viewGuardianProfileModal').style.display = 'none'; // Hide guardian modal
+                        showPatientProfilePopup(linkedPatients[0]); // Shw profile
+                    } else {
+                        alert("No synced patient records found for this guardian.");
+                    }
+                } catch (e) {
+                    console.error("Error fetching patients", e);
+                    btn.innerHTML = '<i class="bi bi-people"></i> View Linked Patients';
+                    alert("Error fetching linked patient data.");
+                }
+            };
+
+            const modal = document.getElementById('viewGuardianProfileModal');
+            modal.style.display = 'flex';
+        }
+
+        window.activeGuardianToDelete = null;
+
+        function deleteGuardian(id) {
+            window.activeGuardianToDelete = id;
+            document.getElementById('modernConfirm').style.display = 'flex';
+        }
+
+        async function executeDeleteGuardian() {
+            const id = window.activeGuardianToDelete;
+            if (!id) return;
+            document.getElementById('modernConfirm').style.display = 'none';
+            const loader = document.getElementById('modernLoader');
+            loader.querySelector('h3').textContent = 'Deleting Guardian...';
+            loader.querySelector('p').textContent = 'Please wait while we securely remove this record.';
+            loader.style.display = 'flex';
+
+            try {
+                const res = await fetch('http://localhost:8080/api/v1/users/' + id, { method: 'DELETE' });
+                const text = await res.text();
+                loader.style.display = 'none';
+
+                if (res.ok) {
+                    document.getElementById('modernSuccessMsg').textContent = 'Guardian profile was successfully removed from the system.';
+                    document.getElementById('modernSuccess').style.display = 'flex';
+                    window.allGuardiansData = window.allGuardiansData.filter(g => g.id !== id);
+                    populateGuardiansTable(window.allGuardiansData);
+                    document.getElementById('totalGuardiansCount').textContent = window.allGuardiansData.length.toLocaleString();
+                } else {
+                    document.getElementById('modernErrorMsg').textContent = 'Failed to delete guardian: ' + text;
+                    document.getElementById('modernError').style.display = 'flex';
+                }
+            } catch (e) {
+                loader.style.display = 'none';
+                document.getElementById('modernErrorMsg').textContent = 'Connection error: ' + e.message;
+                document.getElementById('modernError').style.display = 'flex';
+            }
+        }
+
+        function closePatientProfilePopup() {
+            document.getElementById('profileModal').style.display = 'none';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function showPatientProfilePopup(pt) {
+            document.getElementById('vpName').textContent = pt.name || '-';
+            document.getElementById('vpNic').textContent = pt.nic || '-';
+            document.getElementById('vpAgeGender').textContent = `${pt.age ? pt.age + ' Yrs' : '-'} / ${pt.gender || '-'}`;
+            document.getElementById('vpPhone').textContent = pt.patientPhone || '-';
+            document.getElementById('vpEmail').textContent = pt.patientEmail || '-';
+
+            // Reg Status
+            const regBadge = document.getElementById('vpRegStatus');
+            if (pt.hasAccount) {
+                regBadge.innerHTML = `<span style="color:#059669;"><i class="bi bi-check-circle-fill"></i> Account Active</span>`;
+            } else {
+                regBadge.innerHTML = `<span style="color:#f59e0b;"><i class="bi bi-clock-history"></i> Needs Account</span>`;
+            }
+
+            document.getElementById('vpAddress').textContent = pt.address || '-';
+            document.getElementById('vpDistrict').textContent = pt.district || '-';
+            document.getElementById('vpGn').textContent = pt.gnDivision || '-';
+            document.getElementById('vpDs').textContent = pt.divisionalSecretariat || '-';
+
+            const latLng = pt.gpsCoordinates || '';
+            const gpsContainer = document.getElementById('vpGpsContainer');
+            if (latLng) {
+                const mapLink = `https://maps.google.com/?q=${latLng}`;
+                gpsContainer.style.display = 'flex';
+                document.getElementById('vpGpsIframe').innerHTML = `<iframe src="https://maps.google.com/maps?q=${latLng}&z=14&output=embed" width="100%" height="100%" frameborder="0" style="border:0;" allowfullscreen="" aria-hidden="false" tabindex="0"></iframe>`;
+                document.getElementById('vpGpsBtn').onclick = () => window.open(mapLink, '_blank');
+            } else {
+                gpsContainer.style.display = 'none';
+            }
+
+            document.getElementById('vpGuardName').textContent = pt.guardianName || '-';
+            document.getElementById('vpGuardPhone').textContent = pt.guardianPhone || '-';
+            document.getElementById('vpGuardEmail').textContent = pt.guardianEmail || '-';
+
+            const gRegBadge = document.getElementById('vpGuardStatus');
+            if (pt.hasGuardianAccount) {
+                gRegBadge.innerHTML = `<span style="color:#059669;"><i class="bi bi-shield-check"></i> Connected & Active</span>`;
+            } else {
+                gRegBadge.innerHTML = `<span style="color:#f59e0b;"><i class="bi bi-shield-exclamation"></i> Not Provisioned</span>`;
+            }
+
+            if (pt.reportedBy) {
+                document.getElementById('vpRepName').textContent = pt.reportedBy.fullName || 'System Source';
+                const avatar = document.getElementById('vpRepPhoto');
+                if (pt.reportedBy.profilePhoto) {
+                    avatar.innerHTML = `<img src="${pt.reportedBy.profilePhoto}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">`;
+                } else {
+                    const initials = (pt.reportedBy.fullName || 'S').substring(0, 2).toUpperCase();
+                    avatar.innerHTML = initials;
+                    avatar.style.background = '#e2e8f0';
+                    avatar.style.color = '#475569';
+                }
+            } else {
+                document.getElementById('vpRepName').textContent = 'System Data';
+                document.getElementById('vpRepPhoto').innerHTML = 'S';
+            }
+
+            const statusBadge = document.getElementById('vpStatusBadge');
+            if (pt.status === 'VERIFIED') {
+                statusBadge.textContent = 'VERIFIED';
+                statusBadge.style.background = '#dcfce7';
+                statusBadge.style.color = '#16a34a';
+            } else if (pt.status === 'REJECTED') {
+                statusBadge.textContent = 'REJECTED';
+                statusBadge.style.background = '#fee2e2';
+                statusBadge.style.color = '#dc2626';
+            } else {
+                statusBadge.textContent = 'PENDING VERIFY';
+                statusBadge.style.background = '#fef3c7';
+                statusBadge.style.color = '#d97706';
+            }
+
+            document.getElementById('vpCreatedAt').textContent = pt.createdAt ? new Date(pt.createdAt).toLocaleString() : '-';
+            document.getElementById('vpDesc').textContent = pt.description || 'No description provided by the reporter/officer.';
+
+            const modal = document.getElementById('profileModal');
+            // Ensure overriding the CSS .active style issue by setting inline display flex
+            modal.style.display = 'flex';
+        }
+    </script>
+    <!-- Logout Confirmation Modal -->
+    <style>
+        .logout-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .logout-cancel {
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+        }
+
+        .logout-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .logout-confirm {
+            border: none;
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-confirm:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        #logoutModal .modal-content {
+            border-radius: 16px !important;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: logoutModalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes logoutModalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+    </style>
+    <div id="logoutModal"
+        style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        <div class="modal-content"
+            style="background: white; max-width: 380px; text-align: center; padding: 32px 24px; align-items: center;">
+            <div
+                style="width: 64px; height: 64px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; color: #ef4444; margin-left: auto; margin-right: auto;">
+                <i class="bi bi-box-arrow-right" style="position: relative; left: 2px;"></i>
+            </div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Confirm Logout</h2>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 28px; line-height: 1.5; padding: 0 10px;">Are you
+                sure you want to log out of the admin portal? You will need to enter your credentials to return.</p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="logout-btn logout-cancel"
+                    onclick="document.getElementById('logoutModal').style.display='none'">Cancel</button>
+                <button class="logout-btn logout-confirm" onclick="confirmLogout()">Yes, Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+            window.location.replace(targetLogin);
+        }
+    </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const adminProfile = document.querySelector('.admin-profile');
+    if (adminProfile) {
+        const fullName = localStorage.getItem('userFullName') || 'System Admin';
+        const photo = localStorage.getItem('profilePhoto');
+        const role = localStorage.getItem('userRole') || 'Administrator';
+
+        const nameEl = adminProfile.querySelector('.admin-info h4');
+        if (nameEl) nameEl.textContent = fullName;
+        
+        const roleEl = adminProfile.querySelector('.admin-info p');
+        if (roleEl) {
+            // some pages have location instead of role here, but we will put role for now, or just leave it
+            // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+        }
+
+        const imgEl = adminProfile.querySelector('img');
+        if (imgEl) {
+            if (photo) {
+                imgEl.src = photo;
+            } else {
+                const initials = fullName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                imgEl.src = 'https://ui-avatars.com/api/?name=' + initials + '&background=0f766e&color=fff';
+            }
+        }
+    }
+});
+</script>
+
+
+
+
+<script>
+    function toggleNotifications() { } 
+    document.addEventListener('click', function (event) { });
+
+    function setupNotifications(userId) {
+        let dropdownOpen = false;
+        const wrapperElement = document.querySelector('.notification-wrapper');
+        const dropdownElement = document.getElementById('notificationDropdown') || document.querySelector('.notification-dropdown');
+        const badgeElement = document.querySelector('.notification-badge-new') || document.querySelector('.notification-badge');
+        const listElement = document.querySelector('.notification-list');
+        
+        if (wrapperElement && dropdownElement) {
+            const iconEl = wrapperElement.querySelector('.notification-icon') || wrapperElement.querySelector('.notification-icon-bell') || wrapperElement;
+            iconEl.removeAttribute('onclick');
+            wrapperElement.addEventListener("click", (e) => {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                if (dropdownOpen) dropdownElement.classList.add("show");
+                else dropdownElement.classList.remove("show");
+            });
+            document.addEventListener("click", () => {
+                if (dropdownOpen) {
+                    dropdownOpen = false;
+                    dropdownElement.classList.remove("show");
+                }
+            });
+            dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+        }
+
+        function fetchNotifications() {
+            if (!userId) return;
+            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.unreadCount > 0) {
+                        if (badgeElement) {
+                            badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                            badgeElement.style.display = 'flex';
+                        }
+                    } else {
+                        if (badgeElement) badgeElement.style.display = 'none';
+                    }
+                    if (!data.notifications || data.notifications.length === 0) {
+                        if (listElement) listElement.innerHTML = `<div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;"><i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>No new notifications</div>`;
+                    } else {
+                        if (listElement) listElement.innerHTML = "";
+                        data.notifications.forEach(notif => {
+                            let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                            if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                            if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                            if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+                            
+                            const date = new Date(notif.createdAt);
+                            let secs = Math.floor((new Date() - date) / 1000);
+                            if (secs < 0) secs = 0;
+                            let timeStr = secs + " secs ago";
+                            if (secs <= 10) timeStr = "just now";
+                            else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                            else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                            else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+                            
+                            const item = document.createElement("div");
+                            item.className = 'notification-item ' + (!notif.read ? 'unread' : '');
+                            item.style.padding = "16px";
+                            item.style.borderBottom = "1px solid var(--border)";
+                            item.style.display = "flex";
+                            item.style.gap = "12px";
+                            item.style.cursor = "pointer";
+                            item.style.transition = "0.2s";
+                            if (!notif.read) item.style.background = "#f8fafc";
+                            
+                            item.innerHTML = `
+                                <div class="noti-icon" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: ${notif.type === 'SUCCESS' ? 'var(--success-bg)' : notif.type === 'WARNING' ? 'var(--warning-bg)' : notif.type === 'ALERT' ? 'var(--danger-bg)' : '#eff6ff'}; color: ${notif.type === 'SUCCESS' ? 'var(--success)' : notif.type === 'WARNING' ? 'var(--warning)' : notif.type === 'ALERT' ? 'var(--danger)' : '#3b82f6'};">${iconHtml}</div>
+                                <div class="noti-content" style="flex-grow: 1;">
+                                    <h4 style="font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark);">${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                    <p style="font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                    <span class="noti-time" style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;">${timeStr}</span>
+                                </div>
+                                ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                            `;
+                            item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                            item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+                            
+                            item.addEventListener("click", () => {
+                                if (!notif.read) {
+                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        .then(() => {
+                                            notif.read = true;
+                                            item.classList.remove("unread");
+                                            item.style.background = "transparent";
+                                            const dot = item.querySelector(".u-dot");
+                                            if (dot) dot.remove();
+                                            if (badgeElement) {
+                                                let curr = parseInt(badgeElement.textContent);
+                                                if (!isNaN(curr) && curr > 0) {
+                                                    curr--;
+                                                    if (curr === 0) badgeElement.style.display = 'none';
+                                                    else badgeElement.textContent = curr;
+                                                }
+                                            }
+                                        });
+                                }
+                            });
+                            
+                            if (listElement) listElement.appendChild(item);
+                        });
+                    }
+                })
+                .catch(err => console.error("Notification load error:", err));
+        }
+        fetchNotifications();
+    }
+    function initNotifications() {
+        const userId = localStorage.getItem('userId') || '1';
+        setupNotifications(userId);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNotifications);
+    } else {
+        initNotifications();
+    }
+</script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+

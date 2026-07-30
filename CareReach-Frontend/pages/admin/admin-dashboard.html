@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Care Reach</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+            <div class="sidebar-header">
+                <h2>Care Reach</h2>
+                <p class="role-badge">Administrator</p>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="admin-dashboard.html" class="active">📊 Dashboard</a></li>
+                    <li><a href="../pages/users/users.html">👥 Manage Users</a></li>
+                    <li><a href="verify-doctors.html">✓ Verify Doctors</a></li>
+                    <li><a href="verify-officers.html">✓ Verify Health Officers</a></li>
+                    <li><a href="../pages/provinces/provinces.html">🗺️ Healthcare Regions</a></li>
+                    <li><a href="system-monitoring.html">🔍 System Monitoring</a></li>
+                    <li><a href="emergencies.html">🚨 Monitor Emergencies</a></li>
+                    <li><a href="reports.html">📈 Generate Reports</a></li>
+                    <li><a href="../pages/profile/profile.html">⚙️ Profile</a></li>
+                    <li><a href="../login.html" onclick="logout()">🚪 Logout</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <header class="top-bar">
+        <div style="display:flex;align-items:center;"><i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+</div>
+                <h1>Admin Dashboard</h1>
+                <div class="user-info">
+                    <span>Welcome, Admin User!</span>
+                </div>
+            </header>
+
+            <section class="dashboard-stats">
+                <div class="stat-card">
+                    <h3>Total Users</h3>
+                    <p class="stat-value">245</p>
+                    <p class="stat-subtitle">Active users in system</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Patients</h3>
+                    <p class="stat-value">1,250</p>
+                    <p class="stat-subtitle">Registered patients</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Pending Verification</h3>
+                    <p class="stat-value">12</p>
+                    <p class="stat-subtitle">Doctors & Officers</p>
+                </div>
+                <div class="stat-card">
+                    <h3>Active SOS</h3>
+                    <p class="stat-value">5</p>
+                    <p class="stat-subtitle">Emergency requests</p>
+                </div>
+            </section>
+
+            <div class="admin-actions">
+                <div class="action-card">
+                    <h3>User Management</h3>
+                    <p>Manage system users, roles, and permissions</p>
+                    <a href="../pages/users/users.html" class="btn-primary">Manage Users</a>
+                </div>
+                <div class="action-card">
+                    <h3>Verification Queue</h3>
+                    <p>Review and verify pending doctors and health officers</p>
+                    <a href="verify-doctors.html" class="btn-primary">Review Pending</a>
+                </div>
+                <div class="action-card">
+                    <h3>System Health</h3>
+                    <p>Monitor system performance and health status</p>
+                    <a href="system-monitoring.html" class="btn-primary">View Status</a>
+                </div>
+                <div class="action-card">
+                    <h3>Emergency Response</h3>
+                    <p>Monitor and manage emergency SOS requests</p>
+                    <a href="emergencies.html" class="btn-primary">View Emergencies</a>
+                </div>
+            </div>
+
+            <section class="dashboard-content">
+                <div class="recent-activities">
+                    <h2>Recent Activities</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Time</th>
+                                <th>Activity</th>
+                                <th>User</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>10:30 AM</td>
+                                <td>New Patient Registered</td>
+                                <td>Community Member</td>
+                                <td><span class="status-success">Success</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:15 AM</td>
+                                <td>SOS Request Created</td>
+                                <td>Patient P001</td>
+                                <td><span class="status-urgent">Urgent</span></td>
+                            </tr>
+                            <tr>
+                                <td>10:00 AM</td>
+                                <td>Doctor Verification Pending</td>
+                                <td>Dr. Smith</td>
+                                <td><span class="status-warning">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="../script.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const adminProfile = document.querySelector('.admin-profile');
+    if (adminProfile) {
+        const fullName = localStorage.getItem('userFullName') || 'System Admin';
+        const photo = localStorage.getItem('profilePhoto');
+        const role = localStorage.getItem('userRole') || 'Administrator';
+
+        const nameEl = adminProfile.querySelector('.admin-info h4');
+        if (nameEl) nameEl.textContent = fullName;
+        
+        const roleEl = adminProfile.querySelector('.admin-info p');
+        if (roleEl) {
+            // some pages have location instead of role here, but we will put role for now, or just leave it
+            // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+        }
+
+        const imgEl = adminProfile.querySelector('img');
+        if (imgEl) {
+            if (photo) {
+                imgEl.src = photo;
+            } else {
+                const initials = fullName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                imgEl.src = 'https://ui-avatars.com/api/?name=' + initials + '&background=0f766e&color=fff';
+            }
+        }
+    }
+});
+</script>
+
+
+
+
+<script>
+    function toggleNotifications() { } 
+    document.addEventListener('click', function (event) { });
+
+    function setupNotifications(userId) {
+        let dropdownOpen = false;
+        const wrapperElement = document.querySelector('.notification-wrapper');
+        const dropdownElement = document.getElementById('notificationDropdown') || document.querySelector('.notification-dropdown');
+        const badgeElement = document.querySelector('.notification-badge-new') || document.querySelector('.notification-badge');
+        const listElement = document.querySelector('.notification-list');
+        
+        if (wrapperElement && dropdownElement) {
+            const iconEl = wrapperElement.querySelector('.notification-icon') || wrapperElement.querySelector('.notification-icon-bell') || wrapperElement;
+            iconEl.removeAttribute('onclick');
+            wrapperElement.addEventListener("click", (e) => {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                if (dropdownOpen) dropdownElement.classList.add("show");
+                else dropdownElement.classList.remove("show");
+            });
+            document.addEventListener("click", () => {
+                if (dropdownOpen) {
+                    dropdownOpen = false;
+                    dropdownElement.classList.remove("show");
+                }
+            });
+            dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+        }
+
+        function fetchNotifications() {
+            if (!userId) return;
+            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.unreadCount > 0) {
+                        if (badgeElement) {
+                            badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                            badgeElement.style.display = 'flex';
+                        }
+                    } else {
+                        if (badgeElement) badgeElement.style.display = 'none';
+                    }
+                    if (!data.notifications || data.notifications.length === 0) {
+                        if (listElement) listElement.innerHTML = `<div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;"><i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>No new notifications</div>`;
+                    } else {
+                        if (listElement) listElement.innerHTML = "";
+                        data.notifications.forEach(notif => {
+                            let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                            if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                            if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                            if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+                            
+                            const date = new Date(notif.createdAt);
+                            let secs = Math.floor((new Date() - date) / 1000);
+                            if (secs < 0) secs = 0;
+                            let timeStr = secs + " secs ago";
+                            if (secs <= 10) timeStr = "just now";
+                            else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                            else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                            else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+                            
+                            const item = document.createElement("div");
+                            item.className = 'notification-item ' + (!notif.read ? 'unread' : '');
+                            item.style.padding = "16px";
+                            item.style.borderBottom = "1px solid var(--border)";
+                            item.style.display = "flex";
+                            item.style.gap = "12px";
+                            item.style.cursor = "pointer";
+                            item.style.transition = "0.2s";
+                            if (!notif.read) item.style.background = "#f8fafc";
+                            
+                            item.innerHTML = `
+                                <div class="noti-icon" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: ${notif.type === 'SUCCESS' ? 'var(--success-bg)' : notif.type === 'WARNING' ? 'var(--warning-bg)' : notif.type === 'ALERT' ? 'var(--danger-bg)' : '#eff6ff'}; color: ${notif.type === 'SUCCESS' ? 'var(--success)' : notif.type === 'WARNING' ? 'var(--warning)' : notif.type === 'ALERT' ? 'var(--danger)' : '#3b82f6'};">${iconHtml}</div>
+                                <div class="noti-content" style="flex-grow: 1;">
+                                    <h4 style="font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark);">${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                    <p style="font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                    <span class="noti-time" style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;">${timeStr}</span>
+                                </div>
+                                ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                            `;
+                            item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                            item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+                            
+                            item.addEventListener("click", () => {
+                                if (!notif.read) {
+                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        .then(() => {
+                                            notif.read = true;
+                                            item.classList.remove("unread");
+                                            item.style.background = "transparent";
+                                            const dot = item.querySelector(".u-dot");
+                                            if (dot) dot.remove();
+                                            if (badgeElement) {
+                                                let curr = parseInt(badgeElement.textContent);
+                                                if (!isNaN(curr) && curr > 0) {
+                                                    curr--;
+                                                    if (curr === 0) badgeElement.style.display = 'none';
+                                                    else badgeElement.textContent = curr;
+                                                }
+                                            }
+                                        });
+                                }
+                            });
+                            
+                            if (listElement) listElement.appendChild(item);
+                        });
+                    }
+                })
+                .catch(err => console.error("Notification load error:", err));
+        }
+        fetchNotifications();
+    }
+    function initNotifications() {
+        const userId = localStorage.getItem('userId') || '1';
+        setupNotifications(userId);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNotifications);
+    } else {
+        initNotifications();
+    }
+</script>
+
+<style>
+        .logout-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .logout-cancel {
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+        }
+
+        .logout-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .logout-confirm {
+            border: none;
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-confirm:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        #logoutModal .modal-content {
+            border-radius: 16px !important;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: logoutModalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes logoutModalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+    
+        .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+            margin-right: 15px;
+        }
+
+        /* Responsive Elements */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block;
+            }
+            .header-search {
+                display: none;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            .format-options {
+                flex-direction: column;
+            }
+            /* Make panels flex column on very small screens if they have side-by-side elements */
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+</style>
+    <div id="logoutModal"
+        style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        <div class="modal-content"
+            style="background: white; max-width: 380px; text-align: center; padding: 32px 24px; align-items: center;">
+            <div
+                style="width: 64px; height: 64px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; color: #ef4444; margin-left: auto; margin-right: auto;">
+                <i class="bi bi-box-arrow-right" style="position: relative; left: 2px;"></i>
+            </div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Confirm Logout</h2>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 28px; line-height: 1.5; padding: 0 10px;">Are you
+                sure you want to log out of the admin portal? You will need to enter your credentials to return.</p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="logout-btn logout-cancel"
+                    onclick="document.getElementById('logoutModal').style.display='none'">Cancel</button>
+                <button class="logout-btn logout-confirm" onclick="confirmLogout()">Yes, Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+            window.location.replace(targetLogin);
+        }
+    </script>
+
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            }
+        }
+        
+        // Auto-close sidebar when clicking outside
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const toggleElements = document.querySelectorAll('.mobile-toggle');
+                
+                if (sidebar && sidebar.classList.contains('open')) {
+                    let clickedOnToggle = false;
+                    toggleElements.forEach(el => {
+                        if (el.contains(event.target)) clickedOnToggle = true;
+                    });
+                    
+                    if (!sidebar.contains(event.target) && !clickedOnToggle) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            }, true); // Use capture phase to beat Chart.js stopPropagation
+        });
+    </script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        @media (max-width: 768px) {
+
+            /* Padding and Header Layout Fixes for Mobile */
+            .content-area {
+                padding: 16px !important;
+            }
+            .top-header {
+                padding: 0 16px !important;
+            }
+            .page-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 16px !important;
+            }
+            .user-info {
+                display: none !important;
+            }
+            .page-header h1 {
+                font-size: 22px !important;
+            }
+            .notification-dropdown {
+                width: 280px !important;
+                right: -40px !important;
+            }
+
+        }
+    </style>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+

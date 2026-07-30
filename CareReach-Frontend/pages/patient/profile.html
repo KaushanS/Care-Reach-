@@ -1,0 +1,1458 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Core Session Manager -->
+  <script>
+    (function () {
+      function enforceProtectedSession() {
+        const userId = localStorage.getItem('userId');
+        const role = localStorage.getItem('userRole');
+        if (!userId || !role) {
+          const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+          window.location.replace(targetLogin);
+        }
+      }
+      enforceProtectedSession();
+      window.addEventListener('pageshow', function (event) {
+        if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+          enforceProtectedSession();
+        }
+      });
+    })();
+  </script>
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | Patient Profile</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --primary-light: #dbeafe;
+      --bg-page: #e2e8f4;
+      --bg-surface: #ffffff;
+      --text-dark: #0f172a;
+      --text-normal: #334155;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #0f172a;
+      --sidebar-text: #cbd5e1;
+      --sidebar-text-muted: #94a3b8;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(59, 130, 246, 0.2);
+      color: #60a5fa;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #60a5fa;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .profile-banner {
+      background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #3b82f6 100%);
+      border-radius: 20px;
+      border: none;
+      padding: 36px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      margin-bottom: 24px;
+      position: relative;
+      overflow: hidden;
+      animation: fadeInUp 0.5s ease;
+    }
+
+    .profile-banner::before {
+      content: '';
+      position: absolute;
+      top: -50px;
+      right: -20px;
+      width: 160px;
+      height: 160px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 50%;
+    }
+
+    .profile-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -40px;
+      right: 100px;
+      width: 100px;
+      height: 100px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 50%;
+    }
+
+    .profile-avatar {
+      width: 96px;
+      height: 96px;
+      border-radius: 50%;
+      border: 4px solid rgba(255, 255, 255, 0.4);
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-meta h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: #ffffff;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-meta p {
+      font-size: 14px;
+      color: rgba(255, 255, 255, 0.8);
+      margin-top: 4px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .profile-meta .role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.2);
+      color: #ffffff;
+      margin-top: 8px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-radius: 20px;
+      border: 1px solid rgba(226, 232, 240, 0.6);
+      margin-bottom: 24px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      animation: fadeInUp 0.6s ease both;
+    }
+
+    .panel:hover {
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-normal);
+      background: var(--bg-page);
+      transition: 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .readonly {
+      background: #e9ecef !important;
+      cursor: not-allowed;
+    }
+
+    .btn {
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      box-shadow: 0 6px 20px rgba(37, 99, 235, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-normal);
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .condition-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .condition-tag {
+      padding: 6px 14px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--warning-bg);
+      color: var(--warning);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .condition-tag.stable {
+      background: var(--success-bg);
+      color: var(--success);
+      border-color: rgba(16, 185, 129, 0.2);
+    }
+
+    .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .profile-banner {
+        flex-direction: column;
+        text-align: center;
+      }
+    }
+
+    .notification-wrapper {
+      position: relative;
+    }
+
+    .notification-icon {
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--bg-surface);
+    }
+
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 12px;
+      width: 380px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      display: none;
+      z-index: 1000;
+      overflow: hidden;
+    }
+
+    .notification-dropdown.show {
+      display: block;
+    }
+
+    .notification-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notification-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .notification-list {
+      max-height: 480px;
+      overflow-y: hidden;
+    }
+
+    .notification-item {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      gap: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .notification-item:hover {
+      background: var(--bg-page);
+    }
+
+    .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .noti-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .noti-icon.blue {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    .noti-icon.green {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .noti-icon.orange {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .noti-content h4 {
+      font-size: 14px;
+      margin: 0 0 4px 0;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .noti-content p {
+      font-size: 13px;
+      margin: 0 0 6px 0;
+      color: var(--text-normal);
+      line-height: 1.4;
+    }
+
+    .noti-time {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* Logout Modal Styles */
+    .logout-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .logout-modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+
+    .logout-modal-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+
+    .logout-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .logout-modal-text {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .logout-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    .logout-btn-cancel,
+    .logout-btn-confirm {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .logout-btn-cancel {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      color: var(--text-normal);
+    }
+
+    .logout-btn-cancel:hover {
+      background: var(--bg-page);
+    }
+
+    .logout-btn-confirm {
+      background: var(--danger);
+      border: none;
+      color: white;
+    }
+
+    .logout-btn-confirm:hover {
+      background: #b91c1c;
+    }
+  
+        .notification-list { scrollbar-width: none; -ms-overflow-style: none; }
+        .notification-list::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div>
+        <div class="menu-title">My Health</div>
+        <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="medical-history.html" class="menu-item"><i class="bi bi-journal-medical"></i> Medical History</a>
+        <div class="menu-title">Account</div>
+        <a href="profile.html" class="menu-item active"><i class="bi bi-person-gear"></i> My Profile</a>
+      </div>
+      <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn"
+        style="color: #ef4444; margin-top: auto;"><i class="bi bi-box-arrow-right"></i> Sign Out</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div></div>
+      </div>
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div class="notification-wrapper">
+          <div class="notification-icon" onclick="toggleNotifications()">
+            <i class="bi bi-bell"></i>
+            <span class="notification-badge">2</span>
+          </div>
+          <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+              <h3>Notifications</h3>
+              <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark all
+                read</a>
+            </div>
+            <div class="notification-list">
+              <div class="notification-item">
+                <div class="noti-icon blue"><i class="bi bi-calendar-event"></i></div>
+                <div class="noti-content">
+                  <h4>Upcoming Appointment</h4>
+                  <p>Reminder: You have an appointment with Dr. Wickremasinghe tomorrow at 10:00 AM.</p>
+                  <span class="noti-time">2 hours ago</span>
+                </div>
+              </div>
+              <div class="notification-item">
+                <div class="noti-icon green"><i class="bi bi-file-earmark-medical"></i></div>
+                <div class="noti-content">
+                  <h4>New Lab Results</h4>
+                  <p>Your recent blood test results have been uploaded by CareReach Clinic.</p>
+                  <span class="noti-time">Yesterday</span>
+                </div>
+              </div>
+            </div>
+            <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+              <a href="notifications.html"
+                style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See all
+                notifications</a>
+            </div>
+          </div>
+        </div>
+        <a href="profile.html" class="user-profile">
+          <div class="user-info">
+            <h4>Kamal Perera</h4>
+            <p>Patient</p>
+          </div>
+          <img src="https://ui-avatars.com/api/?name=Patient&background=042f2e&color=fff" alt="Patient"
+            id="nav-profile-img">
+        </a>
+      </div>
+    </header>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>My Profile</h1>
+        <p>Manage your personal information and account settings.</p>
+      </div>
+      <div class="profile-banner">
+        <div style="position: relative; display: inline-block;">
+          <img src="https://ui-avatars.com/api/?name=Patient&background=042f2e&color=fff&size=96" alt="Avatar"
+            class="profile-avatar" id="profile-avatar-img" style="cursor:pointer;"
+            onclick="document.getElementById('photo-upload').click()">
+          <div
+            style="position: absolute; bottom: 4px; right: 4px; background: var(--primary); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white;"
+            onclick="document.getElementById('photo-upload').click()">
+            <i class="bi bi-camera-fill" style="font-size: 14px;"></i>
+          </div>
+          <input type="file" id="photo-upload" style="display:none;" accept="image/*">
+        </div>
+        <div class="profile-meta">
+          <h2 id="banner-name">Loading...</h2>
+          <p id="banner-id">Patient ID: CR-XXXX</p>
+          <span class="role-badge"><i class="bi bi-heart-pulse"></i> Registered Patient</span>
+        </div>
+      </div>
+      <!-- Personal Info -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-person-fill"></i> Personal Information</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Full Name</label><input type="text" id="input-fullname" value=""></div>
+            <div class="form-group"><label>NIC Number</label><input type="text" id="input-nic" class="readonly"
+                readonly></div>
+            <div class="form-group"><label>Age (Years)</label><input type="number" id="input-age" value=""></div>
+            <div class="form-group"><label>Gender</label><select id="input-gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" id="input-phone" value=""></div>
+            <div class="form-group"><label>Email</label><input type="email" id="input-email" value=""></div>
+            <div class="form-group full-width"><label>Address</label><input type="text" id="input-address" value="">
+            </div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-outline" onclick="window.location.reload();">Cancel</button>
+            <button class="btn btn-primary" onclick="saveProfile(this)"><i class="bi bi-check-lg"></i> Save
+              Changes</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emergency Contact & Guardian -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-person-lines-fill"></i> Emergency Contact & Guardian</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Guardian Name</label><input type="text" id="input-guardian-name" value="">
+            </div>
+            <div class="form-group"><label>Contact Number</label><input type="tel" id="input-guardian-phone" value="">
+            </div>
+            <div class="form-group"><label>Email</label><input type="email" id="input-guardian-email" value=""></div>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary" onclick="saveProfile(this)"><i class="bi bi-check-lg"></i> Update
+              Contact</button>
+          </div>
+        </div>
+      </div>
+      <!-- Account Security -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-shield-lock-fill"></i> Account Security</h2>
+        </div>
+        <div class="panel-body">
+          <form onsubmit="changePassword(event)">
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Current Password</label>
+                <div style="position:relative; display:flex; align-items:center;">
+                  <input type="password" id="input-curr-pw" placeholder="Enter current password"
+                    style="width:100%; padding-right:40px;">
+                  <i class="bi bi-eye-slash pw-toggle" onclick="togglePw('input-curr-pw', this)"
+                    style="position:absolute; right:12px; color:var(--text-muted); cursor:pointer;"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>New Password</label>
+                <div style="position:relative; display:flex; align-items:center;">
+                  <input type="password" id="input-new-pw" placeholder="Enter new password"
+                    style="width:100%; padding-right:40px;">
+                  <i class="bi bi-eye-slash pw-toggle" onclick="togglePw('input-new-pw', this)"
+                    style="position:absolute; right:12px; color:var(--text-muted); cursor:pointer;"></i>
+                </div>
+              </div>
+              <div class="form-group">
+                <label>Confirm Password</label>
+                <div style="position:relative; display:flex; align-items:center;">
+                  <input type="password" id="input-conf-pw" placeholder="Confirm new password"
+                    style="width:100%; padding-right:40px;">
+                  <i class="bi bi-eye-slash pw-toggle" onclick="togglePw('input-conf-pw', this)"
+                    style="position:absolute; right:12px; color:var(--text-muted); cursor:pointer;"></i>
+                </div>
+              </div>
+            </div>
+            <p id="passwordErrorMsg"
+              style="color:var(--danger); font-size:13px; font-weight:600; margin-top:8px; display:none;"></p>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary" id="savePasswordBtn"><i class="bi bi-key-fill"></i> Update
+                Password</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- Global Success Modal -->
+  <div id="successModalOverlay"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+    <div id="successModal"
+      style="background:var(--bg-surface); border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+      <div
+        style="width:72px; height:72px; border-radius:50%; background:rgba(16,185,129,0.1); color:var(--success); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <h3 id="successModalTitle" style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">
+        Success</h3>
+      <p id="successModalMessage" style="font-size:15px; color:var(--text-muted); margin-bottom:32px; font-weight:500;">
+        Action completed
+        successfully.</p>
+      <div style="display:flex; justify-content:center;">
+        <button type="button" onclick="closeSuccessModal()" class="btn btn-primary"
+          style="font-size:15px; padding:12px 40px;">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OTP Verification Modal -->
+  <div id="otpModalOverlay"
+    style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+    <div id="otpModal"
+      style="background:var(--bg-surface); border-radius:16px; padding:40px; width:450px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+      <div
+        style="width:72px; height:72px; border-radius:50%; background:rgba(15,118,110,0.1); color:var(--primary); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+        <i class="bi bi-envelope-check-fill"></i>
+      </div>
+      <h3 style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">
+        Verification Required</h3>
+      <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px; font-weight:500;">
+        For your security, we've sent a 6-digit PIN to your email.
+      </p>
+      <div style="margin-bottom: 24px;">
+        <input type="text" id="otpInput" maxlength="6"
+          style="width:100%; text-align:center; font-size:24px; font-weight:700; letter-spacing:8px; padding:12px; border:2px solid var(--border); border-radius:8px; color:var(--text-dark);"
+          placeholder="------">
+      </div>
+      <p id="otpErrorMsg"
+        style="color:var(--danger); font-size:13px; font-weight:600; margin-bottom:24px; display:none;"></p>
+      <div style="display:flex; gap:16px;">
+        <button type="button" onclick="closeOtpModal()" class="btn btn-outline" style="flex:1;">Cancel</button>
+        <button type="button" onclick="verifyOtpAndChangePassword()" class="btn btn-primary" id="verifyOtpBtn"
+          style="flex:1;">Verify</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+    // Notification Engine
+    let dropdownOpen = false;
+    function setupNotifications(userId) {
+      const wrapperElement = document.querySelector('.notification-wrapper');
+      const dropdownElement = document.getElementById('notificationDropdown');
+      const badgeElement = document.querySelector('.notification-badge');
+      const listElement = document.querySelector('.notification-list');
+
+      if (wrapperElement && dropdownElement) {
+        // Remove old inline onclick just in case
+        wrapperElement.querySelector('.notification-icon').removeAttribute('onclick');
+
+        wrapperElement.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdownOpen = !dropdownOpen;
+          if (dropdownOpen) {
+            dropdownElement.classList.add("show");
+          } else {
+            dropdownElement.classList.remove("show");
+          }
+        });
+
+        document.addEventListener("click", () => {
+          if (dropdownOpen) {
+            dropdownOpen = false;
+            dropdownElement.classList.remove("show");
+          }
+        });
+        dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+      }
+
+      function fetchNotifications() {
+        if (!userId) return;
+        fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.unreadCount > 0) {
+              if (badgeElement) {
+                badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                badgeElement.style.display = 'flex';
+              }
+            } else {
+              if (badgeElement) badgeElement.style.display = 'none';
+            }
+
+            if (!data.notifications || data.notifications.length === 0) {
+              if (listElement) {
+                listElement.innerHTML = `
+                  <div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;">
+                      <i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                      No new notifications
+                  </div>`;
+              }
+            } else {
+              if (listElement) listElement.innerHTML = "";
+              data.notifications.forEach(notif => {
+                let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+
+                const date = new Date(notif.createdAt);
+                let secs = Math.floor((new Date() - date) / 1000);
+                if (secs < 0) secs = 0;
+                let timeStr = secs + " secs ago";
+                if (secs <= 10) timeStr = "just now";
+                else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+
+                const item = document.createElement("div");
+                item.className = `notification-item ${!notif.read ? 'unread' : ''}`;
+                item.style.padding = "16px";
+                item.style.borderBottom = "1px solid var(--border)";
+                item.style.display = "flex";
+                item.style.gap = "12px";
+                item.style.cursor = "pointer";
+                item.style.transition = "0.2s";
+                if (!notif.read) item.style.background = "#f8fafc";
+
+                item.innerHTML = `
+                  <div class="noti-icon" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: ${notif.type === 'SUCCESS' ? 'var(--success-bg)' :
+                    notif.type === 'WARNING' ? 'var(--warning-bg)' :
+                      notif.type === 'ALERT' ? 'var(--danger-bg)' : 'var(--info-bg)'
+                  }; color: ${notif.type === 'SUCCESS' ? 'var(--success)' :
+                    notif.type === 'WARNING' ? 'var(--warning)' :
+                      notif.type === 'ALERT' ? 'var(--danger)' : 'var(--info)'
+                  };">${iconHtml}</div>
+                  <div class="noti-content" style="flex-grow: 1;">
+                      <h4 style="font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark);">${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                      <p style="font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; font-weight: ${!notif.read ? '700' : '500'};">
+                          ${notif.message}
+                      </p>
+                      <span class="noti-time" style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;">${timeStr}</span>
+                  </div>
+                  ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                `;
+
+                item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+
+                item.addEventListener("click", () => {
+                  if (!notif.read) {
+                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                      .then(() => {
+                        notif.read = true;
+                        item.classList.remove("unread");
+                        item.style.background = "transparent";
+                        const dot = item.querySelector(".u-dot");
+                        if (dot) dot.remove();
+
+                        if (badgeElement) {
+                          let curr = parseInt(badgeElement.textContent);
+                          if (!isNaN(curr) && curr > 0) {
+                            curr--;
+                            if (curr === 0) badgeElement.style.display = 'none';
+                            else badgeElement.textContent = curr;
+                          }
+                        }
+                      });
+                  }
+                });
+                if (listElement) listElement.appendChild(item);
+              });
+            }
+          })
+          .catch(err => console.error("Error fetching notifications:", err));
+      }
+      fetchNotifications();
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        window.location.replace('../../login.html');
+        return;
+      }
+
+      setupNotifications(userId);
+
+      try {
+        const res = await fetch(`http://localhost:8080/api/v1/patients/user/${userId}`);
+        if (!res.ok) throw new Error('Failed to fetch patient data');
+        const data = await res.json();
+
+        // Populate Top Nav Profile
+        document.querySelector('.user-info h4').textContent = data.name || 'Patient';
+
+        // Populate Profile Banner
+        document.getElementById('banner-name').textContent = data.name || 'Unknown Patient';
+        document.getElementById('banner-id').textContent = `Patient ID: CR-${1000 + data.id}`;
+
+        const avatarUrl = data.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name || 'Patient')}&background=042f2e&color=fff&size=96`;
+        document.getElementById('profile-avatar-img').src = avatarUrl;
+        document.getElementById('nav-profile-img').src = avatarUrl;
+
+        // Populate Personal Information
+        document.getElementById('input-fullname').value = data.name || '';
+        document.getElementById('input-nic').value = data.nic || '';
+        document.getElementById('input-age').value = data.age || '';
+        if (data.gender) document.getElementById('input-gender').value = data.gender;
+        document.getElementById('input-phone').value = data.patientPhone || '';
+        document.getElementById('input-email').value = data.patientEmail || '';
+        document.getElementById('input-address').value = data.address || '';
+
+        // Populate Guardian Information
+        document.getElementById('input-guardian-name').value = data.guardianName || '';
+        document.getElementById('input-guardian-phone').value = data.guardianPhone || '';
+        document.getElementById('input-guardian-email').value = data.guardianEmail || '';
+
+        // Profile Photo Upload Logic
+        document.getElementById('photo-upload').addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (!file) return;
+          const formData = new FormData();
+          formData.append('file', file);
+          try {
+            e.target.disabled = true;
+            document.getElementById('profile-avatar-img').style.opacity = '0.5';
+            const upRes = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile-photo`, {
+              method: 'POST', body: formData
+            });
+            if (!upRes.ok) throw new Error('Upload failed');
+            const upData = await upRes.json();
+            document.getElementById('profile-avatar-img').src = upData.url;
+            document.getElementById('nav-profile-img').src = upData.url;
+          } catch (err) {
+            console.error(err);
+            alert('Failed to upload photo. Please try again.');
+          } finally {
+            e.target.disabled = false;
+            document.getElementById('profile-avatar-img').style.opacity = '1';
+          }
+        });
+
+      } catch (err) {
+        console.error('Error hydrating profile:', err);
+      }
+    });
+
+    function showLogoutModal(e) {
+      if (e) e.preventDefault();
+      document.getElementById('logoutModal').style.display = 'flex';
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'none';
+    }
+    function confirmLogout() {
+      localStorage.clear();
+      window.location.replace('../../login.html');
+    }
+
+    function togglePw(inputId, iconEl) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        iconEl.classList.remove('bi-eye-slash');
+        iconEl.classList.add('bi-eye');
+      } else {
+        input.type = 'password';
+        iconEl.classList.remove('bi-eye');
+        iconEl.classList.add('bi-eye-slash');
+      }
+    }
+
+    let pendingPasswordUpdate = null;
+
+    function showSuccessModal(title, message) {
+      document.getElementById('successModalTitle').innerText = title;
+      document.getElementById('successModalMessage').innerText = message;
+      const overlay = document.getElementById('successModalOverlay');
+      overlay.style.display = 'flex';
+      void overlay.offsetWidth;
+      overlay.style.opacity = '1';
+      document.getElementById('successModal').style.transform = 'scale(1) translateY(0)';
+    }
+
+    function closeSuccessModal() {
+      const overlay = document.getElementById('successModalOverlay');
+      overlay.style.opacity = '0';
+      document.getElementById('successModal').style.transform = 'scale(0.85) translateY(20px)';
+      setTimeout(() => { overlay.style.display = 'none'; }, 300);
+    }
+
+    function closeOtpModal() {
+      const overlay = document.getElementById('otpModalOverlay');
+      overlay.style.opacity = '0';
+      setTimeout(() => { overlay.style.display = 'none'; }, 300);
+      pendingPasswordUpdate = null;
+      document.getElementById('otpInput').value = '';
+    }
+
+    function changePassword(e) {
+      e.preventDefault();
+      const userId = localStorage.getItem("userId");
+      const currentPass = document.getElementById("input-curr-pw").value;
+      const newPass = document.getElementById("input-new-pw").value;
+      const confirmPass = document.getElementById("input-conf-pw").value;
+      const errorMsg = document.getElementById("passwordErrorMsg");
+      errorMsg.style.display = "none";
+
+      if (newPass !== confirmPass) {
+        errorMsg.innerText = "New passwords do not match!";
+        errorMsg.style.display = "block";
+        return;
+      }
+      if (newPass === currentPass) {
+        errorMsg.innerText = "New password cannot be the same as your old password!";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById('savePasswordBtn');
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Requesting...';
+      btn.disabled = true;
+
+      fetch(`http://localhost:8080/api/v1/users/${userId}/request-password-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ currentPassword: currentPass })
+      })
+        .then(async res => {
+          if (!res.ok) throw new Error(await res.text());
+          return res.text();
+        })
+        .then(msg => {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+
+          pendingPasswordUpdate = { currentPassword: currentPass, newPassword: newPass };
+          const overlay = document.getElementById("otpModalOverlay");
+          document.getElementById("otpErrorMsg").style.display = 'none';
+          document.getElementById("otpInput").value = '';
+          overlay.style.display = 'flex';
+          void overlay.offsetWidth;
+          overlay.style.opacity = '1';
+          setTimeout(() => document.getElementById("otpInput").focus(), 100);
+        })
+        .catch(err => {
+          errorMsg.innerHTML = '<i class="bi bi-shield-x"></i> Error: ' + err.message;
+          errorMsg.style.display = "block";
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+        });
+    }
+
+    function verifyOtpAndChangePassword() {
+      if (!pendingPasswordUpdate) return;
+      const userId = localStorage.getItem("userId");
+      const otpCode = document.getElementById("otpInput").value.trim();
+      const errorMsg = document.getElementById("otpErrorMsg");
+
+      if (!otpCode || otpCode.length !== 6) {
+        errorMsg.innerText = "Please enter a valid 6-digit PIN.";
+        errorMsg.style.display = "block";
+        return;
+      }
+
+      const btn = document.getElementById('verifyOtpBtn');
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Verifying...';
+      btn.disabled = true;
+
+      pendingPasswordUpdate.otpCode = otpCode;
+
+      fetch(`http://localhost:8080/api/v1/users/${userId}/password`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pendingPasswordUpdate)
+      })
+        .then(async res => {
+          if (!res.ok) throw new Error(await res.text());
+
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+
+          document.getElementById("input-curr-pw").value = "";
+          document.getElementById("input-new-pw").value = "";
+          document.getElementById("input-conf-pw").value = "";
+
+          closeOtpModal();
+
+          showSuccessModal("Password Updated", "Your account security has been verified and updated. You will now be redirected to login.");
+          setTimeout(() => {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+          }, 3000);
+        })
+        .catch(err => {
+          btn.innerHTML = originalContent;
+          btn.disabled = false;
+          errorMsg.innerText = "Verification failed: " + err.message;
+          errorMsg.style.display = "block";
+        });
+    }
+
+    function saveProfile(btnElement) {
+      const userId = localStorage.getItem("userId");
+      if (!userId) return;
+
+      const payload = {
+        name: document.getElementById('input-fullname').value,
+        age: document.getElementById('input-age').value,
+        gender: document.getElementById('input-gender').value,
+        patientPhone: document.getElementById('input-phone').value,
+        patientEmail: document.getElementById('input-email').value,
+        address: document.getElementById('input-address').value,
+        guardianName: document.getElementById('input-guardian-name').value,
+        guardianPhone: document.getElementById('input-guardian-phone').value,
+        guardianEmail: document.getElementById('input-guardian-email').value,
+      };
+
+      const originalContent = btnElement.innerHTML;
+      btnElement.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
+      btnElement.disabled = true;
+
+      fetch(`http://localhost:8080/api/v1/patients/user/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+        .then(async res => {
+          if (!res.ok) throw new Error(await res.text());
+          btnElement.innerHTML = originalContent;
+          btnElement.disabled = false;
+
+          // Optimistically update dom elements
+          document.querySelector('.user-info h4').textContent = payload.name;
+          document.getElementById('banner-name').textContent = payload.name;
+
+          showSuccessModal("Profile Updated", "Your profile information has been securely updated!");
+        })
+        .catch(err => {
+          console.error(err);
+          btnElement.innerHTML = '<i class="bi bi-exclamation-circle-fill"></i> Failed';
+          btnElement.style.backgroundColor = 'var(--danger)';
+          setTimeout(() => {
+            btnElement.innerHTML = originalContent;
+            btnElement.style.backgroundColor = '';
+            btnElement.disabled = false;
+            if (err.message) alert(err.message);
+          }, 2000);
+        });
+    }
+  </script>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="logout-modal-overlay" id="logoutModal">
+    <div class="logout-modal-content">
+      <div class="logout-modal-icon">
+        <i class="bi bi-box-arrow-right"></i>
+      </div>
+      <h3 class="logout-modal-title">Sign Out</h3>
+      <p class="logout-modal-text">Are you sure you want to sign out of your account?</p>
+      <div class="logout-modal-actions">
+        <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+        <button class="logout-btn-confirm" onclick="confirmLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+</body>
+
+</html>

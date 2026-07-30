@@ -1,0 +1,1398 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Core Session Manager -->
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Doctor Profile Settings</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+            --sidebar-bg: #042f2e;
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+            --bg-page: #f0f7f6;
+            --bg-surface: #fff;
+            --text-dark: #0f172a;
+            --text-normal: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 260px;
+            --font-family: 'Inter', sans-serif;
+
+            /* Status Colors */
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family)
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, .15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .menu-item.active i {
+            color: #fff;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-header {
+            height: 72px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 32px;
+        }
+
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            padding-left: 20px;
+            border-left: 1px solid var(--border);
+        }
+
+        .doctor-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .doctor-info {
+            text-align: left;
+        }
+
+        .doctor-info h4 {
+            font-size: 14px;
+            color: var(--text-dark)
+        }
+
+        .doctor-info p {
+            font-size: 12px;
+            color: var(--text-muted)
+        }
+
+        .content-area {
+            padding: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 16px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-normal);
+            margin-bottom: 8px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+            background: var(--bg-page);
+            outline: none;
+            transition: all 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: #fff;
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            transition: all .2s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, .2);
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-normal);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        /* NOTIFICATION DROPDOWN */
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 32px;
+            width: 320px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.active {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .notif-blue {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .notif-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .notif-orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .notification-content h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .notification-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+        }
+
+        .mobile-close-btn {
+            display: block !important;
+        }
+
+        .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark);
+            margin-right: 15px;
+        }
+
+        /* Responsive Elements */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-close-btn {
+                display: block !important;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .header-search {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .metrics-grid,
+            .form-grid,
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .format-options {
+                flex-direction: column;
+            }
+
+            /* Make panels flex column on very small screens if they have side-by-side elements */
+            .panel-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 380px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 480px;
+            overflow-y: hidden;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-icon.blue {
+            background: var(--info-bg, #eff6ff);
+            color: var(--info, #3b82f6);
+        }
+
+        .noti-icon.green {
+            background: var(--success-bg, #ecfdf5);
+            color: var(--success, #10b981);
+        }
+
+        .noti-icon.orange {
+            background: var(--warning-bg, #fffbeb);
+            color: var(--warning, #f59e0b);
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        .noti-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn"
+            style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;"
+            onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-title">Main</div>
+            <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+            <div class="menu-title">Clinical Care</div>
+            <a href="appointments.html" class="menu-item"><i class="bi bi-calendar-event"></i> Appointments</a>
+            <a href="patients.html" class="menu-item"><i class="bi bi-person-lines-fill"></i> Patients</a>
+            <a href="home-visits.html" class="menu-item"><i class="bi bi-house-heart"></i> Home Visits</a>
+            <div class="menu-title">Management</div>
+            <a href="profile.html" class="menu-item active"><i class="bi bi-person-badge"></i> Profile</a>
+            <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;"><i
+                    class="bi bi-box-arrow-right"></i> Log Out</a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div style="display:flex;align-items:center;"><i class="bi bi-list mobile-toggle"
+                    onclick="toggleSidebar()"></i>
+            </div>
+
+            <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+
+                <div class="notification-wrapper">
+                    <div class="notification-icon" onclick="toggleNotifications()">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge" style="display:none;">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;"
+                                onclick="markAllNotificationsAsRead()">Mark all read</a>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- JS populated -->
+                        </div>
+                        <a href="notifications.html"
+                            style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
+                            View All Notifications
+                        </a>
+                    </div>
+                </div>
+
+                <a href="profile.html" class="doctor-profile">
+                    <img src="https://ui-avatars.com/api/?name=Dr+Aruna+Silva&background=0f766e&color=fff" alt="Doctor">
+                    <div class="doctor-info">
+                        <h4>Dr. Aruna Silva</h4>
+                        <p>Medical Officer</p>
+                    </div>
+                </a>
+
+        </header>
+
+        <div class="content-area">
+            <div class="page-header">
+                <h1>Edit Profile Details</h1>
+                <p>Update your personal information, contact credentials, and hospital affiliation.</p>
+            </div>
+
+            <!-- Profile Photo Upload -->
+            <div class="panel" style="display: flex; align-items: center; gap: 24px; padding: 24px 32px;">
+                <div style="position: relative; width: 100px; height: 100px;">
+                    <img id="mainAvatar" src="https://ui-avatars.com/api/?name=User&background=0f766e&color=fff"
+                        style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--primary-light);">
+
+                    <!-- Overlay Spinner -->
+                    <div id="doctor-upload-spinner"
+                        style="display:none; position: absolute; inset: 0; background: rgba(0,0,0,0.4); border-radius: 50%; align-items: center; justify-content: center; z-index: 5;">
+                        <div
+                            style="width: 32px; height: 32px; border: 3px solid rgba(255, 255, 255, 0.3); border-top-color: #fff; border-radius: 50%; animation: spin 1s linear infinite;">
+                        </div>
+                    </div>
+
+                    <button class="icon-btn" onclick="document.getElementById('photoInput').click()"
+                        style="position: absolute; bottom: 0; right: 0; z-index: 10; background: var(--primary); color: white; border: none; border-radius: 50%; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <i class="bi bi-camera-fill" style="font-size:14px;"></i>
+                    </button>
+                    <input type="file" id="photoInput" accept="image/*" style="display: none;"
+                        onchange="uploadProfilePhoto(event)">
+                </div>
+                <div>
+                    <h3 style="font-size: 18px; color: var(--text-dark); margin-bottom: 4px;">Profile Photo</h3>
+                    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;">JPG or PNG format. Max
+                        size of 5MB.</p>
+                    <span id="photoUploadStatus" style="font-size: 13px; font-weight: 500;"></span>
+                </div>
+            </div>
+
+            <form onsubmit="handleProfileUpdate(event)">
+                <!-- Personal & Contact Info -->
+                <div class="panel">
+                    <h2 class="panel-title"><i class="bi bi-person-vcard text-primary"></i> Personal Details</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" class="form-control" id="uFullName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">NIC ID</label>
+                            <input type="text" class="form-control" id="uNic" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control" id="uPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="uEmail" required>
+                        </div>
+                        <div class="form-group" style="grid-column: 1 / -1;">
+                            <label class="form-label">Home Address</label>
+                            <textarea class="form-control" id="uAddress" rows="2"
+                                style="font-family: inherit; resize: vertical;" required></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Professional Info -->
+                <div class="panel">
+                    <h2 class="panel-title"><i class="bi bi-hospital text-primary"></i> doctor_career</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Specialist Category</label>
+                            <input type="text" class="form-control" id="uSpecialistCategory" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Main Hospital Name</label>
+                            <input type="text" class="form-control" id="uHospitalName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Qualification</label>
+                            <input type="text" class="form-control" id="uQualification" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Experience (Years)</label>
+                            <input type="number" class="form-control" id="uExperienceYears" min="0" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div style="display: flex; gap: 16px; justify-content: flex-end;">
+                    <button type="submit" class="btn btn-primary" id="saveProfBtn">
+                        <i class="bi bi-check-circle"></i> Save Changes
+                    </button>
+                </div>
+            </form>
+
+            <!-- Account Security Panel -->
+            <div class="panel" style="margin-top: 24px;">
+                <h2 class="panel-title"><i class="bi bi-shield-lock-fill text-primary"></i> Account Security</h2>
+
+                <div
+                    style="background: rgba(15,118,110,0.05); padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; gap: 16px; align-items: center;">
+                    <i class="bi bi-lock-fill" style="font-size: 24px; color: var(--primary);"></i>
+                    <div>
+                        <h5 style="margin: 0; font-size: 15px; color: var(--text-dark); margin-bottom: 4px;">Keep your
+                            account secure</h5>
+                        <p style="margin: 0; font-size: 13px; color: var(--text-muted);">Use a strong password and don't
+                            share it with anyone.</p>
+                    </div>
+                </div>
+
+                <form onsubmit="changePassword(event)">
+                    <div class="form-group" style="position: relative;">
+                        <label class="form-label">Current Password</label>
+                        <input type="password" id="currentPassword" class="form-control"
+                            placeholder="Enter current password" required>
+                        <i class="bi bi-eye-slash" onclick="togglePasswordVis('currentPassword', this)"
+                            style="position: absolute; right: 16px; top: 40px; cursor: pointer; color: var(--text-muted);"></i>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group" style="position: relative;">
+                            <label class="form-label">New Password</label>
+                            <input type="password" id="newPassword" class="form-control"
+                                placeholder="Enter new password" required>
+                            <i class="bi bi-eye-slash" onclick="togglePasswordVis('newPassword', this)"
+                                style="position: absolute; right: 16px; top: 40px; cursor: pointer; color: var(--text-muted);"></i>
+                        </div>
+                        <div class="form-group" style="position: relative;">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" class="form-control"
+                                placeholder="Confirm password" required>
+                            <i class="bi bi-eye-slash" onclick="togglePasswordVis('confirmPassword', this)"
+                                style="position: absolute; right: 16px; top: 40px; cursor: pointer; color: var(--text-muted);"></i>
+                        </div>
+                    </div>
+                    <p id="passwordErrorMsg"
+                        style="color:var(--danger); font-size:13px; font-weight:600; margin-top:-8px; margin-bottom:16px; display:none;">
+                    </p>
+
+                    <div style="background: var(--bg-page); padding: 16px; border-radius: 8px; margin-bottom: 24px;">
+                        <h5
+                            style="margin: 0; font-size: 13px; font-weight: 600; color: var(--text-dark); margin-bottom: 12px;">
+                            Password must contain:</h5>
+                        <div
+                            style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; font-size: 13px; color: var(--text-muted);">
+                            <div><i class="bi bi-check-circle-fill text-primary" style="margin-right: 6px;"></i> At
+                                least 8 characters</div>
+                            <div><i class="bi bi-check-circle-fill text-primary" style="margin-right: 6px;"></i> Include
+                                numbers</div>
+                            <div><i class="bi bi-check-circle-fill text-primary" style="margin-right: 6px;"></i>
+                                Uppercase & lowercase letters</div>
+                            <div><i class="bi bi-check-circle-fill text-primary" style="margin-right: 6px;"></i> Include
+                                symbols</div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end;">
+                        <button type="submit" class="btn btn-primary" id="savePasswordBtn">
+                            <i class="bi bi-lock-fill"></i> Update Password
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Global Success Modal -->
+            <div id="successModalOverlay"
+                style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+                <div id="successModal"
+                    style="background:var(--bg-surface); border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+                    <div
+                        style="width:72px; height:72px; border-radius:50%; background:rgba(16,185,129,0.1); color:var(--success); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                        <i class="bi bi-check-circle-fill"></i>
+                    </div>
+                    <h3 id="successModalTitle"
+                        style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">Success
+                    </h3>
+                    <p id="successModalMessage"
+                        style="font-size:15px; color:var(--text-muted); margin-bottom:32px; font-weight:500;">Action
+                        completed successfully.</p>
+                    <button type="button" onclick="closeSuccessModal()" class="btn btn-primary"
+                        style="width:100%; font-size:15px; padding:12px;">Continue</button>
+                </div>
+            </div>
+
+            <!-- OTP Verification Modal -->
+            <div id="otpModalOverlay"
+                style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+                <div id="otpModal"
+                    style="background:var(--bg-surface); border-radius:16px; padding:40px; width:450px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+                    <div
+                        style="width:72px; height:72px; border-radius:50%; background:rgba(15,118,110,0.1); color:var(--primary); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                        <i class="bi bi-envelope-check-fill"></i>
+                    </div>
+                    <h3 style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">
+                        Verification Required</h3>
+                    <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px; font-weight:500;">For your
+                        security, we've sent a 6-digit PIN to your email.</p>
+                    <p style="font-size:13px; color:var(--text-muted); margin-bottom:24px;">Please enter it below to
+                        authorize this password change.</p>
+                    <div style="margin-bottom: 24px;">
+                        <input type="text" id="otpInput" maxlength="6"
+                            style="width:100%; text-align:center; font-size:24px; font-weight:700; letter-spacing:8px; padding:12px; border:2px solid var(--border); border-radius:8px; color:var(--text-dark);"
+                            placeholder="------">
+                    </div>
+                    <p id="otpErrorMsg"
+                        style="color:var(--danger); font-size:13px; font-weight:600; margin-bottom:24px; display:none;">
+                    </p>
+                    <div style="display:flex; gap:16px;">
+                        <button type="button" onclick="closeOtpModal()" class="btn btn-outline"
+                            style="flex:1;">Cancel</button>
+                        <button type="button" onclick="verifyOtpAndChangePassword()" class="btn btn-primary"
+                            id="verifyOtpBtn" style="flex:1;">Verify & Update</button>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 48px;"></div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+
+            // Hydrate Top Header
+            const userFullName = localStorage.getItem('userFullName');
+            if (userFullName) {
+                document.querySelector('.doctor-info h4').textContent = 'Dr. ' + userFullName;
+            }
+
+            // Hydrate Form Payload
+            fetch(`http://localhost:8080/api/v1/users/${userId}/profile`)
+                .then(res => res.json())
+                .then(profile => {
+                    document.getElementById('uFullName').value = profile.fullName || '';
+                    document.getElementById('uNic').value = profile.nic || '';
+                    document.getElementById('uPhone').value = profile.phone || '';
+                    document.getElementById('uEmail').value = profile.email || '';
+                    document.getElementById('uAddress').value = profile.address || '';
+                    document.getElementById('uSpecialistCategory').value = profile.specialistCategory || '';
+                    document.getElementById('uHospitalName').value = profile.hospitalName || '';
+                    document.getElementById('uQualification').value = profile.qualification || '';
+                    document.getElementById('uExperienceYears').value = profile.experienceYears || '';
+
+                    if (profile.profilePhoto) {
+                        document.getElementById('mainAvatar').src = profile.profilePhoto;
+                        document.querySelector('.doctor-profile img').src = profile.profilePhoto;
+                        localStorage.setItem('profilePhoto', profile.profilePhoto);
+                    }
+                })
+                .catch(err => console.error("Error loading profile:", err));
+        });
+
+        async function uploadProfilePhoto(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const userId = localStorage.getItem('userId');
+            const statusEl = document.getElementById('photoUploadStatus');
+            const spinner = document.getElementById('doctor-upload-spinner');
+
+            statusEl.innerHTML = '';
+            spinner.style.display = 'flex';
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const res = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile-photo`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                spinner.style.display = 'none';
+
+                if (!res.ok) throw new Error(await res.text());
+
+                const data = await res.json();
+                document.getElementById('mainAvatar').src = data.url;
+                document.querySelector('.doctor-profile img').src = data.url;
+                localStorage.setItem('profilePhoto', data.url);
+
+                statusEl.style.color = 'var(--success)';
+                statusEl.innerHTML = '<i class="bi bi-check-circle-fill"></i> Upload Successful!';
+
+                if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
+
+                setTimeout(() => { statusEl.innerHTML = ''; }, 3000);
+            } catch (err) {
+                spinner.style.display = 'none';
+                console.error("Upload error:", err);
+                statusEl.style.color = 'var(--danger)';
+                statusEl.innerHTML = '<i class="bi bi-x-circle-fill"></i> Upload failed.';
+            }
+        }
+
+        let pendingPasswordUpdate = null;
+
+        function togglePasswordVis(inputId, iconEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === "password") {
+                input.type = "text";
+                iconEl.classList.replace("bi-eye-slash", "bi-eye");
+            } else {
+                input.type = "password";
+                iconEl.classList.replace("bi-eye", "bi-eye-slash");
+            }
+        }
+
+        function showSuccessModal(title, message) {
+            document.getElementById('successModalTitle').innerText = title;
+            document.getElementById('successModalMessage').innerText = message;
+            const overlay = document.getElementById('successModalOverlay');
+            const modal = document.getElementById('successModal');
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.style.opacity = '1';
+            modal.style.transform = 'scale(1) translateY(0)';
+        }
+
+        function closeSuccessModal() {
+            const overlay = document.getElementById('successModalOverlay');
+            const modal = document.getElementById('successModal');
+            overlay.style.opacity = '0';
+            modal.style.transform = 'scale(0.85) translateY(20px)';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
+        function closeOtpModal() {
+            const overlay = document.getElementById("otpModalOverlay");
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            pendingPasswordUpdate = null;
+            document.getElementById("otpInput").value = "";
+        }
+
+        function changePassword(e) {
+            e.preventDefault();
+            const newPass = document.getElementById("newPassword").value;
+            const confirmPass = document.getElementById("confirmPassword").value;
+            const currentPass = document.getElementById("currentPassword").value;
+            const errorMsg = document.getElementById("passwordErrorMsg");
+            errorMsg.style.display = "none";
+            const userId = localStorage.getItem('userId');
+
+            if (newPass !== confirmPass) {
+                errorMsg.innerText = "New passwords do not match!";
+                errorMsg.style.display = "block";
+                return;
+            }
+            if (newPass === currentPass) {
+                errorMsg.innerText = "New password cannot be the same as your old password!";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            const btn = document.getElementById('savePasswordBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Requesting...';
+            btn.disabled = true;
+
+            fetch(`http://localhost:8080/api/v1/users/${userId}/request-password-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPassword: currentPass })
+            })
+                .then(async res => {
+                    if (!res.ok) throw new Error(await res.text());
+                    return res.text();
+                })
+                .then(msg => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    pendingPasswordUpdate = { currentPassword: currentPass, newPassword: newPass };
+                    const overlay = document.getElementById("otpModalOverlay");
+                    document.getElementById("otpErrorMsg").style.display = 'none';
+                    document.getElementById("otpInput").value = '';
+                    overlay.style.display = 'flex';
+                    overlay.offsetHeight;
+                    overlay.style.opacity = '1';
+                    setTimeout(() => document.getElementById("otpInput").focus(), 100);
+                })
+                .catch(err => {
+                    errorMsg.innerHTML = '<i class="bi bi-shield-x"></i> Error: ' + err.message;
+                    errorMsg.style.display = "block";
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                });
+        }
+
+        function verifyOtpAndChangePassword() {
+            if (!pendingPasswordUpdate) return;
+            const otpCode = document.getElementById("otpInput").value.trim();
+            const errorMsg = document.getElementById("otpErrorMsg");
+            const userId = localStorage.getItem('userId');
+
+            if (!otpCode || otpCode.length !== 6) {
+                errorMsg.innerText = "Please enter a valid 6-digit PIN.";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            const btn = document.getElementById('verifyOtpBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Verifying...';
+            btn.disabled = true;
+
+            pendingPasswordUpdate.otpCode = otpCode;
+
+            fetch(`http://localhost:8080/api/v1/users/${userId}/password`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pendingPasswordUpdate)
+            })
+                .then(async res => {
+                    if (!res.ok) throw new Error(await res.text());
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    document.getElementById("currentPassword").value = "";
+                    document.getElementById("newPassword").value = "";
+                    document.getElementById("confirmPassword").value = "";
+                    closeOtpModal();
+                    showSuccessModal("Password Updated", "Your account security has been verified and updated. You will now be redirected to login.");
+                    setTimeout(() => {
+                        localStorage.clear();
+                        window.location.replace('../../login.html');
+                    }, 3000);
+                })
+                .catch(err => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    errorMsg.innerText = "Verification failed: " + err.message;
+                    errorMsg.style.display = "block";
+                });
+        }
+
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveProfBtn');
+            const userId = localStorage.getItem('userId');
+
+            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
+            btn.disabled = true;
+
+            const payload = {
+                fullName: document.getElementById('uFullName').value,
+                nic: document.getElementById('uNic').value,
+                phone: document.getElementById('uPhone').value,
+                email: document.getElementById('uEmail').value,
+                address: document.getElementById('uAddress').value,
+                specialistCategory: document.getElementById('uSpecialistCategory').value,
+                hospitalName: document.getElementById('uHospitalName').value,
+                qualification: document.getElementById('uQualification').value,
+                experienceYears: document.getElementById('uExperienceYears').value
+            };
+
+            try {
+                const res = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!res.ok) throw new Error(await res.text());
+
+                const updatedProfile = await res.json();
+
+                // Sync LocalStorage
+                localStorage.setItem('userFullName', updatedProfile.fullName);
+                if (updatedProfile.profilePhoto) localStorage.setItem('profilePhoto', updatedProfile.profilePhoto);
+
+                btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Saved Successfully';
+                btn.style.backgroundColor = 'var(--success)';
+
+                if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
+
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="bi bi-check-circle"></i> Save Changes';
+                    btn.style.backgroundColor = 'var(--primary)';
+                    btn.disabled = false;
+                }, 2000);
+
+            } catch (err) {
+                console.error("Save failure:", err);
+                alert("Failed to update profile settings: " + err.message);
+                btn.innerHTML = '<i class="bi bi-check-circle"></i> Save Changes';
+                btn.disabled = false;
+            }
+        }
+    </script>
+    <style>
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModalOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+        <div id="logoutModal"
+            style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+            <h3 style="font-size:22px; font-weight:800; color:#1e293b; margin-bottom:12px;">Confirm Logout</h3>
+            <p style="font-size:15px; color:#64748b; margin-bottom:32px; font-weight:500;">Are you sure you want to
+                securely log out of the system?</p>
+            <div style="display:flex; gap:16px;">
+                <button type="button" onclick="closeLogoutModal()" class="btn btn-outline"
+                    style="flex:1;">Cancel</button>
+                <button type="button" onclick="confirmLogout()" class="btn btn-primary"
+                    style="flex:1; background-color: #ef4444; border-color: #ef4444;">Log Out</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showLogoutModal(e) {
+            if (e) e.preventDefault();
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.style.opacity = '1';
+            modal.style.transform = 'scale(1) translateY(0)';
+        }
+        function closeLogoutModal() {
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.opacity = '0';
+            modal.style.transform = 'scale(0.85) translateY(20px)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+        }
+    </script>
+    <!-- Global Avatar Hydration -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fn = localStorage.getItem('userFullName');
+            if (fn) {
+                document.querySelectorAll('.doctor-info h4').forEach(el => el.textContent = 'Dr. ' + fn);
+            }
+            const pp = localStorage.getItem('profilePhoto');
+            if (pp) {
+                document.querySelectorAll('.doctor-profile img').forEach(el => el.src = pp);
+            }
+        });
+    </script>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            }
+        }
+
+        // Auto-close sidebar when clicking outside
+        document.addEventListener('DOMContentLoaded', function () {
+            document.addEventListener('click', function (event) {
+                const sidebar = document.getElementById('sidebar');
+                const toggleElements = document.querySelectorAll('.mobile-toggle');
+
+                if (sidebar && sidebar.classList.contains('open')) {
+                    let clickedOnToggle = false;
+                    toggleElements.forEach(el => {
+                        if (el.contains(event.target)) clickedOnToggle = true;
+                    });
+
+                    if (!sidebar.contains(event.target) && !clickedOnToggle) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            }, true); // Use capture phase to beat Chart.js stopPropagation
+        });
+    </script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .mobile-close-btn {
+                display: block !important;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
+
+            .header-search {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .metrics-grid,
+            .form-grid,
+            .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+
+
+    <script>
+        function toggleNotifications() {
+            document.getElementById('notificationDropdown').classList.toggle('show');
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function setupNotifications(userId) {
+            const listElement = document.getElementById('notificationList');
+            const badgeElement = document.querySelector('.notification-badge');
+
+            if (!listElement) return;
+
+            // Optional custom callback if page is notifications.html
+            const isFullPage = typeof fetchAllNotifications === 'function';
+
+            function fetchDropdown() {
+                fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                    .then(res => res.json())
+                    .then(data => {
+                        listElement.innerHTML = '';
+                        let count = 0;
+
+                        const notifs = data.notifications || [];
+                        if (notifs.length > 0) {
+                            notifs.forEach(notif => {
+
+                                const item = document.createElement('div');
+                                item.className = 'notification-item';
+                                if (!notif.read) item.style.background = '#f8fafc';
+
+                                let colorClass = 'blue';
+                                let iconHTML = '<i class="bi bi-info-circle"></i>';
+                                if (notif.type === 'ALERT' || notif.type === 'EMERGENCY') { colorClass = 'orange'; iconHTML = '<i class="bi bi-exclamation-triangle"></i>'; }
+                                else if (notif.type === 'SUCCESS') { colorClass = 'green'; iconHTML = '<i class="bi bi-check-circle"></i>'; }
+                                else if (notif.type === 'WARNING') { colorClass = 'orange'; iconHTML = '<i class="bi bi-shield-exclamation"></i>'; }
+
+                                item.innerHTML = `
+                                    <div class="noti-icon ${colorClass}">${iconHTML}</div>
+                                    <div class="noti-content" style="flex-grow: 1;">
+                                        <h4>${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                        <p style="font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                        <span class="noti-time">${new Date(notif.createdAt).toLocaleString()}</span>
+                                    </div>
+                                    ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                                `;
+
+                                item.addEventListener('click', () => {
+                                    if (!notif.read) {
+                                        fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                            .then(() => {
+                                                fetchDropdown();
+                                                if (isFullPage) fetchAllNotifications(userId);
+                                            });
+                                    }
+                                });
+                                listElement.appendChild(item);
+                            });
+                        } else {
+                            listElement.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">No new notifications</div>';
+                        }
+
+                        if (badgeElement) { badgeElement.textContent = data.unreadCount || 0; badgeElement.style.display = (data.unreadCount > 0) ? 'flex' : 'none'; }
+                    });
+            }
+            fetchDropdown();
+            window.refreshDoctorDropdown = fetchDropdown;
+        }
+
+        function markAllNotificationsAsRead() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+                .then(() => {
+                    if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
+                    if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) setupNotifications(userId);
+        });
+    </script>
+
+</body>
+
+</html>

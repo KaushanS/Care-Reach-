@@ -1,0 +1,51 @@
+* Host localhost:8080 was resolved.
+* IPv6: ::1
+* IPv4: 127.0.0.1
+*   Trying [::1]:8080...
+* Established connection to localhost (::1 port 8080) from ::1 port 11728 
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+
+  0      0   0      0   0      0      0      0                              0* using HTTP/1.x
+> OPTIONS /api/v1/patients/all HTTP/1.1
+
+> Host: localhost:8080
+
+> User-Agent: curl/8.21.0
+
+> Accept: */*
+
+> Origin: http://localhost
+
+> Access-Control-Request-Method: GET
+
+> 
+
+* Request completely sent off
+< HTTP/1.1 200 
+
+< Vary: Origin
+
+< Vary: Access-Control-Request-Method
+
+< Vary: Access-Control-Request-Headers
+
+< Access-Control-Allow-Origin: *
+
+< Access-Control-Allow-Methods: GET,POST,PUT,DELETE,OPTIONS
+
+< Access-Control-Max-Age: 1800
+
+< Allow: GET, HEAD, POST, PUT, DELETE, OPTIONS, PATCH
+
+< Content-Length: 0
+
+< Date: Tue, 28 Jul 2026 17:33:58 GMT
+
+< 
+
+
+  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0
+  0      0   0      0   0      0      0      0                              0
+* Connection #0 to host localhost:8080 left intact
