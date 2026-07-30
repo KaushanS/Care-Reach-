@@ -920,7 +920,47 @@
         }
     }
 
-    </style>
+    
+        @media (max-width: 768px) {
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+            }
+            
+            /* FORCE wrapping on Cancel/Submit and GPS */
+            .panel-body > div[style*="display: flex"],
+            .panel-body > div[style*="display:flex"] {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            .panel-body button {
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+            
+            /* Ensure the text inputs strictly fit */
+            .form-group {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .form-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            input, select, textarea {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+        
+</style>
 
     <!-- Auth Guard for Browser Back Button -->
     
@@ -1178,15 +1218,14 @@
               <div class="form-group">
                 <label>GPS Coordinates <span class="required">*</span></label>
                 <div style="display: flex; gap: 8px; position:relative;">
-                  <i class="bi bi-crosshair"
-                    style="position:absolute; bottom:15px; left:16px; color:var(--text-muted); z-index:10;"></i>
+                  
                   <input type="text" id="gpsCoordinates" required readonly
                     placeholder="Click 'Get Location' to fetch GPS"
                     style="flex: 1; padding-left:42px; background-color: var(--bg-page); cursor: not-allowed; border-color: var(--border); color: var(--text-dark);">
                   <button type="button" class="btn btn-outline"
                     style="padding: 0 16px; border-radius: 10px; border-color:var(--primary); color:var(--primary);"
                     onclick="getLocation()">
-                    <i class="bi bi-crosshair"></i> Get Location
+                     Get Location
                   </button>
                 </div>
                 <div class="field-error" id="error-gps"
@@ -2061,7 +2100,47 @@
         }
     }
 
-    </style>
+    
+        @media (max-width: 768px) {
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+            }
+            
+            /* FORCE wrapping on Cancel/Submit and GPS */
+            .panel-body > div[style*="display: flex"],
+            .panel-body > div[style*="display:flex"] {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            .panel-body button {
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+            
+            /* Ensure the text inputs strictly fit */
+            .form-group {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .form-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+            input, select, textarea {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+        }
+        
+</style>
 
 </body>
 
