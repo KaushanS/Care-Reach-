@@ -403,6 +403,22 @@
             }
         }
     
+
+        /* Eradicate massive desktop padding on mobile screens */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 15px 10px !important; 
+                width: 100vw !important;
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+            }
+            .metric-card {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+            }
+        }
+    
 </style>
 </head>
 <body>
@@ -874,6 +890,22 @@ document.addEventListener('DOMContentLoaded', () => {
             /* If they used flex rows for labels and values, force them to wrap */
             .modal-body div[style*="display: flex"] {
                 flex-wrap: wrap !important;
+            }
+        }
+    
+
+        /* Eradicate massive desktop padding on mobile screens */
+        @media (max-width: 768px) {
+            .content-area {
+                padding: 15px 10px !important; 
+                width: 100vw !important;
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+            }
+            .metric-card {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
             }
         }
     
