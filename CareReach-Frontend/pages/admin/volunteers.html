@@ -1213,7 +1213,7 @@
         let volToDelete = null;
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('http://localhost:8080/api/v1/admin/volunteers')
+            fetch('https://care-reach-host-production.up.railway.app/api/v1/admin/volunteers')
                 .then(res => res.json())
                 .then(data => {
                     window.allVolunteers = data || [];
@@ -1341,7 +1341,7 @@
                     closeConfirmModal();
 
                     try {
-                        const res = await fetch("http://localhost:8080/api/v1/users/" + id, {
+                        const res = await fetch("https://care-reach-host-production.up.railway.app/api/v1/users/" + id, {
                             method: 'DELETE'
                         });
 
@@ -1382,7 +1382,7 @@
         let locationDistricts = [];
 
         document.addEventListener('DOMContentLoaded', () => {
-            fetch('http://localhost:8080/api/v1/locations/districts')
+            fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts')
                 .then(res => res.json())
                 .then(data => {
                     locationDistricts = data.map(d => d.name || d);
@@ -1641,7 +1641,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function fetchNotifications() {
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.unreadCount > 0) {
@@ -1695,7 +1695,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             item.addEventListener("click", () => {
                                 if (!notif.read) {
-                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                         .then(() => {
                                             notif.read = true;
                                             item.classList.remove("unread");

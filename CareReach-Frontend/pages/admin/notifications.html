@@ -839,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function fetchNotifications() {
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.unreadCount > 0) {
@@ -893,7 +893,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             item.addEventListener("click", () => {
                                 if (!notif.read) {
-                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                         .then(() => {
                                             notif.read = true;
                                             item.classList.remove("unread");
@@ -926,7 +926,7 @@ document.addEventListener('DOMContentLoaded', function() {
       if (!mainList) return;
 
       try {
-        const res = await fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/all`);
+        const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/all`);
         if (!res.ok) throw new Error("Failed to fetch all notifications");
         const notifications = await res.json();
 
@@ -971,7 +971,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
           if (!notif.read) {
             card.addEventListener("click", () => {
-              fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' }).then(() => {
+              fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' }).then(() => {
                 notif.read = true;
                 card.classList.remove("active-now");
                 card.style.cursor = "default";

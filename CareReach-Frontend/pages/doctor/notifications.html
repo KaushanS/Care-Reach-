@@ -1174,7 +1174,7 @@
             const isFullPage = typeof fetchAllNotifications === 'function';
 
             function fetchDropdown() {
-                fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                     .then(res => res.json())
                     .then(data => {
                         listElement.innerHTML = '';
@@ -1206,7 +1206,7 @@
 
                                 item.addEventListener('click', () => {
                                     if (!notif.read) {
-                                        fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                             .then(() => {
                                                 fetchDropdown();
                                                 if (isFullPage) fetchAllNotifications(userId);
@@ -1229,7 +1229,7 @@
         function markAllNotificationsAsRead() {
             const userId = localStorage.getItem('userId');
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
                 .then(() => {
                     if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
                     if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);
@@ -1247,7 +1247,7 @@
             const container = document.querySelector('.panel[style*="overflow: hidden"]') || document.querySelector('.panel');
             if (!container) return;
 
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/all`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/all`)
                 .then(res => res.json())
                 .then(data => {
                     container.innerHTML = '';
@@ -1285,7 +1285,7 @@
                             if (!notif.read) {
                                 const btn = row.querySelector('.mark-read-btn');
                                 if (btn) btn.addEventListener('click', () => {
-                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                         .then(() => {
                                             fetchAllNotifications(userId);
                                             if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();

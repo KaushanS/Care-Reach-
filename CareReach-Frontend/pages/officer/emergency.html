@@ -859,7 +859,7 @@
          if (navAvatarImg) navAvatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(navUserFullName)}&background=042f2e&color=fff`;
 
          if (navUId) {
-           fetch(`http://localhost:8080/api/v1/users/${navUId}/profile`)
+           fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${navUId}/profile`)
              .then(res => res.json())
              .then(data => {
                if (data.profilePhoto && navAvatarImg) {
@@ -925,7 +925,7 @@
       });
 
       function fetchNotifications() {
-        fetch(`http://localhost:8080/api/v1/notifications/user/${uId}/latest`)
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${uId}/latest`)
           .then(res => res.json())
           .then(data => {
             if (badgeElement) {
@@ -988,7 +988,7 @@
 
                 item.addEventListener("click", () => {
                   if (!notif.read) {
-                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                       .then(() => {
                         notif.read = true;
                         item.classList.remove("unread");

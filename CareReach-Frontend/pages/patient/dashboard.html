@@ -919,7 +919,7 @@
       }
       function fetchNotifications() {
         if (!userId) return;
-        fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
           .then(res => res.json())
           .then(data => {
             if (data.unreadCount > 0) {
@@ -969,7 +969,7 @@
                 item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
                 item.addEventListener("click", () => {
                   if (!notif.read) {
-                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                       .then(() => {
                         notif.read = true;
                         item.classList.remove("unread");
@@ -1005,7 +1005,7 @@
       setupNotifications(userId);
 
       try {
-        const patientRes = await fetch(`http://localhost:8080/api/v1/patients/user/${userId}`);
+        const patientRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/user/${userId}`);
         if (!patientRes.ok) throw new Error('Failed to fetch patient data');
         const patientRaw = await patientRes.json();
 
@@ -1020,7 +1020,7 @@
         if (profileImg) profileImg.src = avatarUrl;
 
         // Now Fetch Medical Reports to populate Last Visit & Next Appt
-        const reportsRes = await fetch(`http://localhost:8080/api/v1/medical-reports/patient/${patientId}`);
+        const reportsRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/medical-reports/patient/${patientId}`);
         if (!reportsRes.ok) throw new Error('Failed to fetch reports');
         const reports = await reportsRes.json();
 

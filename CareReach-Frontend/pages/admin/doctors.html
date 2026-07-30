@@ -2011,10 +2011,10 @@
 
         async function loadLocationData() {
             try {
-                const dsRes = await fetch('http://localhost:8080/api/v1/locations/divisional-secretariats');
+                const dsRes = await fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/divisional-secretariats');
                 allSecretariats = await dsRes.json();
 
-                const distRes = await fetch('http://localhost:8080/api/v1/locations/districts');
+                const distRes = await fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts');
                 allDistricts = await distRes.json();
             } catch (e) {
                 console.error("Failed loading locations", e);
@@ -2200,7 +2200,7 @@
             document.getElementById('modernLoader').classList.add('active');
 
             try {
-                const res = await fetch('http://localhost:8080/api/v1/users/register', {
+                const res = await fetch('https://care-reach-host-production.up.railway.app/api/v1/users/register', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -2225,7 +2225,7 @@
 
         async function fetchAdminDoctors() {
             try {
-                const res = await fetch('http://localhost:8080/api/v1/admin/doctors');
+                const res = await fetch('https://care-reach-host-production.up.railway.app/api/v1/admin/doctors');
                 if (!res.ok) return;
 
                 const doctors = await res.json();
@@ -2236,7 +2236,7 @@
                 dsDropdown.innerHTML = `<div class="custom-select-option" onclick="selectAdminDs('all', 'Divisional Secretariat')">Divisional Secretariat</div>`;
 
                 try {
-                    const dsRes = await fetch('http://localhost:8080/api/v1/locations/divisional-secretariats');
+                    const dsRes = await fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/divisional-secretariats');
                     if (dsRes.ok) {
                         const dsList = await dsRes.json();
                         dsList.forEach(dsObj => {
@@ -2269,7 +2269,7 @@
             document.getElementById('modernLoader').classList.add('active');
 
             try {
-                const res = await fetch('http://localhost:8080/api/v1/users/' + docId, {
+                const res = await fetch('https://care-reach-host-production.up.railway.app/api/v1/users/' + docId, {
                     method: 'DELETE'
                 });
 
@@ -2595,7 +2595,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         function fetchNotifications() {
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.unreadCount > 0) {
@@ -2649,7 +2649,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             
                             item.addEventListener("click", () => {
                                 if (!notif.read) {
-                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                         .then(() => {
                                             notif.read = true;
                                             item.classList.remove("unread");

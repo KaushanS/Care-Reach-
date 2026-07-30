@@ -1156,7 +1156,7 @@
         style="position:fixed;top:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:12px;"></div>
 
     <script>
-        const BASE = 'http://localhost:8080/api/v1';
+        const BASE = 'https://care-reach-host-production.up.railway.app/api/v1';
         let currentUserId = null;
 
         // ─── Toast ───────────────────────────────────────────────
@@ -1472,7 +1472,7 @@
 
         function fetchNotifications() {
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.unreadCount > 0) {
@@ -1526,7 +1526,7 @@
                             
                             item.addEventListener("click", () => {
                                 if (!notif.read) {
-                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                         .then(() => {
                                             notif.read = true;
                                             item.classList.remove("unread");

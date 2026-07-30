@@ -1118,7 +1118,7 @@
       if (navAvatarImg) navAvatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(navUserFullName)}&background=042f2e&color=fff`;
 
       if (navUId) {
-        fetch(`http://localhost:8080/api/v1/users/${navUId}/profile`)
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${navUId}/profile`)
           .then(res => res.json())
           .then(data => {
             if (data.profilePhoto && navAvatarImg) {
@@ -1137,7 +1137,7 @@
             }
 
             // Fetch report details
-            fetch(`http://localhost:8080/api/v1/patients/${reportId}`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/${reportId}`)
                 .then(res => {
                     if (!res.ok) throw new Error("Failed to fetch report");
                     return res.json();
@@ -1198,7 +1198,7 @@
                     };
 
                     document.getElementById('btn-confirm-verify').onclick = () => {
-                        fetch(`http://localhost:8080/api/v1/patients/report/${reportId}/verify`, { method: 'PUT' })
+                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/report/${reportId}/verify`, { method: 'PUT' })
                             .then(r => { if (r.ok) window.location.href = 'home-visits.html'; else alert('Failed to verify'); });
                     };
 
@@ -1208,7 +1208,7 @@
                     };
 
                     document.getElementById('btn-confirm-reject').onclick = () => {
-                        fetch(`http://localhost:8080/api/v1/patients/report/${reportId}/reject`, { method: 'PUT' })
+                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/report/${reportId}/reject`, { method: 'PUT' })
                             .then(r => { if (r.ok) window.location.href = 'home-visits.html'; else alert('Failed to reject'); });
                     };
 
@@ -1303,7 +1303,7 @@
       });
 
       function fetchNotifications() {
-        fetch(`http://localhost:8080/api/v1/notifications/${uId}`)
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${uId}`)
           .then(res => res.json())
           .then(data => {
             if (badgeElement) {
@@ -1366,7 +1366,7 @@
 
                 item.addEventListener("click", () => {
                   if (!notif.read) {
-                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                       .then(() => {
                         notif.read = true;
                         item.classList.remove("unread");

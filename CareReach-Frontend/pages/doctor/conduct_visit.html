@@ -747,7 +747,7 @@
             const targetPatientId = urlParams.get('patientId');
 
             if (targetPatientId) {
-                fetch(`http://localhost:8080/api/v1/patients/${targetPatientId}`)
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/${targetPatientId}`)
                     .then(res => res.json())
                     .then(pt => {
                         document.getElementById('patientContextCard').style.display = 'flex';
@@ -804,7 +804,7 @@
             btn.style.opacity = '0.8';
             btn.disabled = true;
 
-            fetch('http://localhost:8080/api/v1/medical-reports', {
+            fetch('https://care-reach-host-production.up.railway.app/api/v1/medical-reports', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -1045,7 +1045,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isFullPage = typeof fetchAllNotifications === 'function';
 
             function fetchDropdown() {
-                fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                     .then(res => res.json())
                     .then(data => {
                         listElement.innerHTML = '';
@@ -1077,7 +1077,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 
                                 item.addEventListener('click', () => {
                                     if (!notif.read) {
-                                        fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                             .then(() => {
                                                 fetchDropdown();
                                                 if (isFullPage) fetchAllNotifications(userId);
@@ -1100,7 +1100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function markAllNotificationsAsRead() {
             const userId = localStorage.getItem('userId');
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
                 .then(() => {
                     if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
                     if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);

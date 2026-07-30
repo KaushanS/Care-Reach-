@@ -937,7 +937,7 @@
             }
             function fetchNotifications() {
                 if (!userId) return;
-                fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                     .then(res => res.json())
                     .then(data => {
                         if (data.unreadCount > 0) {
@@ -987,7 +987,7 @@
                                 item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
                                 item.addEventListener("click", () => {
                                     if (!notif.read) {
-                                        fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                             .then(() => {
                                                 notif.read = true;
                                                 item.classList.remove("unread");
@@ -1021,7 +1021,7 @@
 
             try {
                 // Fetch complete User model profile
-                const res = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile`);
+                const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`);
                 if (!res.ok) throw new Error('Failed to fetch guardian profile data');
                 const data = await res.json();
 
@@ -1040,7 +1040,7 @@
                 document.getElementById('input-address').value = data.address || '';
 
                 // Fetch linked dependents
-                const pRes = await fetch(`http://localhost:8080/api/v1/patients/guardian/user/${userId}`);
+                const pRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/guardian/user/${userId}`);
                 if (pRes.ok) {
                     const patients = await pRes.json();
                     document.getElementById('sidebar-dependents').innerHTML = '';
@@ -1064,7 +1064,7 @@
                     try {
                         e.target.disabled = true;
                         document.getElementById('profile-avatar-img').style.opacity = '0.5';
-                        const upRes = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile-photo`, { method: 'POST', body: formData });
+                        const upRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile-photo`, { method: 'POST', body: formData });
                         if (!upRes.ok) throw new Error('Upload failed');
                         const upData = await upRes.json();
                         document.getElementById('profile-avatar-img').src = upData.url;
@@ -1097,7 +1097,7 @@
             btnElement.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
             btnElement.disabled = true;
 
-            fetch(`http://localhost:8080/api/v1/users/${userId}/profile`, {
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -1146,7 +1146,7 @@
             btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Requesting...';
             btn.disabled = true;
 
-            fetch(`http://localhost:8080/api/v1/users/${userId}/request-password-otp`, {
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/request-password-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ currentPassword: currentPass })
@@ -1192,7 +1192,7 @@
 
             pendingPasswordUpdate.otpCode = otpCode;
 
-            fetch(`http://localhost:8080/api/v1/users/${userId}/password`, {
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/password`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(pendingPasswordUpdate)

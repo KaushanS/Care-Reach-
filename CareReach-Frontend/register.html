@@ -1040,7 +1040,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
       // Fetch districts API
-      fetch('http://localhost:8080/api/v1/locations/districts')
+      fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts')
         .then(res => res.json())
         .then(data => {
           allDistricts = data.map(d => d.name || d);
@@ -1278,7 +1278,7 @@
       successCheck.style.display = 'none';
       loadingText.innerText = 'Creating your account...';
 
-      fetch('http://localhost:8080/api/v1/users/register', {
+      fetch('https://care-reach-host-production.up.railway.app/api/v1/users/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

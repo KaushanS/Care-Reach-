@@ -885,7 +885,7 @@
         }
         function fetchNotifications() {
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                 .then(res => res.json())
                 .then(data => {
                     if (data.unreadCount > 0) {
@@ -935,7 +935,7 @@
                             item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
                             item.addEventListener("click", () => {
                                 if (!notif.read) {
-                                    fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                         .then(() => {
                                             notif.read = true;
                                             item.classList.remove("unread");
@@ -970,7 +970,7 @@
 
         try {
             // Get Guardian Name for Navbar
-            const userRes = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile`);
+            const userRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`);
             if (userRes.ok) {
                 const userData = await userRes.json();
                 const nameEl = document.querySelector('.user-info h4');
@@ -981,7 +981,7 @@
             }
 
             // Get Linked Patients
-            const patientsRes = await fetch(`http://localhost:8080/api/v1/patients/guardian/user/${userId}`);
+            const patientsRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/guardian/user/${userId}`);
             const tabsContainer = document.getElementById('patientTabsContainer');
 
             if (patientsRes.ok) {
@@ -1041,7 +1041,7 @@
     async function fetchActiveReports(patientId) {
         const listContainer = document.getElementById('historyListContainer');
         try {
-            const res = await fetch(`http://localhost:8080/api/v1/medical-reports/patient/${patientId}`);
+            const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/medical-reports/patient/${patientId}`);
             if (res.ok) {
                 const reports = await res.json();
                 listContainer.innerHTML = '';

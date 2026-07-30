@@ -903,7 +903,7 @@
             }
 
             // Hydrate Form Payload
-            fetch(`http://localhost:8080/api/v1/users/${userId}/profile`)
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`)
                 .then(res => res.json())
                 .then(profile => {
                     document.getElementById('uFullName').value = profile.fullName || '';
@@ -940,7 +940,7 @@
             formData.append('file', file);
 
             try {
-                const res = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile-photo`, {
+                const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile-photo`, {
                     method: 'POST',
                     body: formData
                 });
@@ -1033,7 +1033,7 @@
             btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Requesting...';
             btn.disabled = true;
 
-            fetch(`http://localhost:8080/api/v1/users/${userId}/request-password-otp`, {
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/request-password-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ currentPassword: currentPass })
@@ -1081,7 +1081,7 @@
 
             pendingPasswordUpdate.otpCode = otpCode;
 
-            fetch(`http://localhost:8080/api/v1/users/${userId}/password`, {
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/password`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(pendingPasswordUpdate)
@@ -1129,7 +1129,7 @@
             };
 
             try {
-                const res = await fetch(`http://localhost:8080/api/v1/users/${userId}/profile`, {
+                const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -1325,7 +1325,7 @@
             const isFullPage = typeof fetchAllNotifications === 'function';
 
             function fetchDropdown() {
-                fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/latest`)
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
                     .then(res => res.json())
                     .then(data => {
                         listElement.innerHTML = '';
@@ -1357,7 +1357,7 @@
 
                                 item.addEventListener('click', () => {
                                     if (!notif.read) {
-                                        fetch(`http://localhost:8080/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
                                             .then(() => {
                                                 fetchDropdown();
                                                 if (isFullPage) fetchAllNotifications(userId);
@@ -1380,7 +1380,7 @@
         function markAllNotificationsAsRead() {
             const userId = localStorage.getItem('userId');
             if (!userId) return;
-            fetch(`http://localhost:8080/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
                 .then(() => {
                     if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
                     if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);
