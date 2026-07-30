@@ -636,291 +636,62 @@
             }
         }
 
-        /* CareReach Universal Mobile Patch */
-        @media (max-width: 768px) {
-            /* Fix overflowing tables */
-            .table-container {
-                overflow-x: auto !important;
-                -webkit-overflow-scrolling: touch;
-                width: 100vw !important;
-                margin-left: -20px !important;
-                margin-right: -20px !important;
-                padding: 0 20px !important;
-                border-radius: 0 !important;
-            }
-            .table-container table {
-                min-width: 800px; /* Ensure table keeps format, users can swipe sideways */
-            }
-
-            /* Fix Modals being cut off */
-            .modal-content {
-                width: 95% !important;
-                margin: 5% auto !important;
-                padding: 20px !important;
-                max-height: 90vh !important;
-                overflow-y: auto !important;
-            }
-
-            /* Fix Page Headers (Title + Buttons) */
-            .page-header {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 15px !important;
-            }
-            .page-header .btn {
-                width: 100% !important;
-                justify-content: center !important;
-            }
-
-            /* Fix Search and Filtering Bars */
-            .filter-bar {
-                flex-direction: column !important;
-            }
-            .filter-bar .search-box, 
-            .filter-bar .filter-select {
-                width: 100% !important;
-                /* max-width removed */
-            }
-
-            /* Fix Form Grids */
-            .form-grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            /* Main Content Padding adjustments */
-            .main-content {
-                padding: 15px !important;
-            }
-            
-            /* Metric Cards Grid */
-            .metrics-grid {
-                grid-template-columns: 1fr !important;
-            }
-        }
-
-    
-        /* CareReach Mobile Box-Sizing & Margin Override */
-        @media (max-width: 768px) {
-            * {
-                box-sizing: border-box !important;
-            }
-            body, html {
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            input, select, textarea, .form-control {
-                width: 100% !important;
-                /* max-width removed */
-                box-sizing: border-box !important;
-            }
-            .form-section, .dashboard-card, .metric-card {
-                padding: 15px !important;
-                margin: 10px 0 !important;
-                width: 100% !important;
-            }
-            .main-content {
-                padding: 10px !important;
-                width: 100% !important;
-                margin-left: 0 !important;
-            }
-        }
-
-    
-    /* CareReach SUPREME Mobile Boundary Enforcement */
-    @media (max-width: 768px) {
-        * {
-            box-sizing: border-box !important;
-            /* max-width removed */
-        }
-        html, body {
-            overflow-x: hidden !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        .panel {
-            flex-direction: column !important;
-            width: 100% !important;
-            overflow: hidden !important;
-            padding: 15px !important;
-            margin-bottom: 20px !important;
-        }
-        
-        .panel-body {
-            padding: 10px 0 !important;
-            width: 100% !important;
-        }
-
-        /* Force any side-by-side flexbox elements to wrap */
-        .form-group, 
-        .panel-header, 
-        div[style*="display: flex"],
-        div[style*="display:flex"] {
-            flex-wrap: wrap !important;
-        }
-
-        
-        .notification-dropdown {
-            width: 300px !important;
-            max-width: 90vw !important;
-            right: -20px !important;
-        }
-        .header-search { display: none !important; }
-        .top-header {
-            padding: 0 16px !important;
-            height: auto !important;
-            min-height: 72px !important;
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-        }
-        .mobile-toggle {
-            margin-right: 15px !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-        }
-        .notification-wrapper {
-            flex-shrink: 0 !important;
-        }
-        .user-profile {
-            padding-left: 10px !important;
-            border-left: none !important;
-        }
-                    
-        /* Stop buttons from colliding */
-        .btn {
-            width: 100% !important;
-            white-space: normal !important;
-            margin-bottom: 8px !important;
-        }
-
-        input, select, textarea, .custom-dropdown {
-            width: 100% !important;
-            /* max-width removed */
-            margin-left: 0 !important;
-        }
-    }
-
-    
-        /* Map Modal Mobile Enhancements */
-        .map-search-bar {
-            flex-direction: column !important;
-        }
-        .map-modal-footer {
-            flex-direction: column-reverse !important;
-            gap: 10px !important;
-        }
-        .map-modal-footer .btn {
-            width: 100% !important;
-            margin: 0 !important;
-        }
-        /* Stop the header from getting squished by button rules */
-        .map-modal-header {
-            flex-wrap: nowrap !important;
-        }
-        .close-map-btn {
-            width: auto !important;
-            padding: 10px !important;
-        }
-                
-
-        /* Table Scroll Override */
-        @media (max-width: 768px) {
-            .table-container, .table-responsive {
-                width: 100% !important;
-                max-width: 100% !important;
-                overflow-x: auto !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                padding: 0 !important;
-                -webkit-overflow-scrolling: touch;
-            }
-            .panel {
-                overflow: visible !important;
-            }
-            .panel-body {
-                overflow-x: auto !important;
-            }
-            td, th {
-                white-space: nowrap !important;
-            }
-            
-            /* Stop buttons on Volunteer Dashboard from being completely squished */
-            .filter-tabs {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 5px !important;
-            }
-            .filter-tab {
-                flex: 1 1 auto !important;
-                text-align: center !important;
-            }
-        }
-    
-
-        /* Global Mobile Fallback & Dropdown Fix */
-        @media (max-width: 768px) {
-            /* Guarantee ALL notification dropdowns float exactly in the center */
-            .notification-dropdown {
-                position: fixed !important;
-                top: 72px !important;
-                left: 5% !important;
-                width: 90% !important;
-                max-width: none !important;
-                right: auto !important;
-                z-index: 9999 !important;
-            }
-            
-            /* Guarantee ALL modals take up the full screen */
-            .modal-content, .modal {
-                width: 95% !important;
-                max-width: 95% !important;
-                margin: 5% auto !important;
-                padding: 15px !important;
-            }
-            
-            /* Any data grid inside a modal must stack horizontally */
-            .details-grid, .info-grid, .data-grid {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 15px !important;
-            }
-            
-            /* Generic fix for internal modal details */
-            .detail-item, .info-item {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-            }
-            
-            /* If they used flex rows for labels and values, force them to wrap */
-            .modal-body div[style*="display: flex"] {
-                flex-wrap: wrap !important;
-            }
-        }
-    
-
-        /* Eradicate massive desktop padding on mobile screens */
-        @media (max-width: 768px) {
-            .content-area {
-                padding: 15px 10px !important; 
-                width: 100% !important;
-                max-width: 100% !important;
-                overflow-x: hidden !important;
-            }
-            .metric-card {
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                width: 100% !important;
-            }
-        }
-    
-</style>
+        </style>
 
     <!-- Auth Guard for Browser Back Button -->
 
+<style>
+
+    /* =========================================
+       CareReach Master Mobile Responsiveness
+       ========================================= */
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+        
+        /* Padding and Layouts */
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+        /* Modals and Data Grids */
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+        
+        /* Forms, Inputs, Buttons */
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+        
+        /* Tables and Advanced Nav */
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
 </head>
 
 <body>
@@ -1275,288 +1046,7 @@
             }
         }
     
-        /* CareReach Universal Mobile Patch */
-        @media (max-width: 768px) {
-            /* Fix overflowing tables */
-            .table-container {
-                overflow-x: auto !important;
-                -webkit-overflow-scrolling: touch;
-                width: 100vw !important;
-                margin-left: -20px !important;
-                margin-right: -20px !important;
-                padding: 0 20px !important;
-                border-radius: 0 !important;
-            }
-            .table-container table {
-                min-width: 800px; /* Ensure table keeps format, users can swipe sideways */
-            }
-
-            /* Fix Modals being cut off */
-            .modal-content {
-                width: 95% !important;
-                margin: 5% auto !important;
-                padding: 20px !important;
-                max-height: 90vh !important;
-                overflow-y: auto !important;
-            }
-
-            /* Fix Page Headers (Title + Buttons) */
-            .page-header {
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                gap: 15px !important;
-            }
-            .page-header .btn {
-                width: 100% !important;
-                justify-content: center !important;
-            }
-
-            /* Fix Search and Filtering Bars */
-            .filter-bar {
-                flex-direction: column !important;
-            }
-            .filter-bar .search-box, 
-            .filter-bar .filter-select {
-                width: 100% !important;
-                /* max-width removed */
-            }
-
-            /* Fix Form Grids */
-            .form-grid {
-                grid-template-columns: 1fr !important;
-            }
-            
-            /* Main Content Padding adjustments */
-            .main-content {
-                padding: 15px !important;
-            }
-            
-            /* Metric Cards Grid */
-            .metrics-grid {
-                grid-template-columns: 1fr !important;
-            }
-        }
-
-    
-        /* CareReach Mobile Box-Sizing & Margin Override */
-        @media (max-width: 768px) {
-            * {
-                box-sizing: border-box !important;
-            }
-            body, html {
-                overflow-x: hidden !important;
-                width: 100% !important;
-            }
-            input, select, textarea, .form-control {
-                width: 100% !important;
-                /* max-width removed */
-                box-sizing: border-box !important;
-            }
-            .form-section, .dashboard-card, .metric-card {
-                padding: 15px !important;
-                margin: 10px 0 !important;
-                width: 100% !important;
-            }
-            .main-content {
-                padding: 10px !important;
-                width: 100% !important;
-                margin-left: 0 !important;
-            }
-        }
-
-    
-    /* CareReach SUPREME Mobile Boundary Enforcement */
-    @media (max-width: 768px) {
-        * {
-            box-sizing: border-box !important;
-            /* max-width removed */
-        }
-        html, body {
-            overflow-x: hidden !important;
-            width: 100% !important;
-            margin: 0 !important;
-            padding: 0 !important;
-        }
-        
-        .panel {
-            flex-direction: column !important;
-            width: 100% !important;
-            overflow: hidden !important;
-            padding: 15px !important;
-            margin-bottom: 20px !important;
-        }
-        
-        .panel-body {
-            padding: 10px 0 !important;
-            width: 100% !important;
-        }
-
-        /* Force any side-by-side flexbox elements to wrap */
-        .form-group, 
-        .panel-header, 
-        div[style*="display: flex"],
-        div[style*="display:flex"] {
-            flex-wrap: wrap !important;
-        }
-
-        
-        .notification-dropdown {
-            width: 300px !important;
-            max-width: 90vw !important;
-            right: -20px !important;
-        }
-        .header-search { display: none !important; }
-        .top-header {
-            padding: 0 16px !important;
-            height: auto !important;
-            min-height: 72px !important;
-            display: flex !important;
-            flex-wrap: nowrap !important;
-            justify-content: space-between !important;
-            align-items: center !important;
-        }
-        .mobile-toggle {
-            margin-right: 15px !important;
-            display: block !important;
-            flex-shrink: 0 !important;
-        }
-        .notification-wrapper {
-            flex-shrink: 0 !important;
-        }
-        .user-profile {
-            padding-left: 10px !important;
-            border-left: none !important;
-        }
-                    
-        /* Stop buttons from colliding */
-        .btn {
-            width: 100% !important;
-            white-space: normal !important;
-            margin-bottom: 8px !important;
-        }
-
-        input, select, textarea, .custom-dropdown {
-            width: 100% !important;
-            /* max-width removed */
-            margin-left: 0 !important;
-        }
-    }
-
-    
-        /* Map Modal Mobile Enhancements */
-        .map-search-bar {
-            flex-direction: column !important;
-        }
-        .map-modal-footer {
-            flex-direction: column-reverse !important;
-            gap: 10px !important;
-        }
-        .map-modal-footer .btn {
-            width: 100% !important;
-            margin: 0 !important;
-        }
-        /* Stop the header from getting squished by button rules */
-        .map-modal-header {
-            flex-wrap: nowrap !important;
-        }
-        .close-map-btn {
-            width: auto !important;
-            padding: 10px !important;
-        }
-                
-
-        /* Table Scroll Override */
-        @media (max-width: 768px) {
-            .table-container, .table-responsive {
-                width: 100% !important;
-                max-width: 100% !important;
-                overflow-x: auto !important;
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                padding: 0 !important;
-                -webkit-overflow-scrolling: touch;
-            }
-            .panel {
-                overflow: visible !important;
-            }
-            .panel-body {
-                overflow-x: auto !important;
-            }
-            td, th {
-                white-space: nowrap !important;
-            }
-            
-            /* Stop buttons on Volunteer Dashboard from being completely squished */
-            .filter-tabs {
-                display: flex !important;
-                flex-wrap: wrap !important;
-                gap: 5px !important;
-            }
-            .filter-tab {
-                flex: 1 1 auto !important;
-                text-align: center !important;
-            }
-        }
-    
-
-        /* Global Mobile Fallback & Dropdown Fix */
-        @media (max-width: 768px) {
-            /* Guarantee ALL notification dropdowns float exactly in the center */
-            .notification-dropdown {
-                position: fixed !important;
-                top: 72px !important;
-                left: 5% !important;
-                width: 90% !important;
-                max-width: none !important;
-                right: auto !important;
-                z-index: 9999 !important;
-            }
-            
-            /* Guarantee ALL modals take up the full screen */
-            .modal-content, .modal {
-                width: 95% !important;
-                max-width: 95% !important;
-                margin: 5% auto !important;
-                padding: 15px !important;
-            }
-            
-            /* Any data grid inside a modal must stack horizontally */
-            .details-grid, .info-grid, .data-grid {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 15px !important;
-            }
-            
-            /* Generic fix for internal modal details */
-            .detail-item, .info-item {
-                display: flex !important;
-                flex-direction: column !important;
-                width: 100% !important;
-            }
-            
-            /* If they used flex rows for labels and values, force them to wrap */
-            .modal-body div[style*="display: flex"] {
-                flex-wrap: wrap !important;
-            }
-        }
-    
-
-        /* Eradicate massive desktop padding on mobile screens */
-        @media (max-width: 768px) {
-            .content-area {
-                padding: 15px 10px !important; 
-                width: 100% !important;
-                max-width: 100% !important;
-                overflow-x: hidden !important;
-            }
-            .metric-card {
-                margin-left: 0 !important;
-                margin-right: 0 !important;
-                width: 100% !important;
-            }
-        }
-    
-</style>
+        </style>
 
 
     <script>

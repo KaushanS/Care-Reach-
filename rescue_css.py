@@ -1,15 +1,10 @@
-<!DOCTYPE html>
-<html>
+import os
+import re
 
-<head>
-    <title>Reset Session</title>
-    <script>
-        localStorage.clear();
-        alert("Session cleared! You will now be redirected to the landing page.");
-        window.location.replace("index.html");
-    </script>
-<style>
-
+def rescue_frontend():
+    base_dir = r"CareReach-Frontend"
+    
+    MASTER_CSS = '''
     /* =========================================
        CareReach Master Mobile Responsiveness
        ========================================= */
@@ -58,12 +53,42 @@
         .notification-wrapper { flex-shrink: 0 !important; }
         .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
     }
+'''
 
-</style>
-</head>
+    for root, dirs, files in os.walk(base_dir):
+        for file in files:
+            if file.endswith('.html'):
+                path = os.path.join(root, file)
+                with open(path, 'r', encoding='utf-8') as f:
+                    content = f.read()
 
-<body>
-    Clearing session...
-</body>
+                # Step 1: Strip OUT absolutely ALL fragment CSS blocks.
+                # Notice we are just matching from /* CareReach Universal Mobile Patch to ANY following closing } that ends the media query.
+                content = re.sub(r'/\* CareReach Universal Mobile Patch \*/.*?(?=</style>)', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* CareReach Mobile Box-Sizing.*?(?=</style>)', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* CareReach SUPREME.*?(?=</style>)', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Table Scroll Override.*?(?=</style>)', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Global Mobile Fallback.*?(?=</style>)', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Eradicate massive desktop padding.*?(?=</style>)', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Map Modal Mobile Enhancements.*?(?=</style>)', '', content, flags=re.DOTALL)
 
-</html>
+                # Most dangerously, rip out the unclosed rogue string rendering in visual DOM
+                # The rogue string literally prints on the screen, meaning it has NO </style> enclosing it!
+                content = re.sub(r'/\* CareReach Universal Mobile Patch \*/.*?\}\s*\}\s*\}', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* CareReach Mobile Box-Sizing.*?\}\s*\}', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* CareReach SUPREME.*?\}\s*\}', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Table Scroll Override.*?\}\s*\}', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Global Mobile Fallback.*?\}\s*\}', '', content, flags=re.DOTALL)
+                content = re.sub(r'/\* Eradicate massive desktop padding.*?\}\s*\}', '', content, flags=re.DOTALL)
+
+                # Step 2: Ensure any empty dangling </style> blocks are removed if they were orphaned
+                content = re.sub(r'<style>[\s\n]*</style>', '', content, flags=re.DOTALL)
+
+                # Step 3: Inject the Master block cleanly ONE TIME strictly within the <head> segment
+                if "CareReach Master Mobile Responsiveness" not in content and "</head>" in content:
+                    content = content.replace("</head>", "<style>\n" + MASTER_CSS + "\n</style>\n</head>")
+
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+
+rescue_frontend()
