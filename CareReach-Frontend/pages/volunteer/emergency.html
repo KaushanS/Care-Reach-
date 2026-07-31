@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | Emergency SOS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* SOS Button */
+    .sos-container {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    @keyframes sos-pulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.4);
+      }
+
+      70% {
+        box-shadow: 0 0 0 30px rgba(220, 38, 38, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+      }
+    }
+
+    .sos-button {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #dc2626, #b91c1c);
+      border: none;
+      color: white;
+      font-size: 22px;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      animation: sos-pulse 2s infinite;
+      transition: transform 0.2s;
+    }
+
+    .sos-button:hover {
+      transform: scale(1.05);
+    }
+
+    .sos-button i {
+      font-size: 40px;
+    }
+
+    .sos-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 12px;
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-body {
+      padding: 24px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+
+    .form-group label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-dark);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .form-group label .required {
+      color: var(--danger);
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-normal);
+      background: var(--bg-page);
+      transition: 0.2s;
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 15px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    /* History */
+    .history-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .history-info {
+      flex: 1;
+    }
+
+    .history-info h4 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 2px;
+    }
+
+    .history-info p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .status-resolved {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .status-active {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu">
+      <div class="menu-title">Volunteer Hub</div>
+      <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="report-patient.html" class="menu-item"><i class="bi bi-person-plus"></i> Report a Patient</a>
+      <a href="emergency.html" class="menu-item active"><i class="bi bi-exclamation-triangle"></i> Emergency SOS</a>
+      <a href="activities.html" class="menu-item"><i class="bi bi-journal-text"></i> My Activities</a>
+      <div class="menu-title">Account</div>
+      <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search..."></div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Nimal Sirisena</h4>
+          <p>Community Volunteer</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Nimal+Sirisena&background=042f2e&color=fff" alt="Volunteer">
+      </a>
+    </header>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>Emergency SOS</h1>
+        <p>Submit an emergency request for immediate medical assistance.</p>
+      </div>
+      <div class="sos-container">
+        <button class="sos-button"><i class="bi bi-telephone-fill"></i> SOS</button>
+        <p class="sos-text">Press the button to instantly alert the GN Officer and nearest medical responders.</p>
+      </div>
+      <!-- Emergency Details Form -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-clipboard-fill"></i> Emergency Details</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Patient Name <span class="required">*</span></label><input type="text"
+                placeholder="Enter name or 'Unknown'"></div>
+            <div class="form-group"><label>Contact Number</label><input type="tel" placeholder="e.g. +94 71 234 5678">
+            </div>
+            <div class="form-group"><label>Emergency Type <span class="required">*</span></label>
+              <select>
+                <option value="" disabled selected>Select type</option>
+                <option>Cardiac Emergency</option>
+                <option>Breathing Difficulty</option>
+                <option>Fall / Injury</option>
+                <option>Severe Dehydration</option>
+                <option>Seizure</option>
+                <option>Unconscious</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group"><label>Location</label><input type="text" placeholder="Address or GPS coordinates">
+            </div>
+            <div class="form-group full-width"><label>Description</label><textarea
+                placeholder="Describe the situation — what happened, visible symptoms, current state..."></textarea>
+            </div>
+          </div>
+          <div style="margin-top:20px;">
+            <button class="btn btn-danger"><i class="bi bi-exclamation-triangle-fill"></i> Submit Emergency
+              Request</button>
+          </div>
+        </div>
+      </div>
+      <!-- Recent Emergency History -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-clock-history"></i> My Emergency Reports</h2>
+        </div>
+        <div class="panel-body">
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--danger-bg);color:var(--danger);"><i
+                class="bi bi-heart-pulse-fill"></i></div>
+            <div class="history-info">
+              <h4>Cardiac Emergency — Sunil Jayasooriya</h4>
+              <p>45, High Level Rd • Today, 8:15 AM</p>
+            </div>
+            <span class="status-badge status-active"><i class="bi bi-activity"></i> Active</span>
+          </div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--success-bg);color:var(--success);"><i
+                class="bi bi-check-circle-fill"></i></div>
+            <div class="history-info">
+              <h4>Fall / Injury — Elderly woman near bus stop</h4>
+              <p>Thimbirigasyaya Bus Stop • June 30, 3:45 PM</p>
+            </div>
+            <span class="status-badge status-resolved"><i class="bi bi-check-circle-fill"></i> Resolved</span>
+          </div>
+          <div class="history-item">
+            <div class="history-icon" style="background:var(--success-bg);color:var(--success);"><i
+                class="bi bi-check-circle-fill"></i></div>
+            <div class="history-info">
+              <h4>Breathing Difficulty — Kamal Perera</h4>
+              <p>12, Temple Road • June 12, 11:00 AM</p>
+            </div>
+            <span class="status-badge status-resolved"><i class="bi bi-check-circle-fill"></i> Resolved</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>

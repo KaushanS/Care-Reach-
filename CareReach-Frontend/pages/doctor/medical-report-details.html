@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Medical Report Details</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+            --sidebar-bg: #042f2e;
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+            --bg-page: #f0f7f6;
+            --bg-surface: #fff;
+            --text-dark: #0f172a;
+            --text-normal: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --sidebar-width: 260px;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family)
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, .1);
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, .15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+
+        .brand span {
+            color: #5eead4;
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            margin: 16px 0 8px 8px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            color: #fff;
+        }
+
+        .menu-item.active i {
+            color: #fff;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .top-header {
+            height: 72px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 0 32px;
+        }
+
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+
+        .doctor-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+
+        .doctor-info {
+            text-align: left;
+        }
+
+        .doctor-info h4 {
+            font-size: 14px;
+            color: var(--text-dark)
+        }
+
+        .doctor-info p {
+            font-size: 12px;
+            color: var(--text-muted)
+        }
+
+        .content-area {
+            padding: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .breadcrumb span {
+            color: var(--text-dark);
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 24px;
+        }
+
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 24px;
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 20px;
+            margin-bottom: 24px;
+        }
+
+        .report-date {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-field {
+            margin-bottom: 24px;
+        }
+
+        .report-field h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .report-field p {
+            font-size: 15px;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: #f8fbfb;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+    
+        /* NOTIFICATION DROPDOWN */
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 32px;
+            width: 320px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+        .notification-dropdown.active {
+            display: flex;
+        }
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+        .notif-blue { background: #e0f2fe; color: #0284c7; }
+        .notif-green { background: #dcfce7; color: #16a34a; }
+        .notif-orange { background: #ffedd5; color: #ea580c; }
+        .notification-content h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+        .notification-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+        .notification-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+        }
+
+</style>
+</head>
+
+<body>
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-title">Main</div>
+            <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+            <div class="menu-title">Clinical Care</div>
+            <a href="appointments.html" class="menu-item"><i class="bi bi-calendar-event"></i> Appointments</a>
+            <a href="patients.html" class="menu-item active"><i class="bi bi-person-lines-fill"></i> Patients</a>
+            <a href="home-visits.html" class="menu-item"><i class="bi bi-house-heart"></i> Home Visits</a>
+            <div class="menu-title">Management</div>
+            <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
+            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+                <i class="bi bi-box-arrow-right"></i> Log Out
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            
+            <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+                <div class="action-icon" title="Notifications" onclick="document.getElementById('notificationDropdown').classList.toggle('active')" style="font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative;">
+                    <i class="bi bi-bell"></i>
+                    <div class="dot" style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--warning); border-radius: 50%; border: 2px solid white;"></div>
+                </div>
+            
+<a href="profile.html" class="doctor-profile">
+                    <img src="https://ui-avatars.com/api/?name=Dr+Aruna+Silva&background=0f766e&color=fff" alt="Doctor">
+                    <div class="doctor-info">
+                        <h4>Dr. Aruna Silva</h4>
+                        <p>Medical Officer</p>
+                    </div>
+                </a>
+        
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <span><i class="bi bi-bell"></i> Notifications</span>
+                <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark all as read</span>
+            </div>
+            <a href="home-visits.html" class="notification-item">
+                <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
+                <div class="notification-content">
+                    <h4>New GN-Verified Visit</h4>
+                    <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
+                    <span class="notification-time">10 mins ago</span>
+                </div>
+            </a>
+            <a href="appointments.html" class="notification-item">
+                <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
+                <div class="notification-content">
+                    <h4>Appointment Reminder</h4>
+                    <p>You have 4 pending clinic appointments for today.</p>
+                    <span class="notification-time">1 hour ago</span>
+                </div>
+            </a>
+            <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                View All Notifications
+                    </a>
+        </div>
+
+</header>
+
+        <div class="content-area">
+            <div class="breadcrumb">
+                <a href="patient-details.html"><i class="bi bi-arrow-left"></i> Back to Patient Details</a>
+                <i class="bi bi-chevron-right" style="color: var(--border); font-size: 12px;"></i>
+                <span>Medical Report</span>
+            </div>
+
+            <div class="page-header">
+                <h1>Medical Report Details</h1>
+            </div>
+
+            <div class="panel">
+                <div class="report-header">
+                    <div class="report-date"><i class="bi bi-calendar-check"></i> Report Date: July 04, 2026</div>
+                    <div style="font-size: 14px; font-weight: 500;">Patient: <strong>Amaya Perera</strong></div>
+                </div>
+
+                <div class="report-field">
+                    <h3>Observed Symptoms</h3>
+                    <p>Patient presented with severe headache and slight dizziness in the morning. Symptoms have
+                        persisted for 3 days.</p>
+                </div>
+
+                <div class="report-field">
+                    <h3>Primary Diagnosis</h3>
+                    <p><strong>High Blood Pressure (Hypertension)</strong></p>
+                </div>
+
+                <div class="report-field">
+                    <h3>Visit Description</h3>
+                    <p>BP recorded at 150/95. Patient was advised on strict low-sodium dietary habits. Basic physical
+                        exam showed no other acute abnormalities. Scheduled a follow-up assessment in 2 weeks.</p>
+                </div>
+
+                <div class="report-field">
+                    <h3>Recommended Medicines</h3>
+                    <p>
+                        • Amlodipine 5mg (1 Daily after dinner)<br>
+                        • Paracetamol 500mg (SOS for headache)
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>
+
+

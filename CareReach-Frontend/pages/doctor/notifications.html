@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CareReach | Doctor Dashboard</title>
+    <title>CareReach | Notifications</title>
     <!-- Fonts and Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -678,9 +678,6 @@
             <a href="profile.html" class="menu-item">
                 <i class="bi bi-person-badge"></i> Profile
             </a>
-            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
-                <i class="bi bi-box-arrow-right"></i> Log Out
-            </a>
         </nav>
     </aside>
 
@@ -735,199 +732,119 @@
                         <span class="notification-time">1 hour ago</span>
                     </div>
                 </a>
-                <a href="notifications.html" class="notification-item"
-                    style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
-                    View All Notifications
-                </a>
+                <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                View All Notifications
+                    </a>
             </div>
 
         </header>
 
         <div class="content-area">
-
-            <div class="page-header">
+            <div class="page-header"
+                style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
                 <div>
-                    <h1>Clinical Dashboard</h1>
-                    <p>Manage GN-verified home visit requests, conduct patient checks, and upload reports.</p>
+                    <h1>Notifications Hub</h1>
+                    <p style="font-size: 15px; color: var(--text-muted); margin-top: 4px;">View and manage all system
+                        alerts, appointment reminders, and incoming home visits.</p>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <select
+                        style="padding: 10px 16px; border: 1px solid var(--border); border-radius: 8px; outline: none; font-size: 13px; font-family: var(--font-family);">
+                        <option>All Notifications</option>
+                        <option>Unread Only</option>
+                        <option>Read</option>
+                    </select>
+                    <button class="btn btn-outline" style="color: var(--primary); border-color: var(--border);"><i
+                            class="bi bi-check2-all"></i> Mark All Read</button>
                 </div>
             </div>
 
-            <!-- METRICS (Tailored to the Volunteer -> GN -> Doctor workflow) -->
-            <div class="metrics-grid">
-                <div class="metric-card" style="border-color: rgba(245, 158, 11, 0.4); background: var(--warning-bg);">
-                    <div class="metric-icon icon-orange"><i class="bi bi-house-exclamation-fill"></i></div>
-                    <div class="metric-info">
-                        <h3 style="color: var(--warning);">02</h3>
-                        <p style="color: var(--warning);">GN-Verified Visits Pending</p>
+            <div class="panel" style="padding: 0; overflow: hidden;">
+                <!-- Unread Notification 1 -->
+                <div class="notification-row unread"
+                    style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 20px; align-items: flex-start; background: #f0fdfa;">
+                    <div class="metric-icon notif-orange"
+                        style="width: 48px; height: 48px; flex-shrink: 0; background: #ffedd5; color: #ea580c; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px;">
+                        <i class="bi bi-house-exclamation"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center;">
+                            <h3 style="font-size: 16px; color: var(--text-dark); margin:0;">New GN-Verified Visit</h3>
+                            <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">10 mins
+                                ago</span>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-normal); margin: 0 0 12px 0;">Amaya Perera has been
+                            verified by the Grama Niladari for a home visit due to severe respiratory issues.</p>
+                        <a href="home-visits.html" class="btn btn-primary"
+                            style="padding: 6px 14px; font-size: 12px; display: inline-flex;"><i
+                                class="bi bi-arrow-right-short" style="font-size: 16px; margin-right: 4px;"></i> View
+                            Visit Queue</a>
+                    </div>
+                    <button class="icon-btn" title="Mark as read"
+                        style="margin-top: 4px; border: 1px solid var(--border);"><i class="bi bi-check2"></i></button>
+                </div>
+
+                <!-- Unread Notification 2 -->
+                <div class="notification-row unread"
+                    style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 20px; align-items: flex-start; background: #f0fdfa;">
+                    <div class="metric-icon notif-blue"
+                        style="width: 48px; height: 48px; flex-shrink: 0; background: #e0f2fe; color: #0284c7; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px;">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center;">
+                            <h3 style="font-size: 16px; color: var(--text-dark); margin:0;">Appointment Reminder</h3>
+                            <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">1 hour ago</span>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-normal); margin: 0 0 12px 0;">You have 4 pending
+                            clinic appointments for today. Please review the roster.</p>
+                        <a href="appointments.html" class="btn btn-primary"
+                            style="padding: 6px 14px; font-size: 12px; display: inline-flex;"><i
+                                class="bi bi-arrow-right-short" style="font-size: 16px; margin-right: 4px;"></i> Go to
+                            Appointments</a>
+                    </div>
+                    <button class="icon-btn" title="Mark as read"
+                        style="margin-top: 4px; border: 1px solid var(--border);"><i class="bi bi-check2"></i></button>
+                </div>
+
+                <!-- Read Notification 1 -->
+                <div class="notification-row read"
+                    style="padding: 24px; border-bottom: 1px solid var(--border); display: flex; gap: 20px; align-items: flex-start;">
+                    <div class="metric-icon notif-green"
+                        style="width: 48px; height: 48px; flex-shrink: 0; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px;">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center;">
+                            <h3 style="font-size: 16px; color: var(--text-dark); margin:0;">System Update: Profile
+                                Approved</h3>
+                            <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">Yesterday</span>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-normal); margin: 0;">Your medical officer profile
+                            details have been successfully verified and updated by the regional admin.</p>
                     </div>
                 </div>
 
-
-                <div class="metric-card">
-                    <div class="metric-icon icon-blue"><i class="bi bi-clipboard2-check-fill"></i></div>
-                    <div class="metric-info">
-                        <h3>14</h3>
-                        <p>Visits Completed (This Week)</p>
+                <!-- Read Notification 2 -->
+                <div class="notification-row read"
+                    style="padding: 24px; display: flex; gap: 20px; align-items: flex-start;">
+                    <div class="metric-icon"
+                        style="width: 48px; height: 48px; flex-shrink: 0; background: #f1f5f9; color: #64748b; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 20px;">
+                        <i class="bi bi-shield-lock-fill"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div
+                            style="display: flex; justify-content: space-between; margin-bottom: 8px; align-items: center;">
+                            <h3 style="font-size: 16px; color: var(--text-dark); margin:0;">Password Changed</h3>
+                            <span style="font-size: 12px; color: var(--text-muted); font-weight: 600;">3 days ago</span>
+                        </div>
+                        <p style="font-size: 14px; color: var(--text-normal); margin: 0;">Your account password was
+                            successfully updated. If this was not you, please contact IT immediately.</p>
                     </div>
                 </div>
-
-                <div class="metric-card">
-                    <div class="metric-icon icon-teal"><i class="bi bi-people-fill"></i></div>
-                    <div class="metric-info">
-                        <h3>128</h3>
-                        <p>Registered Patients</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- MAIN GRID -->
-            <div class="dashboard-layout">
-
-                <!-- GN Verified Pending Home Visits -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="bi bi-house-heart text-warning"></i> Action Required:
-                            GN-Verified Home Visits</h2>
-                        <a href="home-visits.html"
-                            style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">View
-                            All Visits</a>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Reported Patient Details</th>
-                                <th>Location & Division</th>
-                                <th>Verified By (GN Officer)</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="patient-cell">
-                                        <span class="patient-name">Sunil Jayasooriya</span>
-                                        <span class="patient-meta"><i class="bi bi-exclamation-circle text-danger"></i>
-                                            Suspected Cardiac Issue</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Colombo 05</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Thimbirigasyaya Division
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Mr. Kasun Perera</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Verified: Today, 08:30 AM
-                                    </div>
-                                </td>
-                                <td><span class="status-badge status-pending">Pending Visit</span></td>
-                                <td>
-                                    <div class="action-cell">
-                                        <a href="visit-details.html" class="btn btn-primary"
-                                            style="padding: 6px 12px; font-size: 12px; color: #ccfbf1;"><i
-                                                class="bi bi-eye"></i> View
-                                            Details</a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="patient-cell">
-                                        <span class="patient-name">Ayesha Mendis</span>
-                                        <span class="patient-meta"><i class="bi bi-lungs text-info"></i> Severe Asthma
-                                            Attack</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Kandy City</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Kandy Four Gravets</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Mrs. R. Kumari</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Verified: Yesterday, 16:45
-                                        PM</div>
-                                </td>
-                                <td><span class="status-badge status-pending">Pending Visit</span></td>
-                                <td>
-                                    <div class="action-cell">
-                                        <a href="visit-details.html" class="btn btn-primary"
-                                            style="padding: 6px 12px; font-size: 12px; color: #ccfbf1;"><i
-                                                class="bi bi-eye"></i> View
-                                            Details</a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <!-- Recently Completed / Uploaded Reports -->
-                <div class="panel">
-                    <div class="panel-header">
-                        <h2 class="panel-title"><i class="bi bi-file-earmark-check text-success"></i> Today Added
-                            Patient Details</h2>
-                        <a href="patients.html"
-                            style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">Patient
-                            Directory</a>
-                    </div>
-
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Registered Patient</th>
-                                <th>Diagnosis Summary</th>
-                                <th>Visit Completed On</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <div class="patient-cell">
-                                        <span class="patient-name">Kamal Perera</span>
-                                        <span class="patient-meta">ID: CR-1092</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-dark);">Stable. Prescribed Metformin.
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Today, 14:00 PM</div>
-                                </td>
-                                <td><span class="status-badge status-success">Profile Created</span></td>
-                                <td>
-                                    <a href="patients.html" class="btn btn-outline"
-                                        style="padding: 6px 12px; font-size: 12px;">View Profile</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="patient-cell">
-                                        <span class="patient-name">David Fernando</span>
-                                        <span class="patient-meta">ID: CR-8830</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-dark);">Post-op check. Wound healing
-                                        well.</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Today, 09:30 AM</div>
-                                </td>
-                                <td><span class="status-badge status-success">Profile Created</span></td>
-                                <td>
-                                    <a href="patients.html" class="btn btn-outline"
-                                        style="padding: 6px 12px; font-size: 12px;">View Profile</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
             </div>
         </div>
     </main>
@@ -941,3 +858,4 @@
 </body>
 
 </html>
+

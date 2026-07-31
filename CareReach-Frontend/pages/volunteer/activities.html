@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | My Activities</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .filter-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .filter-chip:hover:not(.active) {
+      background: #e2e8f0;
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    td {
+      padding: 18px 24px;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #f9fafb;
+    }
+
+    .type-icon {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .type-icon-box {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-verified {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .status-pending {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .status-rejected {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .status-active {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .status-resolved {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div>
+        <div class="menu-title">Volunteer Hub</div>
+        <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="activities.html" class="menu-item active"><i class="bi bi-journal-text"></i> My Activities</a>
+        <div class="menu-title">Account</div>
+        <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+      </div>
+      <a href="#" class="menu-item" style="color: #ef4444; margin-top: auto;"><i class="bi bi-box-arrow-right"></i> Sign
+        Out</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search activities...">
+        </div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Nimal Sirisena</h4>
+          <p>Community Volunteer</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Nimal+Sirisena&background=042f2e&color=fff" alt="Volunteer">
+      </a>
+    </header>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>My Activities</h1>
+        <p>A complete record of the patients you have reported to CareReach.</p>
+      </div>
+      <div class="filters">
+        <button class="filter-chip active">All Reports</button>
+        <button class="filter-chip">Verified</button>
+        <button class="filter-chip">Pending Verification</button>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-journal-text"></i> Activity Log</h2>
+        </div>
+        <div style="overflow-x:auto;">
+          <table style="width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px;">
+            <thead>
+              <tr style="background: var(--bg-page); border-bottom: 1px solid var(--border); text-align: left;">
+                <th
+                  style="padding: 16px 24px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                  Patient Details</th>
+                <th
+                  style="padding: 16px 24px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                  Location</th>
+                <th
+                  style="padding: 16px 24px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                  Date Reported</th>
+                <th
+                  style="padding: 16px 24px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
+                  Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Saman Perera</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Elderly Male • possible dementia</div>
+                </td>
+                <td style="padding: 16px 24px;">Station Road, Kirulapone</td>
+                <td style="padding: 16px 24px;">Oct 12, 10:30 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--warning-bg); color: var(--warning); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Pending
+                    Verification</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Kamala Siriwardena</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Female, 65 Yrs</div>
+                </td>
+                <td style="padding: 16px 24px;">High Level Rd intersection</td>
+                <td style="padding: 16px 24px;">Oct 12, 08:15 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--warning-bg); color: var(--warning); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Pending
+                    Verification</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Sunil Jayasooriya</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Male</div>
+                </td>
+                <td style="padding: 16px 24px;">Negombo, Gampaha</td>
+                <td style="padding: 16px 24px;">Oct 11, 07:00 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--success-bg); color: var(--success); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Verified</span>
+                </td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Rasika Wijesekera</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Female, living alone with limited mobility
+                  </div>
+                </td>
+                <td style="padding: 16px 24px;">Temple Road</td>
+                <td style="padding: 16px 24px;">Jul 02, 10:00 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--success-bg); color: var(--success); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Verified</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Ayesha Mendis</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Young mother • isolated, post-partum</div>
+                </td>
+                <td style="padding: 16px 24px;">Kandy Four Gravets</td>
+                <td style="padding: 16px 24px;">Jun 18, 02:00 PM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--danger-bg); color: var(--danger); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Rejected</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>
