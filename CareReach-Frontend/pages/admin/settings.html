@@ -13,12 +13,12 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+        
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #ccfbf1;
 
-            /* Sidebar Specific Colors (Dark Highlighted) */
+           
             --sidebar-bg: #042f2e;
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
@@ -31,7 +31,7 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
 
-            /* Status Colors */
+          
             --danger: #ef4444;
             --success: #10b981;
 
@@ -54,7 +54,7 @@
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR (Same as Dashboard) --- */
+  
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--sidebar-bg);
@@ -276,7 +276,7 @@
             color: var(--text-muted);
         }
 
-        /* --- SETTINGS SPECIFIC STYLES --- */
+  
         .content-area {
             padding: 32px;
             max-width: 1200px;
@@ -307,7 +307,7 @@
             align-items: flex-start;
         }
 
-        /* Settings Nav (Left) */
+  
         .settings-nav {
             width: 250px;
             flex-shrink: 0;
@@ -348,7 +348,6 @@
             border: 1px solid var(--border);
         }
 
-        /* Settings Content (Right) */
         .settings-content {
             flex: 1;
             background: var(--bg-surface);
@@ -744,7 +743,6 @@
             line-height: 1.4;
         }
 
-        /* ─── Custom searchable dropdown ─────────────────────── */
         .custom-select-wrapper {
             position: relative;
             width: 100%;
@@ -870,9 +868,7 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /* CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -880,13 +876,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+     
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+     
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -897,7 +893,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+     
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -906,7 +902,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+    
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -1164,7 +1160,7 @@
                                 <button type="button" id="requestOtpBtn" class="btn btn-primary" style="color:white;"
                                     onclick="requestOtp()"><i class="bi bi-shield-lock"></i> Send OTP to Email</button>
                             </div>
-                            <!-- STEP 2: OTP + new password (hidden by default) -->
+                            <!-- STEP 2: OTP + new password  -->
                             <div id="pwStep2"
                                 style="display:none; margin-top:24px; padding-top:24px; border-top:1px solid var(--border);">
                                 <p style="font-size:13px; color:#0f766e; font-weight:600; margin-bottom:16px;"><i
@@ -1212,7 +1208,6 @@
         const BASE = 'https://care-reach-host-production.up.railway.app/api/v1';
         let currentUserId = null;
 
-        // ─── Toast ───────────────────────────────────────────────
         function showToast(msg, type = 'success') {
             const color = type === 'success' ? '#10b981' : '#ef4444';
             const icon = type === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill';
@@ -1223,7 +1218,7 @@
             setTimeout(() => t.remove(), 4000);
         }
 
-        // ─── Sidebar & Tab ───────────────────────────────────────
+  
         function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
         function switchTab(event, tabId) {
@@ -1240,7 +1235,7 @@
             if (w && d && !w.contains(e.target)) d.classList.remove('show');
         });
 
-        // ─── District searchable dropdown ─────────────────────
+   
         let allDistricts = [];
 
         function toggleDistrictDropdown() {
@@ -1293,7 +1288,7 @@
             }
         });
 
-        // ─── Load profile ────────────────────────────────────────
+  
         async function loadProfileData() {
             const userId = localStorage.getItem('userId');
             if (!userId) return;
@@ -1327,7 +1322,7 @@
             } catch (e) { console.error('Profile load error', e); }
         }
 
-        // ─── Save profile ────────────────────────────────────────
+        // ─── Save profile 
         document.getElementById('saveProfileBtn').addEventListener('click', async () => {
             if (!currentUserId) { showToast('Not logged in.', 'error'); return; }
 
@@ -1385,7 +1380,7 @@
             finally { btn.disabled = false; btn.innerHTML = '<i class="bi bi-save"></i> Save Changes'; }
         });
 
-        // ─── Profile photo upload ────────────────────────────────
+        // ─── Profile photo upload
         document.getElementById('profilePhotoInput').addEventListener('change', async function () {
             const file = this.files[0];
             if (!file || !currentUserId) return;
@@ -1427,7 +1422,6 @@
             }
         });
 
-        // ─── Password change — Step 1: request OTP ───────────────
         async function requestOtp() {
             if (!currentUserId) return;
             const pw = document.getElementById('currentPassword').value;
@@ -1454,7 +1448,6 @@
             }
         }
 
-        // ─── Password change — Step 2: submit OTP + new pw ───────
         async function submitPasswordChange() {
             if (!currentUserId) return;
             const otp = document.getElementById('otpCode').value.trim();
@@ -1487,7 +1480,7 @@
             btn.disabled = false; btn.innerHTML = '<i class="bi bi-shield-lock"></i> Send OTP to Email';
         }
 
-        // ─── Init ─────────────────────────────────────────────────
+
         document.addEventListener('DOMContentLoaded', loadProfileData);
     </script>
 

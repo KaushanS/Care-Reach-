@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface GramaNiladhariDivisionRepository extends JpaRepository<GramaNiladhariDivision, Long> {
     
-    // Fetch all GN divisions belonging to a specific Divisional Secretariat
+    // Fetch all GN divisions 
     List<GramaNiladhariDivision> findByDivisionalSecretariatId(Long dsId);
     
     @Query("SELECT gn FROM GramaNiladhariDivision gn JOIN FETCH gn.divisionalSecretariat ds JOIN FETCH ds.district")

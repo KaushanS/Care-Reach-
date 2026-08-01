@@ -755,9 +755,7 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /* CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -765,13 +763,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+        
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+       
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -782,7 +780,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+        
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -790,8 +788,7 @@
         .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
-        
-        /* Tables and Advanced Nav */
+       
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -809,7 +806,7 @@
 
 <body>
   <aside class="sidebar" id="sidebar">
-        <!-- MOBILE CLOSE BUTTON -->
+        
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
     <div class="brand">
@@ -932,7 +929,6 @@
         </div>
       </div>
 
-      <!-- Emergency Contact & Guardian -->
       <div class="panel">
         <div class="panel-header">
           <h2 class="panel-title"><i class="bi bi-person-lines-fill"></i> Emergency Contact & Guardian</h2>
@@ -1051,7 +1047,6 @@
   <script>
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
-    // Notification Engine
     let dropdownOpen = false;
     function setupNotifications(userId) {
       const wrapperElement = document.querySelector('.notification-wrapper');
@@ -1060,7 +1055,7 @@
       const listElement = document.querySelector('.notification-list');
 
       if (wrapperElement && dropdownElement) {
-        // Remove old inline onclick just in case
+    
         wrapperElement.querySelector('.notification-icon').removeAttribute('onclick');
 
         wrapperElement.addEventListener("click", (e) => {
@@ -1196,10 +1191,10 @@
         if (!res.ok) throw new Error('Failed to fetch patient data');
         const data = await res.json();
 
-        // Populate Top Nav Profile
+        
         document.querySelector('.user-info h4').textContent = data.name || 'Patient';
 
-        // Populate Profile Banner
+        
         document.getElementById('banner-name').textContent = data.name || 'Unknown Patient';
         document.getElementById('banner-id').textContent = `Patient ID: CR-${1000 + data.id}`;
 
@@ -1207,7 +1202,7 @@
         document.getElementById('profile-avatar-img').src = avatarUrl;
         document.getElementById('nav-profile-img').src = avatarUrl;
 
-        // Populate Personal Information
+       
         document.getElementById('input-fullname').value = data.name || '';
         document.getElementById('input-nic').value = data.nic || '';
         document.getElementById('input-age').value = data.age || '';
@@ -1216,12 +1211,12 @@
         document.getElementById('input-email').value = data.patientEmail || '';
         document.getElementById('input-address').value = data.address || '';
 
-        // Populate Guardian Information
+       
         document.getElementById('input-guardian-name').value = data.guardianName || '';
         document.getElementById('input-guardian-phone').value = data.guardianPhone || '';
         document.getElementById('input-guardian-email').value = data.guardianEmail || '';
 
-        // Profile Photo Upload Logic
+       
         document.getElementById('photo-upload').addEventListener('change', async (e) => {
           const file = e.target.files[0];
           if (!file) return;
@@ -1438,7 +1433,7 @@
           btnElement.innerHTML = originalContent;
           btnElement.disabled = false;
 
-          // Optimistically update dom elements
+          
           document.querySelector('.user-info h4').textContent = payload.name;
           document.getElementById('banner-name').textContent = payload.name;
 
@@ -1458,7 +1453,7 @@
     }
   </script>
 
-  <!-- Logout Confirmation Modal -->
+ 
   <div class="logout-modal-overlay" id="logoutModal">
     <div class="logout-modal-content">
       <div class="logout-modal-icon">
@@ -1473,7 +1468,7 @@
     </div>
   </div>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+   
     <style>
         @media (max-width: 1024px) {
             .sidebar {

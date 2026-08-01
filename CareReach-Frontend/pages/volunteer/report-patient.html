@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
     <script>
         (function() {
             function enforceProtectedSession() {
@@ -755,13 +754,10 @@
 
         </style>
 
-    <!-- Auth Guard for Browser Back Button -->
     
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /*CareReach Master Mobile Responsiveness*/
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -769,13 +765,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+   
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -786,7 +782,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+  
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -794,8 +790,7 @@
         .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
-        
-        /* Tables and Advanced Nav */
+
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -813,7 +808,7 @@
 
 <body>
   <aside class="sidebar" id="sidebar">
-        <!-- MOBILE CLOSE BUTTON -->
+
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
     <div class="brand">
@@ -1126,7 +1121,7 @@
         </div>
   </main>
 
-  <!-- Real-Time Interactive Map Modal -->
+ 
   <div class="map-modal-overlay" id="mapModal">
     <div class="map-modal">
       <div class="map-modal-header">
@@ -1168,7 +1163,7 @@
   <script>
     function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
 
-    // --- MAP LOGIC INTEGRATION ---
+ 
     let mapInstance = null;
     let marker = null;
     let currentLat = 0;
@@ -1218,8 +1213,7 @@
         marker.setLatLng([lat, lng]);
       }
 
-      // Delay map redrawing until the browser has fully finished the CSS modal rendering 
-      // (Fixes the gray tile coordinate misalignment bug)
+ 
       setTimeout(() => {
         mapInstance.invalidateSize();
         mapInstance.setView([lat, lng], 16);
@@ -1234,7 +1228,7 @@
       }
     }
 
-    // Geocoding Autocomplete Search logic
+    
     let searchTimeout = null;
 
     function debouncedSearchAddress() {
@@ -1247,13 +1241,13 @@
         return;
       }
 
-      // Temporarily open the box to show loading state
+    
       resultsContainer.innerHTML = '<div class="custom-option text-muted" style="color: #6b7280; text-align: center;">Searching satellites...</div>';
       resultsContainer.classList.add('open');
       resultsContainer.style.zIndex = "9999";
 
       searchTimeout = setTimeout(() => {
-        // Photon API supports native fuzzy type-ahead autocomplete without needing full exact words
+       
         fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query + " Sri Lanka")}&limit=5`)
           .then(res => res.json())
           .then(data => {
@@ -1292,10 +1286,10 @@
           .catch(err => {
             resultsContainer.innerHTML = '<div class="custom-option text-muted" style="color: #ef4444; text-align: center;">Network error</div>';
           });
-      }, 500); // reduced timeout for snappier autocomplete
+      }, 500);
     }
 
-    // Backup enter-key brute force search if user just clicks search button directly
+  
     function forceSearch() {
       debouncedSearchAddress();
     }
@@ -1304,15 +1298,13 @@
       document.getElementById('gpsCoordinates').value = `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`;
       closeMapModal();
     }
-    // ---------------------------
-
-    // Auto-populate auth info
+ 
     document.addEventListener('DOMContentLoaded', () => {
       const userFullName = localStorage.getItem('userFullName') || 'Volunteer';
       const userId = localStorage.getItem('userId');
       document.querySelector('.user-info h4').innerText = userFullName;
 
-      // Dynamically load user avatar globally
+  
       if (userId) {
         fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`)
           .then(res => res.json())
@@ -1325,7 +1317,7 @@
           .catch(e => console.error("Could not load global avatar:", e));
       }
 
-      // Load Districts asynchronously
+
       fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts')
         .then(response => response.json())
         .then(districts => {
@@ -1347,7 +1339,7 @@
 
     let allGnDivisions = [];
 
-    // Fetch all GN divisions right away
+    
     fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/divisions')
       .then(response => response.json())
       .then(divisions => {
@@ -1357,7 +1349,7 @@
       .catch(console.error);
 
     function toggleDropdown(type) {
-      if (type !== 'gn') return; // we only have GN dropdown now
+      if (type !== 'gn') return; 
       const container = document.getElementById('gnContainer');
       container.classList.toggle('open');
       if (container.classList.contains('open')) {
@@ -1397,7 +1389,7 @@
     }
 
     function selectGnDivision(division) {
-      // Update UI Text
+
       const textSpan = document.getElementById('gnText');
       textSpan.innerText = division.name;
       textSpan.style.color = "var(--text-dark)";
@@ -1405,17 +1397,16 @@
 
       document.getElementById('gnContainer').classList.remove('open');
 
-      // Update hidden inputs for API form parsing
+     
       document.getElementById('gnDivision').value = division.name;
       document.getElementById('divisionalSecretariat').value = division.dsName;
       document.getElementById('district').value = division.districtName;
 
-      // Update read-only displays to fulfill reverse-cascade requirements
+     
       document.getElementById('dsDisplay').value = division.dsName;
       document.getElementById('districtDisplay').value = division.districtName;
     }
 
-    // Close dropdown instantly whenever you click somewhere else
     document.addEventListener('click', (e) => {
       if (!e.target.closest('.custom-dropdown')) {
         document.querySelectorAll('.custom-options-container').forEach(c => c.classList.remove('open'));
@@ -1433,7 +1424,7 @@
       }
 
       const status = document.getElementById('formStatus');
-      status.style.display = 'none'; // reset status
+      status.style.display = 'none'; 
 
       document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
       let hasError = false;
@@ -1541,10 +1532,9 @@
           return response.json();
         })
         .then(res => {
-          // Trigger the premium success modal
+         
           document.getElementById('successOverlay').classList.add('active');
 
-          // Auto-redirect cleanly after letting them read the success popup
           setTimeout(() => {
             window.location.href = 'dashboard.html';
           }, 2500);
@@ -1554,7 +1544,7 @@
           const errMsg = (error.message || '').toLowerCase();
           let showedFieldError = false;
 
-          // NIC Duplicate Check
+         
           if (errMsg.includes('nic is already registered')) {
             const errDiv = document.getElementById('error-nic');
             errDiv.style.display = 'block';
@@ -1564,7 +1554,7 @@
             if (typeof field.focus === 'function') field.focus();
             showedFieldError = true;
           }
-          // Email Duplicate Check
+       
           else if (errMsg.includes('email is already registered')) {
             const errDiv = document.getElementById('error-patientEmail');
             errDiv.style.display = 'block';
@@ -1746,7 +1736,7 @@
     }
   </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+  
     <style>
         @media (max-width: 1024px) {
             .sidebar {

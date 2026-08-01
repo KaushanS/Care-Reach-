@@ -13,7 +13,7 @@ public class AdminDoctorDto {
     private String address;
     private java.time.LocalDateTime createdAt;
 
-    // Extracted from DoctorCareer
+    // Extracted DoctorCareer
     private String specialization;
     private String hospitalName;
     private String qualification;

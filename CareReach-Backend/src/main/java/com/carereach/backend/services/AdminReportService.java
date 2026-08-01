@@ -109,9 +109,7 @@ public class AdminReportService {
                 table.addCell(cell);
             }
 
-            // In our system, emergent patients often don't have guardians but are reported
-            // by volunteers/officers.
-            // Querying all patients directly for now.
+            
             List<Patient> emergencies = patientRepository.findAll();
 
             for (Patient p : emergencies) {

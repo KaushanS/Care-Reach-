@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
+
     <script>
         (function () {
             function enforcePublicSession() {
@@ -34,7 +34,7 @@
 
     <style>
         :root {
-            /* CareReach index-style colors */
+
             --bg-light: #f4fffd;
             --panel-light: #ffffff;
             --panel-soft: rgba(255, 255, 255, 0.8);
@@ -67,7 +67,7 @@
             overflow-x: hidden;
         }
 
-        /* --- LEFT PANEL --- */
+  
         .left-panel {
             width: 50%;
             background: linear-gradient(135deg, rgba(15, 118, 110, 0.85), rgba(10, 92, 86, 0.95)),
@@ -167,7 +167,7 @@
             border-radius: 12px;
             padding: 20px 16px;
             backdrop-filter: blur(4px);
-            /* Added slight blur to make cards pop against the image */
+            
         }
 
         .stat-value {
@@ -334,7 +334,7 @@
             }
         }
 
-        /* Role Selector Custom styling (Radio buttons) */
+     
         .role-selector {
             display: flex;
             gap: 12px;
@@ -451,7 +451,7 @@
             color: var(--primary-blue);
         }
 
-        /* Updated Contact Admin & Registration Links styling */
+    
         .contact-admin {
             margin-top: 40px;
             text-align: center;
@@ -520,23 +520,20 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
         .main-content { margin-left: 0 !important; width: 100% !important; }
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
-        
-        /* Padding and Layouts */
+     
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+      
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -546,8 +543,7 @@
         .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
-        
-        /* Forms, Inputs, Buttons */
+       
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -556,7 +552,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+    
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -574,7 +570,7 @@
 
 <body>
 
-    <!-- Left Informational Panel -->
+  
     <div class="left-panel">
         <div class="logo-area">
             <div class="logo-icon">
@@ -735,9 +731,9 @@
             </div>
         </div>
 
-        <!-- Password visibility toggle script -->
+    
         <script>
-            // Back-button Auth Guard
+      
             document.addEventListener("DOMContentLoaded", () => {
                 const existingUserId = localStorage.getItem('userId');
                 const existingUserRole = localStorage.getItem('userRole');

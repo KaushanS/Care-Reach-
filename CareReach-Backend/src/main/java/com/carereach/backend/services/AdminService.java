@@ -132,7 +132,7 @@ public class AdminService {
         newUser.setPhone(dto.getPhone());
 
         // Combining GN Name + Number for the GN Division string matching frontend
-        // filters
+        
         String gnDiv = dto.getGnDivisionName();
         if (dto.getGnDivisionNumber() != null && !dto.getGnDivisionNumber().isEmpty()) {
             gnDiv += " (GN-" + dto.getGnDivisionNumber() + ")";

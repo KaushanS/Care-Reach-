@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <!-- Core Session Manager -->
+
   <script>
     (function () {
       function enforcePublicSession() {
@@ -585,7 +585,7 @@
       }
     }
 
-    /* Loading Overlay */
+  
     .loading-overlay {
       position: fixed;
       top: 0;
@@ -665,7 +665,6 @@
     .custom-dropdown-btn {
       width: 100%;
       padding: 14px 16px 14px 44px;
-      /* Space for the left icon */
       background: var(--white);
       border: 1px solid var(--border-color);
       border-radius: 10px;
@@ -730,7 +729,7 @@
     .dropdown-list {
       list-style: none;
       max-height: 180px;
-      /* Approximately 5 items at 36px each */
+  
       overflow-y: auto;
       padding: 5px 0;
     }
@@ -748,7 +747,7 @@
       color: var(--text-dark);
     }
 
-    /* Scrollbar styling */
+
     .dropdown-list::-webkit-scrollbar {
       width: 6px;
     }
@@ -761,23 +760,20 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
         .main-content { margin-left: 0 !important; width: 100% !important; }
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
-        
-        /* Padding and Layouts */
+
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+     
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -788,7 +784,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+        
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -797,7 +793,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+       
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -815,7 +811,7 @@
 
 <body>
 
-  <!-- Loading Overlay -->
+
   <div class="loading-overlay" id="loadingOverlay">
     <div class="spinner" id="loadingSpinner"></div>
     <div class="success-check" id="successCheck"><i class="bi bi-check-lg"></i></div>
@@ -1092,7 +1088,7 @@
     let allDistricts = [];
 
     document.addEventListener('DOMContentLoaded', () => {
-      // Fetch districts API
+    
       fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts')
         .then(res => res.json())
         .then(data => {
@@ -1104,7 +1100,7 @@
           document.getElementById('district-list').innerHTML = '<li style="color:red;text-align:center;">Load failed.</li>';
         });
 
-      // Close dropdown when clicking outside
+    
       document.addEventListener('click', function (e) {
         if (!e.target.closest('#district-dropdown-container')) {
           document.getElementById('district-menu')?.classList.remove('show');
@@ -1151,22 +1147,22 @@
     }
 
     function selectDistrict(val) {
-      // Set hidden input
+     
       document.getElementById('district').value = val;
 
-      // Set visual text
+    
       const textSpan = document.getElementById('district-selected-text');
       textSpan.textContent = val;
       textSpan.style.color = "var(--text-dark)";
 
-      // Close menu
+      
       document.getElementById('district-menu').classList.remove('show');
       document.getElementById('district-btn').classList.remove('open');
 
-      // Clear error style if any
+    
       document.getElementById('err-district').style.display = 'none';
 
-      // Clear search
+     
       document.getElementById('district-search').value = '';
       renderDistricts(allDistricts);
     }
@@ -1187,7 +1183,7 @@
       clearErrors();
       let hasError = false;
 
-      // Validations before moving to next step
+      
       if (stepNumber === 2) {
         const username = document.getElementById('username').value;
         const email = document.getElementById('email').value;
@@ -1225,15 +1221,15 @@
         if (hasError) return;
       }
 
-      // 1. Hide all steps
+   
       document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
-      // 2. Show target step
+    
       document.getElementById('step' + stepNumber).classList.add('active');
 
-      // 3. Update subtitle text
+      
       document.getElementById('step-subtitle').innerText = `Step ${stepNumber} of 3 — ${stepTitles[stepNumber - 1]}`;
 
-      // 4. Update Horizontal Stepper
+      
       document.querySelectorAll('.h-step').forEach((el, index) => {
         let circle = el.querySelector('.h-step-circle');
         el.classList.remove('active', 'completed');
@@ -1249,14 +1245,14 @@
         }
       });
 
-      // 5. Update Vertical Stepper
+      
       document.querySelectorAll('.v-step').forEach((el, index) => {
         el.classList.remove('active', 'completed');
         if (index + 1 === stepNumber) el.classList.add('active');
         if (index + 1 < stepNumber) el.classList.add('completed');
       });
 
-      // 6. Populate Summary if moving to Step 2
+      
       if (stepNumber === 2) {
         document.getElementById('sum-user').innerText = document.getElementById('username').value || 'Not provided';
         document.getElementById('sum-email').innerText = document.getElementById('email').value || 'Not provided';
@@ -1267,7 +1263,6 @@
       }
     }
 
-    // Password Toggle Functionality
     function togglePassword(inputId, iconEl) {
       const input = document.getElementById(inputId);
       if (input.type === "password") {
@@ -1287,7 +1282,7 @@
       const pass2 = document.getElementById('pass2').value;
       const terms = document.getElementById('terms').checked;
 
-      // Requires at least 1 uppercase, 1 number, 1 special character, and min 8 total characters
+      
       const passRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{8,}$/;
 
       if (!pass1) {
@@ -1320,7 +1315,7 @@
         district: document.getElementById('district').value
       };
 
-      // Show Loading Overlay
+    
       const overlay = document.getElementById('loadingOverlay');
       const spinner = document.getElementById('loadingSpinner');
       const successCheck = document.getElementById('successCheck');
@@ -1346,18 +1341,18 @@
           return response.text();
         })
         .then(text => {
-          // Show Success state in Overlay
+       
           spinner.style.display = 'none';
           successCheck.style.display = 'flex';
           loadingText.innerText = 'Registration Successful!';
 
-          // Wait 1.5 seconds then redirect
+          
           setTimeout(() => {
             window.location.href = "login.html";
           }, 1500);
         })
         .catch(error => {
-          // Hide overlay on error
+          
           overlay.classList.remove('active');
 
           console.error('Error:', error);
@@ -1365,7 +1360,7 @@
 
           if (errMsg.toLowerCase().includes("email")) {
             nextStep(1);
-            // Small timeout ensures the DOM has fully switched steps before rendering error
+  
             setTimeout(() => {
               showError('err-email', 'Error: ' + errMsg);
               document.getElementById('email').focus();

@@ -26,7 +26,7 @@ public class Notification {
     private String message;
 
     @Column(nullable = false)
-    private String type; // e.g., INFO, ALERT, SUCCESS
+    private String type;
 
     @Column(nullable = false)
     private boolean isRead = false;

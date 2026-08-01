@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
+
     <script>
         (function () {
             function enforceProtectedSession() {
@@ -706,9 +706,7 @@
         }
     </style>
     <style>
-        /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+        /* CareReach Master Mobile Responsiveness */
         @media (max-width: 768px) {
             * {
                 box-sizing: border-box !important;
@@ -738,7 +736,6 @@
                 transform: translateX(0);
             }
 
-            /* Padding and Layouts */
             .content-area {
                 padding: 15px 10px !important;
                 width: 100% !important;
@@ -768,7 +765,7 @@
                 overflow-x: auto !important;
             }
 
-            /* Modals and Data Grids */
+      
             .modal,
             .modal-content {
                 width: 95% !important;
@@ -870,7 +867,7 @@
                 margin-top: 10px !important;
             }
 
-            /* Tables and Advanced Nav */
+         
             .table-container,
             .table-responsive {
                 width: 100% !important;
@@ -954,9 +951,9 @@
             <a href="appointments.html" class="menu-item"><i class="bi bi-calendar-event"></i> Appointments</a>
             <a href="patients.html" class="menu-item"><i class="bi bi-person-lines-fill"></i> Patients</a>
             <a href="home-visits.html" class="menu-item active"><i class="bi bi-house-heart"></i> Home Visits</a>
-            <!-- <a href="prescriptions.html" class="menu-item"><i class="bi bi-prescription2"></i> Prescriptions</a> -->
+        
             <div class="menu-title">Management</div>
-            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-text"></i> Reports</a> -->
+           
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
                 <i class="bi bi-box-arrow-right"></i> Log Out
@@ -1028,7 +1025,7 @@
                         </tr>
                     </thead>
                     <tbody id="visitQueueList">
-                        <!-- Populated dynamically -->
+                      
                     </tbody>
                 </table>
             </section>
@@ -1052,11 +1049,11 @@
                 fetch(`https://care-reach-host-production.up.railway.app/api/v1/doctor/${userId}/dashboard`)
                     .then(res => res.json())
                     .then(data => {
-                        // Publish Metrics
+                     
                         document.getElementById('metricPendingVisits').textContent = String(data.pendingVerifiedVisits).padStart(2, '0');
-                        // Metric removed at user request
+                  
 
-                        // Render Table
+                   
                         const tbody = document.getElementById('visitQueueList');
                         tbody.innerHTML = '';
 
@@ -1140,7 +1137,7 @@
             window.location.replace('../../login.html');
         }
     </script>
-    <!-- Global Avatar Hydration -->
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const fn = localStorage.getItem('userFullName');
@@ -1154,7 +1151,7 @@
         });
     </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+
     <style>
         @media (max-width: 1024px) {
             .sidebar {
@@ -1220,7 +1217,7 @@
 
             if (!listElement) return;
 
-            // Optional custom callback if page is notifications.html
+       
             const isFullPage = typeof fetchAllNotifications === 'function';
 
             function fetchDropdown() {

@@ -56,7 +56,7 @@ public class DataSeeder implements CommandLineRunner {
                 String line;
                 boolean isFirstLine = true;
 
-                // Cache to prevent massive duplicate DB lookups for Districts & DS
+              
                 Map<String, District> districtCache = new HashMap<>();
                 Map<String, DivisionalSecretariat> dsCache = new HashMap<>();
 
@@ -75,7 +75,7 @@ public class DataSeeder implements CommandLineRunner {
                         if (districtName.isEmpty() || gnDivisionName.isEmpty())
                             continue;
 
-                        // 1. Get or Create District
+                        // Get District
                         District district = districtCache.get(districtName);
                         if (district == null) {
                             district = new District();
@@ -84,9 +84,7 @@ public class DataSeeder implements CommandLineRunner {
                             districtCache.put(districtName, district);
                         }
 
-                        // 2. Get or Create Divisional Secretariat
-                        // Must combine DS Name + District Name for cache key since multiple districts
-                        // might have identical DS names
+                        // Get Divisional Secretariat
                         String cacheKey = districtName + "_" + dsName;
                         DivisionalSecretariat ds = dsCache.get(cacheKey);
                         if (ds == null) {
@@ -97,7 +95,7 @@ public class DataSeeder implements CommandLineRunner {
                             dsCache.put(cacheKey, ds);
                         }
 
-                        // 3. Create and Save GN Division
+                        //Create GN Division
                         GramaNiladhariDivision div = new GramaNiladhariDivision();
                         div.setName(gnDivisionName);
                         div.setDivisionalSecretariat(ds);
@@ -114,7 +112,7 @@ public class DataSeeder implements CommandLineRunner {
             }
         }
 
-        // Automated Cleanup Sequence - Now strips quotes from DS as well
+    
         java.util.List<DivisionalSecretariat> dsList = dsRepository.findAll();
         for (DivisionalSecretariat ds : dsList) {
             if (ds.getName().contains("\"")) {

@@ -2,7 +2,6 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
     <script>
         (function () {
             function enforceProtectedSession() {
@@ -35,7 +34,7 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+          
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #d1f2eb;
@@ -50,7 +49,7 @@
             --success: #10b981;
             --info: #3b82f6;
 
-            /* Sidebar Variables */
+            
             --sidebar-bg: #042f2e;
             --sidebar-text: #ccfbf1;
             --sidebar-text-muted: #99f6e4;
@@ -167,7 +166,7 @@
             opacity: 1;
         }
 
-        /* Emergency Button */
+        
         .menu-item.emergency-btn {
             background-color: rgba(220, 38, 38, 0.1);
             color: #fca5a5;
@@ -305,7 +304,7 @@
             padding: 24px;
         }
 
-        /* Profile Sidebar Card */
+      
         .profile-card {
             text-align: center;
             padding: 32px 24px;
@@ -600,9 +599,7 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /*careReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -610,13 +607,12 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+    
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -627,7 +623,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+       
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -636,7 +632,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+    
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -656,7 +652,7 @@
 
     <!-- GUARDIAN SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <!-- MOBILE CLOSE BUTTON -->
+       
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
         <div class="brand">
@@ -750,7 +746,7 @@
 
             <div class="profile-layout">
 
-                <!-- Left Column: Profile Summary Card -->
+                <!--  Profile Summary Card -->
                 <div>
                     <div class="panel profile-card">
                         <div style="position: relative; display: inline-block;">
@@ -778,7 +774,6 @@
                     </div>
                 </div>
 
-                <!-- Right Column: Forms -->
                 <div>
                     <!-- Personal Info Form -->
                     <form class="panel" onsubmit="saveProfile(event)" style="margin-bottom: 24px;">
@@ -820,7 +815,7 @@
                         </div>
                     </form>
 
-                    <!-- Security / Password Form -->
+                    <!-- Password Form -->
                     <form class="panel" onsubmit="changePassword(event)">
                         <div class="panel-header">
                             <i class="bi bi-shield-lock-fill"></i> Account Security
@@ -872,7 +867,7 @@
         </div>
     </main>
 
-    <!-- Global Success Modal -->
+
     <div id="successModalOverlay"
         style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
         <div id="successModal"
@@ -893,7 +888,6 @@
         </div>
     </div>
 
-    <!-- OTP Verification Modal -->
     <div id="otpModalOverlay"
         style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
         <div id="otpModal"
@@ -1073,26 +1067,25 @@
             setupNotifications(userId);
 
             try {
-                // Fetch complete User model profile
+             
                 const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`);
                 if (!res.ok) throw new Error('Failed to fetch guardian profile data');
                 const data = await res.json();
 
-                // Populate Top Nav Profile
+               
                 document.querySelector('.user-info h4').textContent = data.fullName || 'Guardian';
                 document.getElementById('banner-name').textContent = data.fullName || 'Guardian Profile';
                 const avatarUrl = data.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || 'Guardian')}&background=042f2e&color=fff&size=200`;
                 document.getElementById('profile-avatar-img').src = avatarUrl;
                 document.querySelector('.user-profile img').src = data.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || 'Guardian')}&background=042f2e&color=fff&size=96`;
 
-                // Populate Personal Information fields
+              
                 document.getElementById('input-fullname').value = data.fullName || '';
                 document.getElementById('input-nic').value = data.nic || '';
                 document.getElementById('input-phone').value = data.phone || '';
                 document.getElementById('input-email').value = data.email || '';
                 document.getElementById('input-address').value = data.address || '';
 
-                // Fetch linked dependents
                 const pRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/guardian/user/${userId}`);
                 if (pRes.ok) {
                     const patients = await pRes.json();
@@ -1108,7 +1101,7 @@
                     }
                 }
 
-                // Profile Photo Upload Logic
+                // Profile Photo Upload 
                 document.getElementById('photo-upload').addEventListener('change', async (e) => {
                     const file = e.target.files[0];
                     if (!file) return;
@@ -1478,7 +1471,7 @@
         }
     </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+
     <style>
         @media (max-width: 1024px) {
             .sidebar {

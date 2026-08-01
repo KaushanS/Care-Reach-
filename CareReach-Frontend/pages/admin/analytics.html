@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
-    <!-- Chart.js for Analytics Visualizations -->
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js">
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
@@ -29,12 +29,12 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+          
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #ccfbf1;
 
-            /* Sidebar Specific Colors */
+           
             --sidebar-bg: #042f2e;
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
@@ -47,7 +47,7 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
 
-            /* Status Colors */
+           
             --danger: #ef4444;
             --danger-bg: #fef2f2;
             --warning: #f59e0b;
@@ -661,9 +661,7 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /*CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -671,13 +669,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+    
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+       
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -688,7 +686,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+    
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -696,8 +694,7 @@
         .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
-        
-        /* Tables and Advanced Nav */
+      
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -716,7 +713,7 @@
 <body>
 
     <aside class="sidebar" id="sidebar">
-        <!-- MOBILE CLOSE BUTTON -->
+  
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
         <div class="brand">
@@ -756,7 +753,7 @@
             </a>
 
             <div class="menu-title">Insights & Reports</div>
-            <!-- ANALYTICS MENU ACTIVE -->
+       
             <a href="analytics.html" class="menu-item active">
                 <i class="bi bi-graph-up"></i> Analytics
             </a>
@@ -845,10 +842,8 @@
             </div>
 
             <!-- Charts section starts directly below -->
-
-            <!-- Top Charts Row -->
             <div class="charts-grid">
-                <!-- Line Chart: Emergency Trend -->
+
                 <div class="chart-panel">
                     <div class="chart-header">
                         <h2 class="chart-title"><i class="bi bi-graph-up text-primary"></i> Patient Registrations Over
@@ -859,7 +854,7 @@
                     </div>
                 </div>
 
-                <!-- Doughnut Chart: Incident Types -->
+    
                 <div class="chart-panel">
                     <div class="chart-header">
                         <h2 class="chart-title"><i class="bi bi-pie-chart-fill text-primary"></i> Patient Verification
@@ -874,7 +869,7 @@
 
             <!-- Bottom Charts Row -->
             <div class="charts-grid-equal">
-                <!-- Bar Chart: Incidents by District -->
+                <!-- Bar Chart: -->
                 <div class="chart-panel">
                     <div class="chart-header">
                         <h2 class="chart-title"><i class="bi bi-geo-alt-fill text-primary"></i> Registered Patients by
@@ -886,7 +881,7 @@
                     </div>
                 </div>
 
-                <!-- Horizontal Bar: Platform Users by Role -->
+                <!-- Horizontal Bar:-->
                 <div class="chart-panel">
                     <div class="chart-header">
                         <h2 class="chart-title"><i class="bi bi-people-fill text-primary"></i> Platform Users by Role
@@ -901,7 +896,7 @@
         </div>
     </main>
 
-    <!-- Chart.js Initialization Script -->
+    <!-- Chart.js Script -->
     <script>
         // --- Common Chart Configuration ---
         Chart.defaults.font.family = "'Inter', sans-serif";
@@ -919,7 +914,7 @@
         fetch('https://care-reach-host-production.up.railway.app/api/v1/admin/analytics')
             .then(res => res.json())
             .then(data => {
-                // 1. Registrations Over Time
+
                 new Chart(document.getElementById('trendChart').getContext('2d'), {
                     type: 'line',
                     data: {
@@ -936,7 +931,6 @@
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top', align: 'end' } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#e2e8f0' } }, x: { grid: { display: false } } } }
                 });
 
-                // 2. Status Distribution
                 new Chart(document.getElementById('categoryChart').getContext('2d'), {
                     type: 'doughnut',
                     data: {
@@ -950,7 +944,6 @@
                     options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8 } } } }
                 });
 
-                // 3. District Distribution
                 new Chart(document.getElementById('districtChart').getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -964,8 +957,7 @@
                     },
                     options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#e2e8f0' } }, x: { grid: { display: false } } } }
                 });
-
-                // 4. Users by Role
+                
                 new Chart(document.getElementById('responseTimeChart').getContext('2d'), {
                     type: 'bar',
                     data: {
@@ -1003,8 +995,7 @@
 
                 const roleEl = adminProfile.querySelector('.admin-info p');
                 if (roleEl) {
-                    // some pages have location instead of role here, but we will put role for now, or just leave it
-                    // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+                   
                 }
 
                 const imgEl = adminProfile.querySelector('img');
@@ -1237,7 +1228,7 @@
     </script>
 
 
-    <!-- SUPREME RESPONSIVE FIX -->
+    <!-- RESPONSIVE FIX -->
     <style>
         @media (max-width: 1024px) {
             .sidebar {
@@ -1280,7 +1271,7 @@
             }
         }
         
-        // Auto-close sidebar when clicking outside
+        // Auto-close sidebar 
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', function(event) {
                 const sidebar = document.getElementById('sidebar');
@@ -1296,7 +1287,7 @@
                         sidebar.classList.remove('open');
                     }
                 }
-            }, true); // Use capture phase to beat Chart.js stopPropagation
+            }, true); 
         });
     </script>
 

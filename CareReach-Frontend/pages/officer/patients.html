@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
+
     <script>
         (function() {
             function enforceProtectedSession() {
@@ -120,12 +120,12 @@
             flex-direction: column;
             gap: 4px;
             overflow-y: auto;
-            /* Hide scrollbar for IE, Edge and Firefox */
+           
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
+       
         .sidebar-menu::-webkit-scrollbar {
             display: none;
         }
@@ -577,7 +577,7 @@
             }
         }
     
-    /* --- NOTIFICATION DROPDOWN --- */
+
     .notification-dropdown {
       position: absolute;
       top: 100%;
@@ -645,9 +645,7 @@
     
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /* CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -655,13 +653,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+      
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+   
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -672,7 +670,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+        
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -681,7 +679,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+        
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -719,9 +717,9 @@
 
             </a>
             <a href="patients.html" class="menu-item active"><i class="bi bi-people"></i> Division Patients</a>
-            <!-- <a href="emergency.html" class="menu-item"><i class="bi bi-exclamation-triangle"></i> Local Emergencies</a> -->
+           
             <div class="menu-title">Administration</div>
-            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-bar-graph"></i> Activity Reports</a> -->
+            
             <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
         
             <!-- Logout Button -->
@@ -791,12 +789,12 @@
                 </div>
             </div>
 
-            <!-- Filter Chips -->
+          
             <div class="filters">
                 <button class="filter-chip active">All Patients</button>
             </div>
 
-            <!-- Patients Table -->
+          
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="bi bi-person-lines-fill"></i> Registered Patients in Division</h2>
@@ -828,7 +826,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-      // [Added via script] Navbar Profile injection
+      
       const navUserFullName = localStorage.getItem("userFullName") || "Officer";
       const navUId = localStorage.getItem("userId");
       
@@ -845,7 +843,7 @@
             if (data.profilePhoto && navAvatarImg) {
               navAvatarImg.src = data.profilePhoto;
             }
-          }).catch(err => { /* fail silently */ });
+          }).catch(err => {  });
       }
 
             const userId = localStorage.getItem('userId');
@@ -865,10 +863,10 @@
                     return fetch('https://care-reach-host-production.up.railway.app/api/v1/patients/all')
                         .then(res => res.json())
                         .then(data => {
-                            // The user requested that we ONLY show VERIFIED patients in this gnDivision
+                           
                             const verifiedPatients = data.filter(p => p.gnDivision === myGnDivision && p.status === 'VERIFIED');
 
-                            // Dynamic Table Rendering logic
+                            
                             document.getElementById('totalPatientsMetric').innerText = verifiedPatients.length;
                             document.getElementById('tableCountLabel').innerText = `Showing ${verifiedPatients.length} patients`;
 
@@ -963,7 +961,6 @@
         }
     </script>
 
-    <!-- Premium Patient Details Modal -->
     <style>
         .no-scrollbar::-webkit-scrollbar {
             display: none;
@@ -971,9 +968,9 @@
 
         .no-scrollbar {
             -ms-overflow-style: none;
-            /* IE and Edge */
+        
             scrollbar-width: none;
-            /* Firefox */
+     
         }
     
         </style>
@@ -1221,7 +1218,7 @@
                     </div>
                 </div>
 
-                <!-- Location Preview (Bottom Green Box & Map) -->
+                <!-- Location Preview -->
                 <div
                     style="background: #e6f7ec; margin: 16px; border-radius: 12px; display: flex; flex-wrap: wrap; border: 1px solid #cbf0d8; position: relative; overflow: hidden; min-height: 150px;">
                     <div style="flex: 1; min-width: 250px;">
@@ -1279,7 +1276,7 @@
         }
     </script>
 
-  <!-- Notification System Polling -->
+
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const uId = localStorage.getItem("userId");
@@ -1393,14 +1390,14 @@
       }
 
       if (uId) {
-        // Run immediately then poll every 5s
+      
         fetchNotifications();
         setInterval(fetchNotifications, 5000);
       }
     });
   </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+  
     <style>
         @media (max-width: 1024px) {
             .sidebar {

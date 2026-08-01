@@ -35,12 +35,12 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+           
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #ccfbf1;
 
-            /* Sidebar Specific Colors */
+         
             --sidebar-bg: #042f2e;
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
@@ -53,7 +53,7 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
 
-            /* Status Colors */
+           
             --danger: #ef4444;
             --danger-bg: #fef2f2;
             --warning: #f59e0b;
@@ -132,12 +132,12 @@
             flex-direction: column;
             gap: 4px;
             overflow-y: auto;
-            /* Hide scrollbar for IE, Edge and Firefox */
+           
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
+       
         .sidebar-menu::-webkit-scrollbar {
             display: none;
         }
@@ -838,9 +838,7 @@
 
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /* CareReach Master Mobile Responsiveness*/
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -848,13 +846,12 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+  
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -865,7 +862,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+     
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -874,7 +871,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+    
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -912,7 +909,6 @@
             </a>
 
             <div class="menu-title">Network Management</div>
-            <!-- PATIENTS MENU ACTIVE -->
             <a href="patients.html" class="menu-item active">
                 <i class="bi bi-person-rolodex"></i> Patients
             </a>
@@ -1064,7 +1060,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Dynamic Content Rendered via JS -->
+                          
                         </tbody>
                     </table>
                 </div>
@@ -1087,7 +1083,6 @@
     </main>
 
     <!-- Modals -->
-    <!-- Modern Overlays -->
     <div id="modernConfirm" class="modal-overlay"
         style="display: none; z-index: 1000; align-items: center; justify-content: center;">
         <div
@@ -1173,7 +1168,7 @@
     </div>
 
 
-    <!-- PROFILE MODAL (READONLY) -->
+    <!-- PROFILE MODAL -->
     <div class="modal-overlay" id="profileModal">
         <div class="modal-box" style="padding:0; overflow:hidden; max-width:600px; width:100%;">
             <div style="background:#0f766e; color:white; padding:24px; display:flex; flex-direction:column; gap:16px;">
@@ -1203,7 +1198,7 @@
             </div>
 
             <div style="padding:0; background:#f8fafc; overflow-y:auto; max-height:70vh;">
-                <!-- SYSTEM META / REPORTER SECTION -->
+                <!-- REPORTER SECTION -->
                 <div style="padding:24px; background:white; border-bottom:4px solid #f1f5f9;">
                     <div
                         style="display:flex; align-items:center; gap:10px; color:#0f766e; font-size:12px; font-weight:800; margin-bottom:24px; letter-spacing:0.5px;">
@@ -1450,7 +1445,7 @@
                         </div>
                     </div>
 
-                    <!-- Map Block Upgrade -->
+                    <!-- Map Block -->
                     <div id="vpGpsContainer"
                         style="display:none; background: #e6f7ec; margin: 16px 0; border-radius: 12px; flex-wrap: wrap; border: 1px solid #cbf0d8; position: relative; overflow: hidden; min-height: 150px;">
                         <div id="vpGpsIframe" style="flex: 1; border-right: 1px solid #cbf0d8; min-width: 200px;"></div>
@@ -1616,12 +1611,12 @@
 
                 verifiedPatients.forEach((pt, index) => {
                     const tr = document.createElement('tr');
-                    // Use data attributes for filtering
+                 
                     tr.setAttribute('data-district', (pt.district || '').toLowerCase());
                     tr.setAttribute('data-ds', (pt.divisionalSecretariat || '').toLowerCase());
                     tr.setAttribute('data-gn', (pt.gnDivision || '').toLowerCase());
                     tr.setAttribute('data-hasaccount', pt.hasAccount ? 'true' : 'false');
-                    // Mock: if they already had an account, let's pretend guardian account isn't made yet.
+                   
                     tr.setAttribute('data-hasguardianaccount', pt.hasGuardianAccount ? 'true' : 'false');
                     tr.id = 'patient-row-' + pt.nic;
 
@@ -1679,13 +1674,13 @@
                         `;
                     tbody.appendChild(tr);
                 });
-                // Initialize custom dropdowns
+             
                 createDropdownUI('districtFilterContainer', 'district', 'Districts');
                 createDropdownUI('dsFilterContainer', 'ds', 'Divisional Sec.');
                 createDropdownUI('gnFilterContainer', 'gn', 'GN Divisions');
 
                 updateFilterOptions();
-                filterTable(); // Run filters initially to apply default tab
+                filterTable(); 
 
             } catch (err) {
                 console.error("Failed to load patients", err);
@@ -1718,7 +1713,7 @@
             const pt = window.activePatientSelection;
             if (!pt) return;
 
-            // Hide main modal and show loader
+          
             document.getElementById('patientModal').classList.remove('active');
             const loader = document.getElementById('modernLoader');
             loader.style.display = 'flex';
@@ -1741,14 +1736,14 @@
                 });
 
                 const text = await res.text();
-                loader.style.display = 'none'; // Hide loader
+                loader.style.display = 'none';
 
                 if (res.ok) {
-                    // Show Modern Success Modal
+                  
                     document.getElementById('modernSuccessMsg').textContent = 'Login credentials have been securely emailed to ' + (pt.patientEmail || 'the patient.');
                     document.getElementById('modernSuccess').style.display = 'flex';
 
-                    // Dynamically update the row so it immediately moves to the other tab
+                   
                     const activeRow = document.getElementById('patient-row-' + pt.nic);
                     if (activeRow) {
                         activeRow.setAttribute('data-hasaccount', 'true');
@@ -1763,8 +1758,7 @@
                     }
                     pt.hasAccount = true;
                     filterTable();
-                    // Switch UI automatically
-                    // switchAccountTab('generated');
+               
                 } else {
                     document.getElementById('modernErrorMsg').textContent = 'Failed to Create account: ' + text;
                     document.getElementById('modernError').style.display = 'flex';
@@ -1965,7 +1959,7 @@
                     }
                     if (window.patientsData) {
                         window.patientsData = window.patientsData.filter(p => p.id !== id);
-                        // Make sure to re-apply filterTable so all stats update correctly 
+                      
                         if (typeof filterTable === 'function') {
                             filterTable();
                         }
@@ -1985,7 +1979,7 @@
             }
         }
 
-        // --- GENERIC DROPDOWN LOGIC ---
+        // --- DROPDOWN  ---
         function createDropdownUI(containerId, prefix, title) {
             const container = document.getElementById(containerId);
             if (!container) return;
@@ -2174,7 +2168,7 @@
                 }
             });
 
-            // Activate target tab
+    
             let targetBtn = null;
             if (tab === 'pending') targetBtn = btnPending;
             else if (tab === 'generated') targetBtn = btnGenerated;
@@ -2241,7 +2235,7 @@
                 pageTxt.textContent = 'Showing ' + visibleCount + ' filtered patients';
             }
 
-            // Global Updates
+
             if (window.patientsData) {
                 const allLength = window.patientsData.length.toLocaleString();
                 const vCount = window.patientsData.filter(p => p.status === 'VERIFIED').length.toLocaleString();
@@ -2383,8 +2377,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const roleEl = adminProfile.querySelector('.admin-info p');
         if (roleEl) {
-            // some pages have location instead of role here, but we will put role for now, or just leave it
-            // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+           
         }
 
         const imgEl = adminProfile.querySelector('img');
@@ -2527,7 +2520,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+    <!--  RESPONSIVE FIX -->
     <style>
         @media (max-width: 1024px) {
             .sidebar {

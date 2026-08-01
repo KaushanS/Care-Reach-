@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
+
     <script>
         (function () {
             function enforceProtectedSession() {
@@ -725,7 +725,6 @@
             line-height: 1.4;
         }
 
-        /* Enhanced Admin Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -1083,9 +1082,7 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /* CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -1093,13 +1090,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+       
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+       
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -1109,8 +1106,7 @@
         .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
-        
-        /* Forms, Inputs, Buttons */
+     
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -1119,7 +1115,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+      
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -1139,7 +1135,7 @@
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
-        <!-- MOBILE CLOSE BUTTON -->
+   
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
         <div class="brand">
@@ -1236,7 +1232,7 @@
                     </div>
                 </div>
 
-                <!-- Profile Block linked to profile.html -->
+          
                 <a href="settings.html" class="admin-profile">
                     <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
                     <div class="admin-info">
@@ -1247,7 +1243,7 @@
             </div>
         </header>
 
-        <!-- DASHBOARD BODY -->
+      
         <div class="content-area">
 
             <div class="page-header">
@@ -1263,7 +1259,7 @@
                 </div>
             </div>
 
-            <!-- Metrics Grid -->
+     
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-icon icon-blue"><i class="bi bi-people-fill"></i></div>
@@ -1298,7 +1294,7 @@
                 </div>
             </div>
 
-            <!-- Recent Emergencies Table -->
+       
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title">Active & Recent Emergencies</h2>
@@ -1740,8 +1736,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const roleEl = adminProfile.querySelector('.admin-info p');
         if (roleEl) {
-            // some pages have location instead of role here, but we will put role for now, or just leave it
-            // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+            
         }
 
         const imgEl = adminProfile.querySelector('img');
@@ -1884,7 +1879,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+    <!-- RESPONSIVE FIX -->
     <style>
         @media (max-width: 1024px) {
             .sidebar {

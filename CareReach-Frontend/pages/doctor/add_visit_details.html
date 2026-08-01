@@ -170,7 +170,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, .1)
         }
 
-        /* --- MAIN CONTENT & HEADER --- */
+
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
@@ -581,9 +581,7 @@
         </style>
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /* CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -591,13 +589,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+  
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+       
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -608,7 +606,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+       
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -616,8 +614,7 @@
         .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
-        
-        /* Tables and Advanced Nav */
+     
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -648,11 +645,11 @@
             <div class="menu-title">Clinical Care</div>
             <a href="appointments.html" class="menu-item"><i class="bi bi-calendar-event"></i> Appointments</a>
             <a href="patients.html" class="menu-item"><i class="bi bi-person-lines-fill"></i> Patients</a>
-            <!-- Keep Home Visits active since we branched from it -->
+          
             <a href="home-visits.html" class="menu-item active"><i class="bi bi-house-heart"></i> Home Visits</a>
-            <!-- <a href="prescriptions.html" class="menu-item"><i class="bi bi-prescription2"></i> Prescriptions</a> -->
+           
             <div class="menu-title">Management</div>
-            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-text"></i> Reports</a> -->
+            
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
                 <i class="bi bi-box-arrow-right"></i> Log Out
@@ -724,7 +721,7 @@
                 </div>
             </div>
 
-            <!-- Medical Report Form (Mapped to ER Diagram: medicalReport) -->
+
             <form class="panel" onsubmit="submitReport(event)">
                 <div class="panel-header">
                     <h2 class="panel-title"><i class="bi bi-clipboard2-pulse text-primary"></i> Clinical Assessment</h2>
@@ -841,7 +838,7 @@
                 return;
             }
 
-            // Build Payload
+  
             const payload = {
                 patientId: targetPatientId,
                 doctorId: doctorId,
@@ -853,7 +850,7 @@
                 description: document.getElementById('description').value
             };
 
-            // UI Feedback during save
+    
             btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
             btn.style.opacity = '0.8';
             btn.disabled = true;
@@ -897,7 +894,7 @@
             }
         }
 
-        /* NOTIFICATION DROPDOWN */
+
         .notification-dropdown {
             position: absolute;
             top: 60px;
@@ -1028,7 +1025,7 @@
         window.location.replace('../../login.html');
     }
 </script>
-<!-- Global Avatar Hydration -->
+
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const fn = localStorage.getItem('userFullName');
@@ -1042,7 +1039,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+
     <style>
         @media (max-width: 1024px) {
             .sidebar {

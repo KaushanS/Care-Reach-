@@ -41,14 +41,14 @@ public class DoctorService {
 
         String ds = doctor.getDivisionalSecretariat();
         if (ds == null || ds.trim().isEmpty()) {
-            // Fallback if doctor lacks a Divisional Secretariat
+          
             ds = "Unknown";
         }
 
         List<Patient> verifiedPatientsRaw = patientRepository.findByDivisionalSecretariatAndStatusOrderByIdDesc(ds,
                 "VERIFIED");
 
-        // Filter out patients who already have at least one MedicalReport
+        // Filter out patients  least one MedicalReport
         List<Patient> verifiedPatients = verifiedPatientsRaw.stream()
                 .filter(p -> medicalReportRepository.findByPatientId(p.getId()).isEmpty())
                 .collect(Collectors.toList());
@@ -124,7 +124,7 @@ public class DoctorService {
 
         List<com.carereach.backend.models.MedicalReport> reports = medicalReportRepository.findByDoctorId(doctorId);
 
-        // Group by Patient to get unique list and newest report per patient
+
         Map<Patient, com.carereach.backend.models.MedicalReport> latestReports = new HashMap<>();
         for (com.carereach.backend.models.MedicalReport r : reports) {
             Patient p = r.getPatient();
@@ -169,7 +169,7 @@ public class DoctorService {
         List<com.carereach.backend.models.MedicalReport> reports = medicalReportRepository.findByDoctorId(doctorId);
         java.time.LocalDate today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Colombo"));
 
-        // We interpret 'completedVisits' as any historical MedicalReport visit.
+       
         List<Map<String, Object>> completedVisits = reports.stream().map(r -> {
             Map<String, Object> map = new HashMap<>();
             map.put("patientName", r.getPatient().getName());
@@ -184,14 +184,13 @@ public class DoctorService {
                 .sorted((a, b) -> b.get("appointmentDate").toString().compareTo(a.get("appointmentDate").toString()))
                 .collect(Collectors.toList());
 
-        // Find which patients have already been seen today
+        // Find which patients 
         List<Long> patientsSeenToday = reports.stream()
                 .filter(r -> r.getCreatedAt() != null && r.getCreatedAt().toLocalDate().isEqual(today))
                 .map(r -> r.getPatient().getId())
                 .collect(Collectors.toList());
 
-        // We interpret 'upcomingVisits' as any target patient who has a MedicalReport
-        // with a nextVisitDate exactly matching today.
+      
         List<Map<String, Object>> upcomingVisits = reports.stream()
                 .filter(r -> r.getNextVisitDate() != null
                         && java.time.LocalDate.parse(r.getNextVisitDate()).isEqual(today))
@@ -206,8 +205,7 @@ public class DoctorService {
                     map.put("status", "Pending");
                     return map;
                 })
-                // Resolve duplicate patients by picking the absolute closest upcoming
-                // appointment
+               
                 .collect(Collectors.groupingBy(m -> m.get("patientId")))
                 .values().stream()
                 .map(list -> list.stream()

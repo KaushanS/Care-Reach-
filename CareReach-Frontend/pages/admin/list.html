@@ -8,9 +8,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /*CareReach Master Mobile Responsiveness */
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -18,13 +16,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+       
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+        
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -35,7 +33,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+       
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -44,7 +42,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+      
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -136,8 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const roleEl = adminProfile.querySelector('.admin-info p');
         if (roleEl) {
-            // some pages have location instead of role here, but we will put role for now, or just leave it
-            // roleEl.textContent = role; // Optional, maybe we just leave the subtitle as is
+            
         }
 
         const imgEl = adminProfile.querySelector('img');
@@ -368,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .format-options {
                 flex-direction: column;
             }
-            /* Make panels flex column on very small screens if they have side-by-side elements */
+          
             .panel-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -419,7 +416,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Auto-close sidebar when clicking outside
+        // Auto-close sidebar
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', function(event) {
                 const sidebar = document.getElementById('sidebar');
@@ -435,11 +432,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         sidebar.classList.remove('open');
                     }
                 }
-            }, true); // Use capture phase to beat Chart.js stopPropagation
+            }, true); 
         });
     </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+    <!-- RESPONSIVE FIX -->
     <style>
         @media (max-width: 1024px) {
             .sidebar {
@@ -472,7 +469,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
         @media (max-width: 768px) {
 
-            /* Padding and Header Layout Fixes for Mobile */
             .content-area {
                 padding: 16px !important;
             }

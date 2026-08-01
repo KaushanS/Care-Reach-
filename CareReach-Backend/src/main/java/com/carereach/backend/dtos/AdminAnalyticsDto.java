@@ -5,20 +5,20 @@ import java.util.List;
 
 @Data
 public class AdminAnalyticsDto {
-    // Chart 1: Patient registrations per month (label -> count)
+    //Patient registrations per month 
     private List<String> monthlyLabels;
     private List<Long> monthlyCounts;
 
-    // Chart 2: Patient status distribution
+    //Patient status distribution
     private long verifiedCount;
     private long pendingCount;
     private long rejectedCount;
 
-    // Chart 3: Patients by district (top 5)
+    //Patients by district 
     private List<String> districtLabels;
     private List<Long> districtCounts;
 
-    // Chart 4: Users by role
+    //Users by role
     private long doctorCount;
     private long officerCount;
     private long guardianCount;

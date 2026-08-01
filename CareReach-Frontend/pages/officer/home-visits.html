@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-    <!-- Core Session Manager -->
+  
     <script>
         (function () {
             function enforceProtectedSession() {
@@ -35,7 +35,7 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+          
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #d1f2eb;
@@ -54,7 +54,6 @@
             --info: #3b82f6;
             --info-bg: #eff6ff;
 
-            /* Sidebar Variables */
             --sidebar-bg: #042f2e;
             --sidebar-text: #ccfbf1;
             --sidebar-text-muted: #99f6e4;
@@ -78,7 +77,7 @@
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR --- */
+    
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--sidebar-bg);
@@ -125,12 +124,12 @@
             flex-direction: column;
             gap: 4px;
             overflow-y: auto;
-            /* Hide scrollbar for IE, Edge and Firefox */
+           
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
 
-        /* Hide scrollbar for Chrome, Safari and Opera */
+      
         .sidebar-menu::-webkit-scrollbar {
             display: none;
         }
@@ -190,7 +189,7 @@
             border-radius: 99px;
         }
 
-        /* --- MAIN CONTENT --- */
+   
         .main-content {
             margin-left: var(--sidebar-width);
             flex: 1;
@@ -199,7 +198,7 @@
             min-height: 100vh;
         }
 
-        /* TOP HEADER */
+     
         .top-header {
             height: 72px;
             background-color: var(--bg-surface);
@@ -378,7 +377,7 @@
             background-color: #f9fafb;
         }
 
-        /* Custom Table Cells */
+     
         .patient-cell {
             display: flex;
             flex-direction: column;
@@ -605,7 +604,7 @@
             .format-options {
                 flex-direction: column;
             }
-            /* Make panels flex column on very small screens if they have side-by-side elements */
+           
             .panel-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -615,13 +614,11 @@
 
         </style>
 
-    <!-- Auth Guard for Browser Back Button -->
+
 
 <style>
 
-    /* =========================================
-       CareReach Master Mobile Responsiveness
-       ========================================= */
+    /*  CareReach Master Mobile Responsiveness*/
     @media (max-width: 768px) {
         * { box-sizing: border-box !important; }
         html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
@@ -629,13 +626,13 @@
         .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
         .sidebar.open { transform: translateX(0); }
         
-        /* Padding and Layouts */
+   
         .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
         .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
         .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
         .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
         
-        /* Modals and Data Grids */
+        
         .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
         .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
         .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
@@ -646,7 +643,7 @@
         .map-modal-header { flex-wrap: nowrap !important; }
         .close-map-btn { width: auto !important; padding: 10px !important; }
         
-        /* Forms, Inputs, Buttons */
+  
         .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
         input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
         .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
@@ -655,7 +652,7 @@
         .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
         .panel-body button { width: 100% !important; margin-top: 10px !important; }
         
-        /* Tables and Advanced Nav */
+        
         .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
         td, th { white-space: nowrap !important; }
         .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
@@ -675,7 +672,7 @@
 
     <!-- SIDEBAR FOR GN OFFICER -->
     <aside class="sidebar" id="sidebar">
-        <!-- MOBILE CLOSE BUTTON -->
+        
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
         <div class="brand">
@@ -698,10 +695,10 @@
 
             <a href="patients.html" class="menu-item"><i class="bi bi-people"></i> Division Patients</a>
 
-            <!-- <a href="emergency.html" class="menu-item"><i class="bi bi-exclamation-triangle"></i> Local Emergencies</a> -->
+          
 
             <div class="menu-title">Administration</div>
-            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-bar-graph"></i> Activity Reports</a> -->
+            
             <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
 
             <!-- Logout Button -->
@@ -766,14 +763,14 @@
                 </div>
             </div>
 
-            <!-- Tabs/Filters -->
+            
             <div class="filters">
                 <button class="filter-btn active">Pending Review (3)</button>
                 <button class="filter-btn">Verified</button>
                 <button class="filter-btn">Rejected</button>
             </div>
 
-            <!-- Verification Queue Panel -->
+           
             <div class="panel">
                 <div class="table-responsive">
                     <table>
@@ -787,7 +784,7 @@
                             </tr>
                         </thead>
                         <tbody id="verificationQueueBody">
-                            <!-- Dynamically populated by JS -->
+                           
                         </tbody>
                     </table>
                 </div>
@@ -799,7 +796,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
 
-            // [Added via script] Navbar Profile injection
+           
             const navUserFullName = localStorage.getItem("userFullName") || "Officer";
             const navUId = localStorage.getItem("userId");
 
@@ -816,7 +813,7 @@
                         if (data.profilePhoto && navAvatarImg) {
                             navAvatarImg.src = data.profilePhoto;
                         }
-                    }).catch(err => { /* fail silently */ });
+                    }).catch(err => {  });
             }
 
             const userId = localStorage.getItem('userId');
@@ -1116,7 +1113,7 @@
             }
 
             if (uId) {
-                // Run immediately then poll every 5s
+               
                 fetchNotifications();
                 setInterval(fetchNotifications, 5000);
             }
@@ -1131,7 +1128,7 @@
             }
         }
         
-        // Auto-close sidebar when clicking outside
+       
         document.addEventListener('DOMContentLoaded', function() {
             document.addEventListener('click', function(event) {
                 const sidebar = document.getElementById('sidebar');
@@ -1147,11 +1144,11 @@
                         sidebar.classList.remove('open');
                     }
                 }
-            }, true); // Use capture phase to beat Chart.js stopPropagation
+            }, true); 
         });
     </script>
 
-    <!-- SUPREME RESPONSIVE FIX -->
+  
     <style>
         @media (max-width: 1024px) {
             .sidebar {
