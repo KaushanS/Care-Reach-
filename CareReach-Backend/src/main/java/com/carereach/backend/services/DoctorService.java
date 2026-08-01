@@ -191,9 +191,9 @@ public class DoctorService {
                 .collect(Collectors.toList());
 
         // We interpret 'upcomingVisits' as any target patient who has a MedicalReport
-        // with a nextVisitDate exactly matching today.
+        // with a nextVisitDate exactly matching today or later.
         List<Map<String, Object>> upcomingVisits = reports.stream()
-                .filter(r -> r.getNextVisitDate() != null && r.getNextVisitDate().isEqual(today))
+                .filter(r -> r.getNextVisitDate() != null && !r.getNextVisitDate().isBefore(today))
                 .filter(r -> !patientsSeenToday.contains(r.getPatient().getId()))
                 .map(r -> {
                     Map<String, Object> map = new HashMap<>();
