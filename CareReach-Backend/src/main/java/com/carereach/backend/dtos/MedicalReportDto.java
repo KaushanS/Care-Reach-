@@ -7,11 +7,8 @@ public class MedicalReportDto {
     private Long id;
     private Long patientId;
     private Long doctorId;
-    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
-    private LocalDate visitDate;
-
-    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
-    private LocalDate nextVisitDate;
+    private String visitDate;
+    private String nextVisitDate;
     private String symptoms;
     private String diagnosis;
     private String medicines;
@@ -44,19 +41,19 @@ public class MedicalReportDto {
         this.doctorId = doctorId;
     }
 
-    public LocalDate getVisitDate() {
+    public String getVisitDate() {
         return visitDate;
     }
 
-    public void setVisitDate(LocalDate visitDate) {
+    public void setVisitDate(String visitDate) {
         this.visitDate = visitDate;
     }
 
-    public LocalDate getNextVisitDate() {
+    public String getNextVisitDate() {
         return nextVisitDate;
     }
 
-    public void setNextVisitDate(LocalDate nextVisitDate) {
+    public void setNextVisitDate(String nextVisitDate) {
         this.nextVisitDate = nextVisitDate;
     }
 
