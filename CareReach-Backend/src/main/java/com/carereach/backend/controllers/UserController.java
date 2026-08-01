@@ -94,6 +94,37 @@ public class UserController {
         }
     }
 
+    @PostMapping("/public/forgot-password")
+    public ResponseEntity<?> requestPublicPasswordResetOtp(@RequestBody java.util.Map<String, String> body) {
+        try {
+            String email = body.get("email");
+            if (email == null)
+                return ResponseEntity.badRequest().body("Email is required");
+            userService.requestPublicPasswordResetOtp(email);
+            return ResponseEntity.ok().body("OTP sent successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/public/reset-password")
+    public ResponseEntity<?> resetPublicPassword(@RequestBody java.util.Map<String, String> body) {
+        try {
+            String email = body.get("email");
+            String otpCode = body.get("otpCode");
+            String newPassword = body.get("newPassword");
+
+            if (email == null || otpCode == null || newPassword == null) {
+                return ResponseEntity.badRequest().body("Missing required payload fields");
+            }
+
+            userService.verifyAndResetPublicPassword(email, otpCode, newPassword);
+            return ResponseEntity.ok().body("Password updated successfully.");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}/password")
     public ResponseEntity<?> updateUserPassword(@PathVariable Long id, @RequestBody PasswordUpdateDto passwordDto) {
         try {

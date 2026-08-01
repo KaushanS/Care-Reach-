@@ -286,6 +286,43 @@ public class UserService {
         }
     }
 
+    public void requestPublicPasswordResetOtp(String email) {
+        if (email == null || email.trim().isEmpty())
+            throw new IllegalArgumentException("Email cannot be empty");
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("No account found with this email"));
+
+        try {
+            java.security.SecureRandom random = new java.security.SecureRandom();
+            String otpCode = String.format("%06d", random.nextInt(1000000));
+
+            user.setResetOtpCode(otpCode);
+            user.setResetOtpExpiry(java.time.LocalDateTime.now().plusMinutes(5));
+            userRepository.save(user);
+
+            emailService.sendOtpVerificationEmail(user.getEmail(), otpCode);
+        } catch (Exception e) {
+            throw new RuntimeException("Error dispatching OTP: " + e.getMessage());
+        }
+    }
+
+    public void verifyAndResetPublicPassword(String email, String otpCode, String newPassword) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Invalid email"));
+
+        if (user.getResetOtpCode() == null || !user.getResetOtpCode().equals(otpCode)) {
+            throw new RuntimeException("Invalid OTP code!");
+        }
+
+        if (user.getResetOtpExpiry() == null || java.time.LocalDateTime.now().isAfter(user.getResetOtpExpiry())) {
+            throw new RuntimeException("OTP expired!");
+        }
+
+        user.setPassword(newPassword);
+        user.setResetOtpCode(null);
+        user.setResetOtpExpiry(null);
+        userRepository.save(user);
+    }
+
     public void updateUserPassword(Long userId, PasswordUpdateDto passwordDto) {
         if (userId == null) {
             throw new IllegalArgumentException("User ID cannot be null");
