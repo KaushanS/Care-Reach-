@@ -2,10 +2,30 @@
 <html lang="en">
 
 <head>
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Guardian Profile</title>
-    
+    <!-- Fonts and Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +34,7 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+          
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #d1f2eb;
@@ -29,7 +49,7 @@
             --success: #10b981;
             --info: #3b82f6;
 
-            /* Sidebar Variables */
+            
             --sidebar-bg: #042f2e;
             --sidebar-text: #ccfbf1;
             --sidebar-text-muted: #99f6e4;
@@ -146,7 +166,7 @@
             opacity: 1;
         }
 
-        /* Emergency Button */
+        
         .menu-item.emergency-btn {
             background-color: rgba(220, 38, 38, 0.1);
             color: #fca5a5;
@@ -176,7 +196,7 @@
             flex-direction: column;
         }
 
-        
+        /* TOP HEADER */
         .top-header {
             height: 72px;
             background-color: var(--bg-surface);
@@ -284,7 +304,7 @@
             padding: 24px;
         }
 
-        /* Profile Sidebar Card */
+      
         .profile-card {
             text-align: center;
             padding: 32px 24px;
@@ -416,13 +436,15 @@
             border-color: var(--primary);
         }
 
-        .mobile-toggle {
+        .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
             display: none;
             font-size: 24px;
             cursor: pointer;
             color: var(--text-dark);
         }
 
+        /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
@@ -436,6 +458,7 @@
                 margin-left: 0;
             }
 
+            .mobile-close-btn { display: block !important; }
             .mobile-toggle {
                 display: block;
             }
@@ -450,29 +473,188 @@
                 grid-template-columns: 1fr;
             }
         }
-    
+
         /* Notifications */
-        .notification-wrapper { position: relative; }
-        .notification-icon { color: var(--text-muted); font-size: 20px; cursor: pointer; position: relative; display: flex; margin-right: 15px; }
-        .notification-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
-        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; overflow: hidden; text-align: left; }
-        .notification-dropdown.show { display: block; }
-        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .notification-list { max-height: 360px; overflow-y: auto; }
-        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .notification-item:hover { background: var(--bg-page); }
-        .notification-item:last-child { border-bottom: none; }
-        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
-        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
-    </style>
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            margin-right: 15px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        .notification-list {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            display: none;
+        }
+    
+        </style>
+<style>
+
+    /*careReach Master Mobile Responsiveness */
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+        
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+    
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+        
+       
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+        
+    
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
 </head>
 
 <body>
 
-   
+    <!-- GUARDIAN SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+       
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
             CARE<span>REACH</span>
@@ -494,22 +676,22 @@
 
                 <div class="menu-title">Account</div>
                 <a href="guardian_profile.html" class="menu-item active">
-                <i class="bi bi-person-gear"></i> My Profile
-            </a>
+                    <i class="bi bi-person-gear"></i> My Profile
+                </a>
             </div>
-            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+            <a href="#" onclick="handleLogout(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
                 <i class="bi bi-box-arrow-right"></i> Sign Out
             </a>
         </nav>
     </aside>
 
     <main class="main-content">
-     
+        <!-- HEADER -->
         <header class="top-header">
             <div style="display: flex; align-items: center; gap: 20px;">
                 <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
             </div>
-                        <div style="display: flex; align-items: center; gap: 20px; margin-left: auto;">
+            <div style="display: flex; align-items: center; gap: 20px; margin-left: auto;">
                 <div class="notification-wrapper">
                     <div class="notification-icon" onclick="toggleNotifications()">
                         <i class="bi bi-bell"></i>
@@ -518,20 +700,26 @@
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="notification-header">
                             <h3>Notifications</h3>
-                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark all read</a>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark
+                                all read</a>
                         </div>
                         <div class="notification-list">
                             <div class="notification-item">
-                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i class="bi bi-calendar-event"></i></div>
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i
+                                        class="bi bi-calendar-event"></i></div>
                                 <div class="noti-content">
                                     <h4>Upcoming Appointment</h4>
                                     <p>Reminder: Health checkup for Kamal Perera tomorrow.</p>
-                                    <span class="noti-time" style="font-size:11px;color:var(--text-muted);">2 hours ago</span>
+                                    <span class="noti-time" style="font-size:11px;color:var(--text-muted);">2 hours
+                                        ago</span>
                                 </div>
                             </div>
                         </div>
                         <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
-                            <a href="notifications.html" style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See all notifications</a>
+                            <a href="notifications.html"
+                                style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See
+                                all notifications</a>
                         </div>
                     </div>
                 </div>
@@ -541,9 +729,11 @@
                         <h4>Namal Fernando</h4>
                         <p>Registered Guardian</p>
                     </div>
-                    <img src="https://ui-avatars.com/api/?name=Namal+Fernando&background=042f2e&color=fff" alt="Guardian">
+                    <img src="https://ui-avatars.com/api/?name=Namal+Fernando&background=042f2e&color=fff"
+                        alt="Guardian">
                 </a>
-            </div></header>
+            </div>
+        </header>
 
         <div class="content-area">
 
@@ -556,67 +746,65 @@
 
             <div class="profile-layout">
 
-                
+                <!--  Profile Summary Card -->
                 <div>
                     <div class="panel profile-card">
-                        <img src="https://ui-avatars.com/api/?name=Namal+Fernando&background=042f2e&color=fff&size=200"
-                            alt="Profile Image" class="profile-avatar-large">
-                        <h2>Namal Fernando</h2>
-                        <p>Colombo, Western Province</p>
+                        <div style="position: relative; display: inline-block;">
+                            <img src="https://ui-avatars.com/api/?name=Guardian&background=042f2e&color=fff&size=200"
+                                alt="Profile Image" class="profile-avatar-large" id="profile-avatar-img"
+                                style="cursor:pointer;" onclick="document.getElementById('photo-upload').click()">
+                            <div style="position: absolute; bottom: 20px; right: 0px; background: var(--primary); color: white; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; border: 2px solid white;"
+                                onclick="document.getElementById('photo-upload').click()">
+                                <i class="bi bi-camera-fill" style="font-size: 16px;"></i>
+                            </div>
+                            <input type="file" id="photo-upload" style="display:none;" accept="image/*">
+                        </div>
+                        <h2 id="banner-name">Loading...</h2>
+                        <p id="banner-location">Guardian Profile</p>
                         <span class="badge"><i class="bi bi-shield-check"></i> Verified Guardian</span>
 
                         <div
                             style="margin-top: 24px; text-align: left; border-top: 1px solid var(--border); padding-top: 16px;">
                             <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><strong>Linked
                                     Dependents</strong></div>
-                            <div style="font-size: 14px; color: var(--text-dark); margin-bottom: 4px;"><i
-                                    class="bi bi-person-fill text-primary"></i> Kamal Perera (Father)</div>
-                            <div style="font-size: 14px; color: var(--text-dark);"><i
-                                    class="bi bi-person-fill text-primary"></i> Sita Fernando (Mother)</div>
+                            <div id="sidebar-dependents" style="min-height: 50px;">
+                                <div style="color: var(--text-muted); font-size: 13px;">Loading dependents...</div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-             
                 <div>
-                
+                    <!-- Personal Info Form -->
                     <form class="panel" onsubmit="saveProfile(event)" style="margin-bottom: 24px;">
                         <div class="panel-header">
                             <i class="bi bi-person-lines-fill"></i> Personal Information
                         </div>
                         <div class="panel-body">
-                            <div class="form-row">
-                                <div class="form-group">
-                                    <label class="form-label">First Name</label>
-                                    <input type="text" class="form-control" value="Namal" required>
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">Last Name</label>
-                                    <input type="text" class="form-control" value="Fernando" required>
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="input-fullname" value="" required>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">Mobile Number</label>
-                                    <input type="tel" class="form-control" value="+94 77 123 4567" required>
+                                    <input type="tel" class="form-control" id="input-phone" value="" required>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">National Identity Card (NIC)</label>
-                                    <input type="text" class="form-control" value="198012345678" disabled
-                                        title="Contact admin to change NIC">
+                                    <input type="text" class="form-control" id="input-nic" value="" required>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Residential Address</label>
-                                <input type="text" class="form-control" value="No. 45, High Level Road, Colombo 05"
-                                    required>
+                                <input type="text" class="form-control" id="input-address" value="" required>
                             </div>
 
                             <div class="form-group">
                                 <label class="form-label">Email Address</label>
-                                <input type="email" class="form-control" value="namal.fernando@gmail.com" required>
+                                <input type="email" class="form-control" id="input-email" value="" required>
                             </div>
 
                             <div class="form-actions">
@@ -627,7 +815,7 @@
                         </div>
                     </form>
 
-                    <!-- Security -->
+                    <!-- Password Form -->
                     <form class="panel" onsubmit="changePassword(event)">
                         <div class="panel-header">
                             <i class="bi bi-shield-lock-fill"></i> Account Security
@@ -635,22 +823,37 @@
                         <div class="panel-body">
                             <div class="form-group">
                                 <label class="form-label">Current Password</label>
-                                <input type="password" class="form-control" placeholder="Enter current password"
-                                    required>
+                                <div style="position:relative; display:flex; align-items:center;">
+                                    <input type="password" class="form-control" id="input-curr-pw"
+                                        placeholder="Enter current password" required style="padding-right:40px;">
+                                    <i class="bi bi-eye-slash pw-toggle" onclick="togglePw('input-curr-pw', this)"
+                                        style="position:absolute; right:12px; color:var(--text-muted); cursor:pointer;"></i>
+                                </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-group">
                                     <label class="form-label">New Password</label>
-                                    <input type="password" class="form-control" placeholder="Enter new password"
-                                        required>
+                                    <div style="position:relative; display:flex; align-items:center;">
+                                        <input type="password" class="form-control" id="input-new-pw"
+                                            placeholder="Enter new password" required style="padding-right:40px;">
+                                        <i class="bi bi-eye-slash pw-toggle" onclick="togglePw('input-new-pw', this)"
+                                            style="position:absolute; right:12px; color:var(--text-muted); cursor:pointer;"></i>
+                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="form-label">Confirm New Password</label>
-                                    <input type="password" class="form-control" placeholder="Confirm new password"
-                                        required>
+                                    <div style="position:relative; display:flex; align-items:center;">
+                                        <input type="password" class="form-control" id="input-conf-pw"
+                                            placeholder="Confirm new password" required style="padding-right:40px;">
+                                        <i class="bi bi-eye-slash pw-toggle" onclick="togglePw('input-conf-pw', this)"
+                                            style="position:absolute; right:12px; color:var(--text-muted); cursor:pointer;"></i>
+                                    </div>
                                 </div>
                             </div>
+                            <p id="passwordErrorMsg"
+                                style="color:var(--danger); font-size:13px; font-weight:600; margin-top:8px; display:none;">
+                            </p>
 
                             <div class="form-actions">
                                 <button type="submit" class="btn btn-outline" id="savePasswordBtn">
@@ -659,67 +862,414 @@
                             </div>
                         </div>
                     </form>
-
-
                 </div>
-
             </div>
         </div>
     </main>
 
+
+    <div id="successModalOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+        <div id="successModal"
+            style="background:var(--bg-surface); border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:rgba(16,185,129,0.1); color:var(--success); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3 id="successModalTitle"
+                style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">Success</h3>
+            <p id="successModalMessage"
+                style="font-size:15px; color:var(--text-muted); margin-bottom:32px; font-weight:500;">Action completed
+                successfully.</p>
+            <div style="display:flex; justify-content:center;">
+                <button type="button" onclick="closeSuccessModal()" class="btn btn-primary"
+                    style="font-size:15px; padding:12px 40px;">Continue</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="otpModalOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+        <div id="otpModal"
+            style="background:var(--bg-surface); border-radius:16px; padding:40px; width:450px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:rgba(15,118,110,0.1); color:var(--primary); font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <i class="bi bi-envelope-check-fill"></i>
+            </div>
+            <h3 style="font-size:22px; font-weight:800; color:var(--text-dark); margin-bottom:12px;">Verification
+                Required</h3>
+            <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px; font-weight:500;">For your security,
+                we've sent a 6-digit PIN to your email.</p>
+            <div style="margin-bottom: 24px;">
+                <input type="text" id="otpInput" maxlength="6"
+                    style="width:100%; text-align:center; font-size:24px; font-weight:700; letter-spacing:8px; padding:12px; border:2px solid var(--border); border-radius:8px; color:var(--text-dark);"
+                    placeholder="------">
+            </div>
+            <p id="otpErrorMsg"
+                style="color:var(--danger); font-size:13px; font-weight:600; margin-bottom:24px; display:none;"></p>
+            <div style="display:flex; gap:16px;">
+                <button type="button" onclick="closeOtpModal()" class="btn btn-outline" style="flex:1;">Cancel</button>
+                <button type="button" onclick="verifyOtpAndChangePassword()" class="btn btn-primary" id="verifyOtpBtn"
+                    style="flex:1;">Verify</button>
+            </div>
+        </div>
+    </div>
+
     <script>
-        function toggleSidebar() {
-            document.getElementById('sidebar').classList.toggle('open');
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+        function togglePw(inputId, iconEl) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                iconEl.classList.remove('bi-eye-slash');
+                iconEl.classList.add('bi-eye');
+            } else {
+                input.type = 'password';
+                iconEl.classList.remove('bi-eye');
+                iconEl.classList.add('bi-eye-slash');
+            }
         }
+
+        let pendingPasswordUpdate = null;
+
+        function showSuccessModal(title, message) {
+            document.getElementById('successModalTitle').innerText = title;
+            document.getElementById('successModalMessage').innerText = message;
+            const overlay = document.getElementById('successModalOverlay');
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.style.opacity = '1';
+            document.getElementById('successModal').style.transform = 'scale(1) translateY(0)';
+        }
+
+        function closeSuccessModal() {
+            const overlay = document.getElementById('successModalOverlay');
+            overlay.style.opacity = '0';
+            document.getElementById('successModal').style.transform = 'scale(0.85) translateY(20px)';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+        }
+
+        function closeOtpModal() {
+            const overlay = document.getElementById('otpModalOverlay');
+            overlay.style.opacity = '0';
+            setTimeout(() => { overlay.style.display = 'none'; }, 300);
+            pendingPasswordUpdate = null;
+            document.getElementById('otpInput').value = '';
+        }
+
+        function toggleNotifications() { }
+        document.addEventListener('click', function (event) { });
+
+        function setupNotifications(userId) {
+            let dropdownOpen = false;
+            const wrapperElement = document.querySelector('.notification-wrapper');
+            const dropdownElement = document.getElementById('notificationDropdown');
+            const badgeElement = document.querySelector('.notification-badge');
+            const listElement = document.querySelector('.notification-list');
+            if (wrapperElement && dropdownElement) {
+                wrapperElement.querySelector('.notification-icon').removeAttribute('onclick');
+                wrapperElement.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    dropdownOpen = !dropdownOpen;
+                    if (dropdownOpen) dropdownElement.classList.add("show");
+                    else dropdownElement.classList.remove("show");
+                });
+                document.addEventListener("click", () => {
+                    if (dropdownOpen) {
+                        dropdownOpen = false;
+                        dropdownElement.classList.remove("show");
+                    }
+                });
+                dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+            }
+            function fetchNotifications() {
+                if (!userId) return;
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.unreadCount > 0) {
+                            if (badgeElement) {
+                                badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                                badgeElement.style.display = 'flex';
+                            }
+                        } else {
+                            if (badgeElement) badgeElement.style.display = 'none';
+                        }
+                        if (!data.notifications || data.notifications.length === 0) {
+                            if (listElement) listElement.innerHTML = `<div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;"><i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>No new notifications</div>`;
+                        } else {
+                            if (listElement) listElement.innerHTML = "";
+                            data.notifications.forEach(notif => {
+                                let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                                if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                                if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                                if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+                                const date = new Date(notif.createdAt);
+                                let secs = Math.floor((new Date() - date) / 1000);
+                                if (secs < 0) secs = 0;
+                                let timeStr = secs + " secs ago";
+                                if (secs <= 10) timeStr = "just now";
+                                else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                                else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                                else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+                                const item = document.createElement("div");
+                                item.className = `notification-item ${!notif.read ? 'unread' : ''}`;
+                                item.style.padding = "16px";
+                                item.style.borderBottom = "1px solid var(--border)";
+                                item.style.display = "flex";
+                                item.style.gap = "12px";
+                                item.style.cursor = "pointer";
+                                item.style.transition = "0.2s";
+                                if (!notif.read) item.style.background = "#f8fafc";
+                                item.innerHTML = `
+                  <div class="noti-icon" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: ${notif.type === 'SUCCESS' ? 'var(--success-bg)' : notif.type === 'WARNING' ? 'var(--warning-bg)' : notif.type === 'ALERT' ? 'var(--danger-bg)' : 'var(--info-bg)'}; color: ${notif.type === 'SUCCESS' ? 'var(--success)' : notif.type === 'WARNING' ? 'var(--warning)' : notif.type === 'ALERT' ? 'var(--danger)' : 'var(--info)'};">${iconHtml}</div>
+                  <div class="noti-content" style="flex-grow: 1;">
+                      <h4 style="font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark);">${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                      <p style="font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                      <span class="noti-time" style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;">${timeStr}</span>
+                  </div>
+                  ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                `;
+                                item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                                item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+                                item.addEventListener("click", () => {
+                                    if (!notif.read) {
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                            .then(() => {
+                                                notif.read = true;
+                                                item.classList.remove("unread");
+                                                item.style.background = "transparent";
+                                                const dot = item.querySelector(".u-dot");
+                                                if (dot) dot.remove();
+                                                if (badgeElement) {
+                                                    let curr = parseInt(badgeElement.textContent);
+                                                    if (!isNaN(curr) && curr > 0) {
+                                                        curr--;
+                                                        if (curr === 0) badgeElement.style.display = 'none';
+                                                        else badgeElement.textContent = curr;
+                                                    }
+                                                }
+                                            });
+                                    }
+                                });
+                                if (listElement) listElement.appendChild(item);
+                            });
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+            fetchNotifications();
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return window.location.replace('../../login.html');
+            setupNotifications(userId);
+
+            try {
+             
+                const res = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`);
+                if (!res.ok) throw new Error('Failed to fetch guardian profile data');
+                const data = await res.json();
+
+               
+                document.querySelector('.user-info h4').textContent = data.fullName || 'Guardian';
+                document.getElementById('banner-name').textContent = data.fullName || 'Guardian Profile';
+                const avatarUrl = data.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || 'Guardian')}&background=042f2e&color=fff&size=200`;
+                document.getElementById('profile-avatar-img').src = avatarUrl;
+                document.querySelector('.user-profile img').src = data.profilePhoto || `https://ui-avatars.com/api/?name=${encodeURIComponent(data.fullName || 'Guardian')}&background=042f2e&color=fff&size=96`;
+
+              
+                document.getElementById('input-fullname').value = data.fullName || '';
+                document.getElementById('input-nic').value = data.nic || '';
+                document.getElementById('input-phone').value = data.phone || '';
+                document.getElementById('input-email').value = data.email || '';
+                document.getElementById('input-address').value = data.address || '';
+
+                const pRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/guardian/user/${userId}`);
+                if (pRes.ok) {
+                    const patients = await pRes.json();
+                    document.getElementById('sidebar-dependents').innerHTML = '';
+                    if (!patients || patients.length === 0) {
+                        document.getElementById('sidebar-dependents').innerHTML = '<div style="color: var(--text-muted); font-size: 13px;">No linked dependents found.</div>';
+                    } else {
+                        patients.forEach(p => {
+                            document.getElementById('sidebar-dependents').innerHTML += `
+                                <div style="font-size: 14px; color: var(--text-dark); margin-bottom: 4px;"><i class="bi bi-person-fill text-primary"></i> ${p.name}</div>
+                            `;
+                        });
+                    }
+                }
+
+                // Profile Photo Upload 
+                document.getElementById('photo-upload').addEventListener('change', async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    try {
+                        e.target.disabled = true;
+                        document.getElementById('profile-avatar-img').style.opacity = '0.5';
+                        const upRes = await fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile-photo`, { method: 'POST', body: formData });
+                        if (!upRes.ok) throw new Error('Upload failed');
+                        const upData = await upRes.json();
+                        document.getElementById('profile-avatar-img').src = upData.url;
+                        document.querySelector('.user-profile img').src = upData.url;
+                    } catch (err) {
+                        alert('Failed to upload photo.');
+                    } finally {
+                        e.target.disabled = false;
+                        document.getElementById('profile-avatar-img').style.opacity = '1';
+                    }
+                });
+            } catch (err) { console.error(err); }
+        });
 
         function saveProfile(e) {
             e.preventDefault();
-            const btn = document.getElementById('saveProfileBtn');
-            const originalContent = btn.innerHTML;
+            const btnElement = document.getElementById('saveProfileBtn');
+            const userId = localStorage.getItem("userId");
+            if (!userId) return;
 
-            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
-            btn.disabled = true;
+            const payload = {
+                fullName: document.getElementById('input-fullname').value,
+                phone: document.getElementById('input-phone').value,
+                email: document.getElementById('input-email').value,
+                address: document.getElementById('input-address').value,
+                nic: document.getElementById('input-nic').value
+            };
 
-            setTimeout(() => {
-                btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Saved Successfully';
-                btn.style.backgroundColor = 'var(--success)';
+            const originalContent = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
+            btnElement.disabled = true;
 
-                setTimeout(() => {
-                    btn.innerHTML = originalContent;
-                    btn.style.backgroundColor = '';
-                    btn.disabled = false;
-                }, 2000);
-            }, 1000);
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+                .then(async res => {
+                    if (!res.ok) throw new Error(await res.text());
+                    btnElement.innerHTML = originalContent;
+                    btnElement.disabled = false;
+                    document.querySelector('.user-info h4').textContent = payload.fullName;
+                    document.getElementById('banner-name').textContent = payload.fullName;
+                    showSuccessModal("Profile Updated", "Your guardian profile information has been securely updated!");
+                })
+                .catch(err => {
+                    btnElement.innerHTML = '<i class="bi bi-exclamation-circle-fill"></i> Failed';
+                    btnElement.style.backgroundColor = 'var(--danger)';
+                    setTimeout(() => {
+                        btnElement.innerHTML = originalContent;
+                        btnElement.style.backgroundColor = '';
+                        btnElement.disabled = false;
+                        alert(err.message);
+                    }, 2000);
+                });
         }
 
         function changePassword(e) {
             e.preventDefault();
+            const userId = localStorage.getItem("userId");
+            const currentPass = document.getElementById("input-curr-pw").value;
+            const newPass = document.getElementById("input-new-pw").value;
+            const confirmPass = document.getElementById("input-conf-pw").value;
+            const errorMsg = document.getElementById("passwordErrorMsg");
+            errorMsg.style.display = "none";
+
+            if (newPass !== confirmPass) {
+                errorMsg.innerText = "New passwords do not match!";
+                errorMsg.style.display = "block";
+                return;
+            }
+            if (newPass === currentPass) {
+                errorMsg.innerText = "New password cannot be the same as old password!";
+                errorMsg.style.display = "block";
+                return;
+            }
             const btn = document.getElementById('savePasswordBtn');
             const originalContent = btn.innerHTML;
-
-            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Updating...';
+            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Requesting...';
             btn.disabled = true;
 
-            setTimeout(() => {
-                btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Password Updated';
-                btn.style.borderColor = 'var(--success)';
-                btn.style.color = 'var(--success)';
-
-                setTimeout(() => {
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/request-password-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ currentPassword: currentPass })
+            })
+                .then(async res => {
+                    if (!res.ok) throw new Error(await res.text());
+                    return res.text();
+                })
+                .then(msg => {
                     btn.innerHTML = originalContent;
-                    btn.style.borderColor = '';
-                    btn.style.color = '';
                     btn.disabled = false;
-                    e.target.reset(); // Clear password fields
-                }, 2000);
-            }, 1000);
+                    pendingPasswordUpdate = { currentPassword: currentPass, newPassword: newPass };
+                    const overlay = document.getElementById("otpModalOverlay");
+                    document.getElementById("otpErrorMsg").style.display = 'none';
+                    document.getElementById("otpInput").value = '';
+                    overlay.style.display = 'flex';
+                    void overlay.offsetWidth;
+                    overlay.style.opacity = '1';
+                })
+                .catch(err => {
+                    errorMsg.innerHTML = '<i class="bi bi-shield-x"></i> Error: ' + err.message;
+                    errorMsg.style.display = "block";
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                });
         }
-    
+
+        function verifyOtpAndChangePassword() {
+            if (!pendingPasswordUpdate) return;
+            const userId = localStorage.getItem("userId");
+            const otpCode = document.getElementById("otpInput").value.trim();
+            const errorMsg = document.getElementById("otpErrorMsg");
+
+            if (!otpCode || otpCode.length !== 6) {
+                errorMsg.innerText = "Please enter a valid 6-digit PIN.";
+                errorMsg.style.display = "block";
+                return;
+            }
+            const btn = document.getElementById('verifyOtpBtn');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Verifying...';
+            btn.disabled = true;
+
+            pendingPasswordUpdate.otpCode = otpCode;
+
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/password`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pendingPasswordUpdate)
+            })
+                .then(async res => {
+                    if (!res.ok) throw new Error(await res.text());
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    document.getElementById("input-curr-pw").value = "";
+                    document.getElementById("input-new-pw").value = "";
+                    document.getElementById("input-conf-pw").value = "";
+                    closeOtpModal();
+                    showSuccessModal("Password Updated", "Your account security has been verified and updated. You will now be redirected to login.");
+                    setTimeout(() => {
+                        localStorage.clear();
+                        window.location.replace('../../login.html');
+                    }, 3000);
+                })
+                .catch(err => {
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    errorMsg.innerText = "Verification failed: " + err.message;
+                    errorMsg.style.display = "block";
+                });
+        }
+
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
             dropdown.classList.toggle('show');
         }
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             const wrapper = document.querySelector('.notification-wrapper');
             const dropdown = document.getElementById('notificationDropdown');
             if (wrapper && dropdown && !wrapper.contains(event.target)) {
@@ -734,22 +1284,227 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Notifications */
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            margin-right: 15px;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        .notification-list {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .notification-list::-webkit-scrollbar {
+            display: none;
+        }
     
-        .notification-wrapper { position: relative; }
-        .notification-icon { color: var(--text-muted); font-size: 20px; cursor: pointer; position: relative; display: flex; margin-right: 15px; }
-        .notification-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
-        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; overflow: hidden; text-align: left; }
-        .notification-dropdown.show { display: block; }
-        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .notification-list { max-height: 360px; overflow-y: auto; }
-        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .notification-item:hover { background: var(--bg-page); }
-        .notification-item:last-child { border-bottom: none; }
-        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
-        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
-    </style>
+        </style>
+    <!-- Logout Modal -->
+    <div id="logoutModalOverlay"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.4); z-index: 9999; backdrop-filter: blur(4px); opacity: 0; transition: opacity 0.3s ease;">
+    </div>
+
+    <div id="logoutModal"
+        style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.9); width: 100%; max-width: 400px; background: white; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.15); z-index: 10000; opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); overflow: hidden; font-family: 'Inter', sans-serif;">
+        <div
+            style="padding: 20px 24px; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between;">
+            <h3
+                style="margin: 0; font-size: 16px; font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+                <i class="bi bi-box-arrow-right" style="color: #ef4444; font-size: 18px;"></i> Sign Out
+            </h3>
+            <button onclick="closeLogoutModal()"
+                style="background: none; border: none; font-size: 18px; color: #94a3b8; cursor: pointer; padding: 0; line-height: 1;"><i
+                    class="bi bi-x-lg"></i></button>
+        </div>
+        <div style="padding: 24px;">
+            <p style="margin: 0 0 24px 0; color: #475569; font-size: 14px; line-height: 1.5;">Are you sure you want to
+                sign out of the Guardian portal?</p>
+            <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                <button onclick="closeLogoutModal()"
+                    style="padding: 10px 16px; background: white; border: 1px solid #cbd5e1; border-radius: 8px; color: #475569; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s;">Cancel</button>
+                <button onclick="confirmLogout()"
+                    style="padding: 10px 16px; background: #ef4444; border: none; border-radius: 8px; color: white; font-weight: 600; font-size: 14px; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);">Yes,
+                    Sign Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogout(e) {
+            if (e) e.preventDefault();
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.display = 'block';
+            modal.style.display = 'block';
+            setTimeout(() => {
+                overlay.style.opacity = '1';
+                modal.style.opacity = '1';
+                modal.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 10);
+        }
+
+        function closeLogoutModal() {
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.opacity = '0';
+            modal.style.opacity = '0';
+            modal.style.transform = 'translate(-50%, -50%) scale(0.9)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                modal.style.display = 'none';
+            }, 300);
+        }
+
+        function confirmLogout() {
+            localStorage.removeItem('userId');
+            localStorage.removeItem('userRole');
+            window.location.replace('../../login.html');
+        }
+    </script>
+
+
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        </style>
+
 </body>
 
 </html>

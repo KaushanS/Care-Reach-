@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Conduct Visit</title>
+    <!-- Fonts and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f766e;
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+            --sidebar-bg: #042f2e;
+            --sidebar-hover: rgba(255, 255, 255, .1);
+            --sidebar-text: #ccfbf1;
+            --sidebar-text-muted: #99f6e4;
+            --bg-page: #f0f7f6;
+            --bg-surface: #fff;
+            --text-dark: #0f172a;
+            --text-normal: #334155;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --danger: #ef4444;
+            --danger-bg: #fef2f2;
+            --warning: #f59e0b;
+            --warning-bg: #fffbeb;
+            --success: #10b981;
+            --success-bg: #ecfdf5;
+            --info: #3b82f6;
+            --info-bg: #eff6ff;
+            --sidebar-width: 260px;
+            --font-family: 'Inter', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: var(--font-family)
+        }
+
+        body {
+            background: var(--bg-page);
+            color: var(--text-normal);
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden
+        }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--sidebar-bg);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            z-index: 100;
+            transition: transform .3s ease;
+            box-shadow: 4px 0 15px rgba(0, 0, 0, .05)
+        }
+
+        .brand {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 800;
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, .1)
+        }
+
+        .brand-icon {
+            background: rgba(255, 255, 255, .15);
+            color: #5eead4;
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px
+        }
+
+        .brand span {
+            color: #5eead4
+        }
+
+        .sidebar-menu {
+            padding: 20px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            overflow-y: auto
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--sidebar-text-muted);
+            opacity: .7;
+            letter-spacing: .5px;
+            margin: 16px 0 8px 8px
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            color: var(--sidebar-text);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all .2s
+        }
+
+        .menu-item i {
+            font-size: 18px;
+            color: var(--sidebar-text-muted);
+            opacity: .8
+        }
+
+        .menu-item:hover {
+            background: var(--sidebar-hover);
+            color: #fff
+        }
+
+        .menu-item:hover i,
+        .menu-item.active i {
+            color: #fff;
+            opacity: 1
+        }
+
+        .menu-item.active {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .1)
+        }
+
+        /* --- MAIN CONTENT & HEADER --- */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh
+        }
+
+        .top-header {
+            height: 72px;
+            background: var(--bg-surface);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            position: sticky;
+            top: 0;
+            z-index: 90
+        }
+
+        .doctor-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            border-left: 1px solid var(--border);
+            padding-left: 20px;
+            text-decoration: none;
+            margin-left: auto;
+        }
+
+        .doctor-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-light)
+        }
+
+        .doctor-info {
+            text-align: left;
+        }
+
+        .doctor-info h4 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark)
+        }
+
+        .doctor-info p {
+            font-size: 12px;
+            color: var(--text-muted)
+        }
+
+        /* --- PAGE CONTENT --- */
+        .content-area {
+            padding: 32px;
+            max-width: 900px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 24px;
+        }
+
+        .breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .breadcrumb a:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb span {
+            color: var(--text-dark);
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-dark)
+        }
+
+        .page-header p {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-top: 4px
+        }
+
+        /* Patient Context Card */
+        .patient-card {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+
+        .patient-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            color: var(--primary);
+            font-size: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .patient-details h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .patient-details p {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Form Container */
+        .panel {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 24px;
+            border-bottom: 2px solid var(--bg-page);
+            padding-bottom: 16px;
+        }
+
+        .panel-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        /* Form Inputs */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-label span.req {
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s;
+            background: var(--bg-page);
+            font-family: var(--font-family);
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            background: var(--bg-surface);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .helper-text {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: block;
+        }
+
+        /* Buttons */
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all .2s;
+            text-decoration: none
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, .2)
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px)
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-normal)
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            border-color: var(--primary)
+        }
+
+        .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+            display: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-dark)
+        }
+
+        @media (max-width:1024px) {
+            .sidebar {
+                transform: translateX(-100%)
+            }
+
+            .sidebar.open {
+                transform: translateX(0)
+            }
+
+            .main-content {
+                margin-left: 0
+            }
+
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block
+            }
+        }
+
+        /* NOTIFICATION DROPDOWN */
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 32px;
+            width: 320px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.active {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .notif-blue {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .notif-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .notif-orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .notification-content h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .notification-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+        }
+    
+        .notification-wrapper { position: relative; }
+        .notification-icon { color: var(--text-muted); font-size: 20px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
+        .notification-icon:hover { color: var(--primary); }
+        .notification-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
+        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 380px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; z-index: 1000; overflow: hidden; }
+        .notification-dropdown.show { display: block; }
+        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .notification-list { max-height: 480px; overflow-y: hidden; }
+        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; text-decoration: none; }
+        .notification-item:hover { background: var(--bg-page); }
+        .notification-item:last-child { border-bottom: none; }
+        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .noti-icon.blue { background: var(--info-bg, #eff6ff); color: var(--info, #3b82f6); }
+        .noti-icon.green { background: var(--success-bg, #ecfdf5); color: var(--success, #10b981); }
+        .noti-icon.orange { background: var(--warning-bg, #fffbeb); color: var(--warning, #f59e0b); }
+        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
+        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
+        .noti-time { font-size: 11px; color: var(--text-muted); font-weight: 500; }
+
+
+        </style>
+<style>
+
+    /*CareReach Master Mobile Responsiveness*/
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+     
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+   
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+        
+    
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+        
+      
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
+</head>
+
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+        </div>
+        <nav class="sidebar-menu">
+            <div class="menu-title">Main</div>
+            <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+            <div class="menu-title">Clinical Care</div>
+            <a href="appointments.html" class="menu-item active"><i class="bi bi-calendar-event"></i> Appointments</a>
+            <a href="patients.html" class="menu-item"><i class="bi bi-person-lines-fill"></i> Patients</a>
+            <a href="home-visits.html" class="menu-item"><i class="bi bi-house-heart"></i> Home Visits</a>
+          
+            <div class="menu-title">Management</div>
+          
+            <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
+            <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
+                <i class="bi bi-box-arrow-right"></i> Log Out
+            </a>
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+
+            <div class="header-actions" style="display: flex; align-items: center; gap: 20px; margin-left: auto;">
+
+                <div class="notification-wrapper">
+                    <div class="notification-icon" onclick="toggleNotifications()">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge" style="display:none;">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;" onclick="markAllNotificationsAsRead()">Mark all read</a>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- JS populated -->
+                        </div>
+                        <a href="notifications.html" style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
+                            View All Notifications
+                        </a>
+                    </div>
+                </div>
+
+                <a href="profile.html" class="doctor-profile">
+                    <img src="https://ui-avatars.com/api/?name=Dr+Aruna+Silva&background=0f766e&color=fff" alt="Doctor">
+                    <div class="doctor-info">
+                        <h4>Dr. Aruna Silva</h4>
+                        <p>Medical Officer</p>
+                    </div>
+                </a>
+
+                </header>
+
+        <div class="content-area">
+
+            <div class="breadcrumb">
+                <a href="appointments.html"><i class="bi bi-arrow-left"></i> Back to Appointments</a>
+                <i class="bi bi-chevron-right" style="color: var(--border); font-size: 12px;"></i>
+                <span>Conduct Visit</span>
+            </div>
+
+            <div class="page-header">
+                <h1>Conduct Clinic Visit</h1>
+                <p>Record the clinical findings and treatments provided during your appointment.</p>
+            </div>
+
+         
+            <div class="patient-card" id="patientContextCard" style="display: none;">
+                <div class="patient-avatar" id="ctxAvatar">--</div>
+                <div class="patient-details">
+                    <h2 id="ctxName">Loading Patient...</h2>
+                    <p><i class="bi bi-geo-alt-fill" style="color: var(--primary);"></i> <span id="ctxAddress">Loading
+                            Address...</span></p>
+                    <div style="margin-top: 8px;">
+                        <span
+                            style="display:inline-flex; align-items:center; gap:4px; font-size:12px; font-weight:600; background:var(--info-bg); color:var(--info); padding:4px 10px; border-radius:6px; border:1px solid rgba(59,130,246,0.2);">
+                            <i class="bi bi-check-circle-fill"></i> GN Verified Record
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medical Report  -->
+            <form class="panel" onsubmit="submitReport(event)">
+                <div class="panel-header">
+                    <h2 class="panel-title"><i class="bi bi-clipboard2-pulse text-primary"></i> Clinical Assessment</h2>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">Visit Date <span class="req">*</span></label>
+                        <input type="date" class="form-control" id="visitDate" required>
+                    </div>
+                    <div class="form-group" style="margin-bottom: 0;">
+                        <label class="form-label">Next Visit Date</label>
+                        <input type="date" class="form-control" id="nextVisitDate">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Observed Symptoms <span class="req">*</span></label>
+                    <textarea class="form-control" id="symptoms" required
+                        placeholder="Detail the physical symptoms observed during the examination..."></textarea>
+                    <span class="helper-text">Record all primary and secondary symptoms presented by the patient during
+                        the visit.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Primary Diagnosis <span class="req">*</span></label>
+                    <input type="text" class="form-control" id="diagnosis" required
+                        placeholder="e.g., Acute Respiratory Infection, Hypertension">
+                    <span class="helper-text">State the definitive or working diagnosis based on your assessment.</span>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Recommended Medicines</label>
+                    <textarea class="form-control" id="medicines" style="min-height: 80px;"
+                        placeholder="List the prescribed medications, dosage, and frequency..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Visit Description <span class="req">*</span></label>
+                    <textarea class="form-control" id="description" required
+                        placeholder="Provide a detailed description of the visit..."></textarea>
+                    <span class="helper-text">Include all actions taken and specific follow-up
+                        advice provided to the patient.</span>
+                </div>
+
+                <div class="form-actions">
+                    <a href="appointments.html" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        <i class="bi bi-person-plus"></i> Submit Diagnosis
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </main>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            const userFullName = localStorage.getItem('userFullName');
+            if (userFullName) {
+                const docNames = document.querySelectorAll('.doctor-info h4');
+                docNames.forEach(n => n.textContent = 'Dr. ' + userFullName);
+                const avatars = document.querySelectorAll('.doctor-profile img');
+                avatars.forEach(img => img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent('Dr ' + userFullName)}&background=0f766e&color=fff`);
+            }
+
+          
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetPatientId = urlParams.get('patientId');
+
+            if (targetPatientId) {
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/patients/${targetPatientId}`)
+                    .then(res => res.json())
+                    .then(pt => {
+                        document.getElementById('patientContextCard').style.display = 'flex';
+
+                        document.getElementById('ctxName').textContent = pt.name || 'Unknown Patient';
+                        if (pt.name) {
+                            const nameParts = pt.name.split(' ');
+                            if (nameParts.length > 1) {
+                                document.getElementById('ctxAvatar').textContent = nameParts[0][0] + nameParts[1][0];
+                            } else {
+                                document.getElementById('ctxAvatar').textContent = nameParts[0].substring(0, 2).toUpperCase();
+                            }
+                        }
+
+                        const locs = [];
+                        if (pt.gnDivision) locs.push(pt.gnDivision);
+                        if (pt.district) locs.push(pt.district);
+
+                        document.getElementById('ctxAddress').textContent = pt.address || locs.join(', ') || 'No Address Provided';
+                    })
+                    .catch(err => {
+                        console.error('Failed to load patient contextual template', err);
+                    });
+            }
+        });
+
+        function submitReport(e) {
+            e.preventDefault();
+            const btn = document.getElementById('saveBtn');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetPatientId = urlParams.get('patientId');
+            const doctorId = localStorage.getItem('userId');
+
+            if (!targetPatientId) {
+                alert("SysError: Patient Identity Missing. Please return to the Appointments schedule and try again.");
+                return;
+            }
+
+        
+            const payload = {
+                patientId: targetPatientId,
+                doctorId: doctorId,
+                visitDate: document.getElementById('visitDate').value,
+                nextVisitDate: document.getElementById('nextVisitDate').value || null,
+                symptoms: document.getElementById('symptoms').value,
+                diagnosis: document.getElementById('diagnosis').value,
+                medicines: document.getElementById('medicines').value,
+                description: document.getElementById('description').value
+            };
+
+           
+            btn.innerHTML = '<i class="bi bi-arrow-repeat" style="animation: spin 1s linear infinite;"></i> Saving...';
+            btn.style.opacity = '0.8';
+            btn.disabled = true;
+
+            fetch('https://care-reach-host-production.up.railway.app/api/v1/medical-reports', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+                .then(async response => {
+                    if (!response.ok) {
+                        const err = await response.text();
+                        throw new Error(err);
+                    }
+                    return response.json();
+                })
+                .then(() => {
+                    btn.innerHTML = '<i class="bi bi-check-circle-fill"></i> Saved Successfully';
+                    btn.style.backgroundColor = 'var(--success)';
+
+                    setTimeout(() => {
+                        window.location.href = 'appointments.html';
+                    }, 800);
+                })
+                .catch(err => {
+                    console.error("Save failed:", err);
+                    alert("Failed to securely deploy Medical Report. Error: " + err.message);
+                    btn.innerHTML = '<i class="bi bi-person-plus"></i> Submit Diagnosis';
+                    btn.style.opacity = '1';
+                    btn.disabled = false;
+                });
+        }
+    </script>
+
+    <style>
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* NOTIFICATION DROPDOWN */
+        .notification-dropdown {
+            position: absolute;
+            top: 60px;
+            right: 32px;
+            width: 320px;
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .notification-dropdown.active {
+            display: flex;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            font-weight: 700;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .notification-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 16px;
+        }
+
+        .notif-blue {
+            background: #e0f2fe;
+            color: #0284c7;
+        }
+
+        .notif-green {
+            background: #dcfce7;
+            color: #16a34a;
+        }
+
+        .notif-orange {
+            background: #ffedd5;
+            color: #ea580c;
+        }
+
+        .notification-content h4 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+        }
+
+        .notification-content p {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .notification-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            display: block;
+        }
+    
+        </style>
+<!-- Logout Confirmation Modal -->
+<div id="logoutModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+    <div id="logoutModal" style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+        <div style="width:72px; height:72px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+            <i class="bi bi-box-arrow-right"></i>
+        </div>
+        <h3 style="font-size:22px; font-weight:800; color:#1e293b; margin-bottom:12px;">Confirm Logout</h3>
+        <p style="font-size:15px; color:#64748b; margin-bottom:32px; font-weight:500;">Are you sure you want to securely log out of the system?</p>
+        <div style="display:flex; gap:16px;">
+            <button type="button" onclick="closeLogoutModal()" class="btn btn-outline" style="flex:1;">Cancel</button>
+            <button type="button" onclick="confirmLogout()" class="btn btn-primary" style="flex:1; background-color: #ef4444; border-color: #ef4444;">Log Out</button>
+        </div>
+    </div>
+</div>
+<script>
+    function showLogoutModal(e) {
+        if(e) e.preventDefault();
+        const overlay = document.getElementById('logoutModalOverlay');
+        const modal = document.getElementById('logoutModal');
+        overlay.style.display = 'flex';
+        void overlay.offsetWidth;
+        overlay.style.opacity = '1';
+        modal.style.transform = 'scale(1) translateY(0)';
+    }
+    function closeLogoutModal() {
+        const overlay = document.getElementById('logoutModalOverlay');
+        const modal = document.getElementById('logoutModal');
+        overlay.style.opacity = '0';
+        modal.style.transform = 'scale(0.85) translateY(20px)';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300);
+    }
+    function confirmLogout() {
+        localStorage.clear();
+        window.location.replace('../../login.html');
+    }
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const fn = localStorage.getItem('userFullName');
+    if (fn) {
+        document.querySelectorAll('.doctor-info h4').forEach(el => el.textContent = 'Dr. ' + fn);
+    }
+    const pp = localStorage.getItem('profilePhoto');
+    if (pp) {
+        document.querySelectorAll('.doctor-profile img').forEach(el => el.src = pp);
+    }
+});
+</script>
+
+
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        </style>
+
+
+
+    <script>
+        function toggleNotifications() {
+            document.getElementById('notificationDropdown').classList.toggle('show');
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function setupNotifications(userId) {
+            const listElement = document.getElementById('notificationList');
+            const badgeElement = document.querySelector('.notification-badge');
+            
+            if (!listElement) return;
+
+     
+            const isFullPage = typeof fetchAllNotifications === 'function';
+
+            function fetchDropdown() {
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
+                    .then(res => res.json())
+                    .then(data => {
+                        listElement.innerHTML = '';
+                        let count = 0;
+                        
+                        const notifs = data.notifications || [];
+                        if (notifs.length > 0) {
+                            notifs.forEach(notif => {
+                                
+                                const item = document.createElement('div');
+                                item.className = 'notification-item';
+                                if (!notif.read) item.style.background = '#f8fafc';
+                                
+                                let colorClass = 'blue';
+                                let iconHTML = '<i class="bi bi-info-circle"></i>';
+                                if (notif.type === 'ALERT' || notif.type === 'EMERGENCY') { colorClass = 'orange'; iconHTML = '<i class="bi bi-exclamation-triangle"></i>'; }
+                                else if (notif.type === 'SUCCESS') { colorClass = 'green'; iconHTML = '<i class="bi bi-check-circle"></i>'; }
+                                else if (notif.type === 'WARNING') { colorClass = 'orange'; iconHTML = '<i class="bi bi-shield-exclamation"></i>'; }
+
+                                item.innerHTML = `
+                                    <div class="noti-icon ${colorClass}">${iconHTML}</div>
+                                    <div class="noti-content" style="flex-grow: 1;">
+                                        <h4>${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                        <p style="font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                        <span class="noti-time">${new Date(notif.createdAt).toLocaleString()}</span>
+                                    </div>
+                                    ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                                `;
+                                
+                                item.addEventListener('click', () => {
+                                    if (!notif.read) {
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                            .then(() => {
+                                                fetchDropdown();
+                                                if (isFullPage) fetchAllNotifications(userId);
+                                            });
+                                    }
+                                });
+                                listElement.appendChild(item);
+                            });
+                        } else {
+                            listElement.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">No new notifications</div>';
+                        }
+                        
+                        if (badgeElement) { badgeElement.textContent = data.unreadCount || 0; badgeElement.style.display = (data.unreadCount > 0) ? 'flex' : 'none'; }
+                    });
+            }
+            fetchDropdown();
+            window.refreshDoctorDropdown = fetchDropdown;
+        }
+
+        function markAllNotificationsAsRead() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+                .then(() => {
+                    if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
+                    if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) setupNotifications(userId);
+        });
+    </script>
+
+</body>
+</html>

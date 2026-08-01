@@ -2,6 +2,26 @@
 <html lang="en">
 
 <head>
+    <script>
+        (function() {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+    
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CareReach | Report a Patient</title>
@@ -10,6 +30,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <style>
     :root {
       --primary: #0f766e;
@@ -52,7 +75,7 @@
 
     .sidebar {
       width: var(--sidebar-width);
-      background-color: var(--sidebar-bg);
+      background: #112F28;
       display: flex;
       flex-direction: column;
       position: fixed;
@@ -60,6 +83,7 @@
       left: 0;
       height: 100vh;
       z-index: 100;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .brand {
@@ -70,74 +94,77 @@
       font-size: 20px;
       font-weight: 800;
       color: #ffffff;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
     .brand-icon {
-      background: rgba(255, 255, 255, 0.15);
-      color: #5eead4;
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
+      background: #0A7265;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 18px;
+      font-size: 20px;
+      flex-shrink: 0;
     }
 
     .brand span {
-      color: #5eead4;
+      color: #31B498;
     }
 
     .sidebar-menu {
-      padding: 20px 16px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 8px;
     }
 
     .menu-title {
       font-size: 11px;
       text-transform: uppercase;
-      font-weight: 700;
-      color: var(--sidebar-text-muted);
-      opacity: 0.7;
+      font-weight: 800;
+      color: #31B498;
       letter-spacing: 0.5px;
-      margin: 16px 0 8px 8px;
+      margin: 16px 0 8px 4px;
     }
 
     .menu-item {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 14px;
       padding: 12px 16px;
-      border-radius: 10px;
-      color: var(--sidebar-text);
+      border-radius: 12px;
+      color: #e5e7eb;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 500;
+      font-size: 15px;
+      font-weight: 600;
       transition: all 0.2s;
     }
 
     .menu-item i {
-      font-size: 18px;
-      color: var(--sidebar-text-muted);
-      opacity: 0.8;
+      font-size: 20px;
+      color: #9ca3af;
+      transition: all 0.2s;
     }
 
     .menu-item:hover {
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.05);
+      color: #ffffff;
+    }
+
+    .menu-item:hover i {
       color: #ffffff;
     }
 
     .menu-item.active {
-      background-color: var(--primary);
+      background-color: #127161;
       color: #ffffff;
     }
 
     .menu-item.active i {
       color: #ffffff;
-      opacity: 1;
     }
 
     .main-content {
@@ -215,7 +242,7 @@
 
     .content-area {
       padding: 32px;
-      max-width: 800px;
+      max-width: 1200px;
       margin: 0 auto;
       width: 100%;
     }
@@ -264,7 +291,7 @@
       border-radius: 16px;
       border: 1px solid var(--border);
       margin-bottom: 24px;
-      overflow: hidden;
+      overflow: visible;
     }
 
     .panel-header {
@@ -338,88 +365,6 @@
       min-height: 100px;
     }
 
-    .file-upload {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 10px;
-      padding: 32px;
-      border: 2px dashed var(--border);
-      border-radius: 12px;
-      cursor: pointer;
-      transition: 0.2s;
-      background: var(--bg-page);
-    }
-
-    .file-upload:hover {
-      border-color: var(--primary);
-      background: var(--primary-light);
-    }
-
-    .file-upload i {
-      font-size: 32px;
-      color: var(--text-muted);
-    }
-
-    .file-upload span {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .file-upload small {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .severity-options {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .severity-option {
-      flex: 1;
-      min-width: 120px;
-    }
-
-    .severity-option input {
-      display: none;
-    }
-
-    .severity-label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 14px;
-      border: 2px solid var(--border);
-      border-radius: 12px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 700;
-      transition: 0.2s;
-    }
-
-    .severity-option input:checked+.severity-label.low {
-      border-color: var(--success);
-      background: var(--success-bg);
-      color: var(--success);
-    }
-
-    .severity-option input:checked+.severity-label.medium {
-      border-color: var(--warning);
-      background: var(--warning-bg);
-      color: var(--warning);
-    }
-
-    .severity-option input:checked+.severity-label.high {
-      border-color: var(--danger);
-      background: var(--danger-bg);
-      color: var(--danger);
-    }
-
     .btn {
       padding: 14px 28px;
       border-radius: 12px;
@@ -448,16 +393,8 @@
       color: var(--text-normal);
     }
 
-    .form-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 12px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      margin-top: 8px;
-    }
-
-    .mobile-toggle {
+    .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
       display: none;
       font-size: 24px;
       cursor: pointer;
@@ -466,7 +403,16 @@
 
     @media (max-width: 1024px) {
       .sidebar {
-        transform: translateX(-100%);
+        width: var(--sidebar-width);
+        background: #0b2e29;
+        box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
       }
 
       .sidebar.open {
@@ -477,7 +423,8 @@
         margin-left: 0;
       }
 
-      .mobile-toggle {
+      .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
         display: block;
       }
 
@@ -491,39 +438,441 @@
         grid-template-columns: 1fr;
       }
     }
-  </style>
+
+    /* Custom Searchable Dropdown CSS */
+    .custom-dropdown {
+      position: relative;
+      width: 100%;
+    }
+
+    .custom-dropdown-header {
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text-normal);
+      background: var(--bg-page);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.2s;
+    }
+
+    .custom-dropdown-header:hover {
+      border-color: var(--primary);
+    }
+
+    .custom-options-container {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+      max-height: 350px;
+      overflow-y: auto;
+    }
+
+    .custom-options-container.open {
+      display: flex;
+    }
+
+    .custom-search {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .custom-search input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      background: var(--bg-page);
+    }
+
+    .custom-search input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    }
+
+    .custom-options-list {
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .custom-option {
+      padding: 10px 16px;
+      font-size: 14px;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: 0.15s;
+    }
+
+    .custom-option:hover {
+      background: var(--info-bg);
+      color: var(--primary);
+    }
+
+    .custom-option.hidden {
+      display: none;
+    }
+
+    /* Interactive Map Modal Setup */
+    .map-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .map-modal-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .map-modal {
+      background: var(--bg-surface);
+      padding: 24px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .map-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .map-modal-header h3 {
+      margin: 0;
+      font-size: 18px;
+      color: var(--text-dark);
+    }
+
+    .close-map-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-light);
+    }
+
+    .map-search-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .map-search-bar input {
+      flex: 1;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .map-search-bar button {
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    #leafletMap {
+      height: 400px;
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      background: #eee;
+      border: 1px solid var(--border);
+    }
+
+    .map-modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* Premium Success Modal */
+    .success-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .success-overlay.active {
+      display: flex;
+      opacity: 1;
+    }
+
+    .success-modal {
+      background: var(--bg-surface);
+      padding: 40px;
+      border-radius: 20px;
+      width: 90%;
+      max-width: 450px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      transform: scale(0.9);
+      transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .success-overlay.active .success-modal {
+      transform: scale(1);
+    }
+
+    .success-icon-container {
+      width: 80px;
+      height: 80px;
+      background: #ecfdf5;
+      color: #10b981;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      margin: 0 auto 20px auto;
+    }
+
+    .success-modal h2 {
+      font-size: 24px;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      font-weight: 800;
+    }
+
+    .success-modal p {
+      color: var(--text-muted);
+      font-size: 15px;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+      /* Logout Modal Styles */
+    .logout-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+    .logout-modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      padding: 32px;
+      text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+    }
+    .logout-modal-icon {
+      width: 64px;
+      height: 64px;
+      background: var(--danger-bg);
+      color: var(--danger);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+    }
+    .logout-modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+    .logout-modal-text {
+      color: var(--text-muted);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+    .logout-modal-actions {
+      display: flex;
+      gap: 12px;
+    }
+    .logout-btn-cancel {
+      flex: 1;
+      padding: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-normal);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn-cancel:hover { background: var(--bg-page); }
+    .logout-btn-confirm {
+      flex: 1;
+      padding: 12px;
+      background: var(--danger);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .logout-btn-confirm:hover { background: #b91c1c; }
+
+        </style>
+
+    
+<style>
+
+    /*CareReach Master Mobile Responsiveness*/
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+        
+
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+   
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+        
+  
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
 </head>
 
 <body>
   <aside class="sidebar" id="sidebar">
+
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
     <div class="brand">
-      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      <div style="display:flex; flex-direction:column; line-height: 1.2;">
+        <span style="color:#ffffff; font-weight:800; font-size:22px; letter-spacing:-0.5px;">CARE<span
+            style="font-weight:300; font-size:22px; color:#31B498; margin-left:2px;">REACH</span></span>
+        <span style="font-size:11px; font-weight:500; color:#31B498;">Community Volunteer Hub</span>
+      </div>
     </div>
     <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
       <div>
-        <div class="menu-title">Volunteer Hub</div>
-        <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="dashboard.html" class="menu-item"><i class="bi bi-layout-sidebar-inset"></i> Dashboard</a>
         <a href="activities.html" class="menu-item"><i class="bi bi-journal-text"></i> My Activities</a>
-        <div class="menu-title">Account</div>
-        <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+        <div class="menu-title" style="margin-top:24px;">ACCOUNT</div>
+        <a href="profile.html" class="menu-item"><i class="bi bi-person"></i> My Profile</a>
       </div>
-      <a href="#" class="menu-item" style="color: #ef4444; margin-top: auto;"><i class="bi bi-box-arrow-right"></i> Sign
-        Out</a>
+      <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn"
+        style="color: #f97316; margin-top: auto; border:1px solid rgba(249,115,22,0.2);"><i
+          class="bi bi-box-arrow-right" style="color:#f97316;"></i> Sign Out</a>
     </nav>
   </aside>
   <main class="main-content">
     <header class="top-header">
       <div style="display:flex;align-items:center;gap:20px;">
         <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
-        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search..."></div>
       </div>
-      <a href="profile.html" class="user-profile">
-        <div class="user-info">
-          <h4>Nimal Sirisena</h4>
-          <p>Community Volunteer</p>
+      <div style="display:flex; align-items:center; gap:24px;">
+        <div style="position:relative; cursor:pointer;" class="nav-bell" id="bellIconWrapper">
+          <i class="bi bi-bell" style="font-size:22px; color:var(--text-normal);"></i>
+          <span id="notifBadge"
+            style="position:absolute; top:-4px; right:-4px; background:var(--danger); color:white; font-size:10px; font-weight:700; width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; box-shadow:0 0 0 2px var(--bg-surface);">0</span>
+
+          <div id="notifDropdown" class="notification-dropdown"
+            style="position: absolute; top: 100%; right: 0; margin-top: 16px; width: 380px; background: #fff; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border: 1px solid var(--border); z-index: 1000; display: none; flex-direction: column;">
+            <div class="notif-header"
+              style="padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="font-size: 15px; font-weight: 700; color: var(--text-dark); margin: 0;">Notifications</h3>
+            </div>
+            <div id="notifList" class="notif-list" style="max-height: 400px; overflow-y: auto;">
+              <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 14px;">
+                <i class="bi bi-arrow-repeat" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                Loading...
+              </div>
+            </div>
+            <div class="notif-footer" style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+              <a href="notifications.html"
+                style="color: var(--primary); text-decoration: none; font-size: 13px; font-weight: 600;">See All
+                Notifications</a>
+            </div>
+          </div>
         </div>
-        <img src="https://ui-avatars.com/api/?name=Nimal+Sirisena&background=042f2e&color=fff" alt="Volunteer">
-      </a>
+        <div style="width:1px; height:32px; background:rgba(0,0,0,0.1);"></div>
+        <a href="profile.html" class="user-profile" style="border:none; padding-left:0; gap:16px;">
+          <div class="user-info" style="text-align:right;">
+            <h4 id="nav-user-name" style="font-weight:700;"> hihewage Pasindu Kaushan Sathsara </h4>
+            <p style="color:var(--text-muted);">Community Volunteer</p>
+          </div>
+          <div style="display:flex; align-items:center; gap:8px;">
+            <img id="nav-avatar-img" src="" alt="Volunteer"
+              style="background:#0b2e29; object-fit:cover; width:36px; height:36px; border-radius:50%;">
+          </div>
+        </a>
+      </div>
     </header>
     <div class="content-area">
       <div class="page-header">
@@ -536,90 +885,891 @@
           CareReach for ongoing care.</p>
       </div>
       <!-- Patient Info -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title"><i class="bi bi-person-fill"></i> Patient Information</h2>
+      <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
+        <div
+          style="background:var(--primary-light); color:var(--primary); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
+          <i class="bi bi-person"></i>
         </div>
-        <div class="panel-body">
-          <div class="form-grid">
-            <div class="form-group"><label>Patient Name <span class="required">*</span></label><input type="text"
-                placeholder="Enter patient's full name"></div>
-            <div class="form-group"><label>Approximate Age</label><input type="number" placeholder="e.g. 65"></div>
-            <div class="form-group"><label>Gender</label><select>
-                <option value="" disabled selected>Select gender</option>
-                <option>Male</option>
-                <option>Female</option>
-                <option>Other</option>
-              </select></div>
-            <div class="form-group"><label>NIC (if known)</label><input type="text" placeholder="e.g. 196050401234">
-            </div>
+        <div style="flex:1;">
+          <div class="panel-header" style="border:none; padding-bottom:0;">
+            <h2 class="panel-title" style="display:flex; align-items:center; gap:12px;">
+              <div
+                style="background:var(--primary); color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                1</div>
+              Patient Information
+            </h2>
+          </div>
+          <div class="panel-body">
+            <form id="reportForm" onsubmit="submitReport(event)">
+              <div class="form-grid">
+                <div class="form-group" style="position:relative;">
+                  <label>Patient Name <span class="required">*</span></label>
+                  <i class="bi bi-person"
+                    style="position:absolute; bottom:14px; left:16px; color:var(--text-muted); font-size:16px;"></i>
+                  <input type="text" id="patientName" required placeholder="Enter patient's full name"
+                    style="padding-left:42px;">
+                </div>
+                <div class="form-group" style="position:relative;">
+                  <label>Approximate Age</label>
+                  <i class="bi bi-calendar3"
+                    style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                  <input type="number" id="age" placeholder="e.g., 65" style="padding-left:42px;">
+                  <div class="field-error" id="error-age"
+                    style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+                </div>
+                <div class="form-group">
+                  <label>Gender</label>
+                  <select id="gender">
+                    <option value="" disabled selected>Select gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="form-group" style="position:relative;">
+                  <label>NIC (If Known)</label>
+                  <i class="bi bi-person-vcard"
+                    style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                  <input type="text" id="nic" placeholder="e.g., 196504601234" style="padding-left:42px;">
+                  <div class="field-error" id="error-nic"
+                    style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+                </div>
+                <div class="form-group" style="position:relative;">
+                  <label>Patient Email (Optional)</label>
+                  <i class="bi bi-envelope"
+                    style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                  <input type="email" id="patientEmail" placeholder="e.g., patient@example.com"
+                    style="padding-left:42px;">
+                  <div class="field-error" id="error-patientEmail"
+                    style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+                </div>
+                <div class="form-group" style="position:relative;">
+                  <label>Patient Phone Number (Optional)</label>
+                  <i class="bi bi-telephone"
+                    style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                  <input type="tel" id="patientPhone" placeholder="e.g., 0771234567" style="padding-left:42px;">
+                </div>
+              </div>
           </div>
         </div>
       </div>
+
       <!-- Guardian Info -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title"><i class="bi bi-people-fill"></i> Guardian Information (Optional)</h2>
+      <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
+        <div
+          style="background:var(--primary-light); color:var(--primary); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
+          <i class="bi bi-people"></i>
         </div>
-        <div class="panel-body">
-          <div class="form-grid">
-            <div class="form-group"><label>Guardian Name</label><input type="text" placeholder="Enter guardian's name">
-            </div>
-            <div class="form-group"><label>Guardian Phone Number</label><input type="tel" placeholder="e.g. 0771234567">
-            </div>
+        <div style="flex:1;">
+          <div class="panel-header" style="border:none; padding-bottom:0;">
+            <h2 class="panel-title" style="display:flex; align-items:center; gap:12px;">
+              <div
+                style="background:var(--primary); color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                2</div>
+              Guardian Information (Optional)
+            </h2>
           </div>
-        </div>
-      </div>
-      <!-- Location -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title"><i class="bi bi-geo-alt-fill"></i> Location Details</h2>
-        </div>
-        <div class="panel-body">
-          <div class="form-grid">
-            <div class="form-group full-width"><label>Address / Location Description <span
-                  class="required">*</span></label><input type="text"
-                placeholder="e.g. 45, High Level Road, near the temple, Colombo 05"></div>
-            <div class="form-group"><label>GN Division (if known)</label><select>
-                <option value="" disabled selected>Select division</option>
-                <option>Thimbirigasyaya</option>
-                <option>Kirulapone</option>
-                <option>Narahenpita</option>
-                <option>Borella</option>
-                <option>Other / Unknown</option>
-              </select></div>
-            <div class="form-group">
-              <label>GPS Coordinates</label>
-              <div style="display: flex; gap: 8px;">
-                <input type="text" placeholder="e.g. 6.9005, 79.8612" style="flex: 1;">
-                <button type="button" class="btn btn-outline" style="padding: 0 16px; border-radius: 10px;"
-                  title="Get Current Location"><i class="bi bi-crosshair"></i> Get Location</button>
+          <div class="panel-body">
+            <div class="form-grid">
+              <div class="form-group" style="position:relative;">
+                <label>Guardian Name</label>
+                <i class="bi bi-person" style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                <input type="text" id="guardianName" placeholder="Enter guardian's name" style="padding-left:42px;">
+              </div>
+              <div class="form-group" style="position:relative;">
+                <label>Guardian Phone Number</label>
+                <i class="bi bi-telephone"
+                  style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                <input type="tel" id="guardianPhone" placeholder="e.g., 0771234567" style="padding-left:42px;">
+                <div class="field-error" id="error-guardianPhone"
+                  style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+              </div>
+              <div class="form-group" style="position:relative;">
+                <label>Guardian Email (Optional)</label>
+                <i class="bi bi-envelope"
+                  style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                <input type="email" id="guardianEmail" placeholder="e.g., guardian@example.com"
+                  style="padding-left:42px;">
               </div>
             </div>
           </div>
         </div>
       </div>
-      <!-- Issue Details -->
-      <div class="panel">
-        <div class="panel-header">
-          <h2 class="panel-title"><i class="bi bi-clipboard2-pulse"></i> Issue Description</h2>
-        </div>
-        <div class="panel-body">
-          <div class="form-grid">
-            <div class="form-group full-width"><label>Description of Issue <span
-                  class="required">*</span></label><textarea
-                placeholder="Describe the patient's condition, visible symptoms, living situation, or any concerns..."></textarea>
-            </div>
 
-            <div class="form-actions">
-              <button class="btn btn-outline">Cancel</button>
-              <button class="btn btn-primary"><i class="bi bi-send-fill"></i> Submit Report</button>
+      <!-- Location -->
+      <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
+        <div
+          style="background:var(--primary-light); color:var(--primary); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
+          <i class="bi bi-geo-alt-fill"></i>
+        </div>
+        <div style="flex:1;">
+          <div class="panel-header" style="border:none; padding-bottom:0;">
+            <h2 class="panel-title" style="display:flex; align-items:center; gap:12px;">
+              <div
+                style="background:var(--primary); color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                3</div>
+              Location Details
+            </h2>
+          </div>
+          <div class="panel-body">
+            <div class="form-grid">
+              <div class="form-group full-width" style="position:relative;">
+                <label>Address / Location Description <span class="required">*</span></label>
+                <i class="bi bi-geo-alt"
+                  style="position:absolute; bottom:15px; left:16px; color:var(--text-muted);"></i>
+                <input type="text" id="address" required
+                  placeholder="e.g., 45, High Level Road, near the temple, Colombo 05" style="padding-left:42px;">
+              </div>
+              <div class="form-group">
+                <label>GN Division <span class="required">*</span></label>
+                <div class="custom-dropdown" id="gnDropdown">
+                  <div class="custom-dropdown-header" id="gnBtn" onclick="toggleDropdown('gn')">
+                    <span id="gnText">Select GN division</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </div>
+                  <div class="custom-options-container" id="gnContainer">
+                    <div class="custom-search">
+                      <input type="text" id="gnSearch" placeholder="Search GN divisions..." oninput="filterGnOptions()"
+                        onclick="event.stopPropagation()">
+                    </div>
+                    <div class="custom-options-list" id="gnList">
+                      <!-- Populated by JS -->
+                    </div>
+                  </div>
+                </div>
+                <!-- Hidden inputs for submission -->
+                <input type="hidden" id="gnDivision" required>
+                <input type="hidden" id="divisionalSecretariat" required>
+                <input type="hidden" id="district" required>
+
+                <div class="field-error" id="error-location"
+                  style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+              </div>
+              <div class="form-group">
+                <label>Divisional Secretariat <span class="required">*</span></label>
+                <input type="text" id="dsDisplay" readonly placeholder="Auto-selected based on GN Division"
+                  style="background-color: var(--bg-page); cursor: not-allowed; border-color: var(--border); color: var(--text-muted);">
+              </div>
+              <div class="form-group">
+                <label>District <span class="required">*</span></label>
+                <input type="text" id="districtDisplay" readonly placeholder="Auto-selected based on GN Division"
+                  style="background-color: var(--bg-page); cursor: not-allowed; border-color: var(--border); color: var(--text-muted);">
+              </div>
+              <div class="form-group">
+                <label>GPS Coordinates <span class="required">*</span></label>
+                <div style="display: flex; gap: 8px; position:relative;">
+                  
+                  <input type="text" id="gpsCoordinates" required readonly
+                    placeholder="Click 'Get Location' to fetch GPS"
+                    style="flex: 1; padding-left:42px; background-color: var(--bg-page); cursor: not-allowed; border-color: var(--border); color: var(--text-dark);">
+                  <button type="button" class="btn btn-outline"
+                    style="padding: 0 16px; border-radius: 10px; border-color:var(--primary); color:var(--primary);"
+                    onclick="getLocation()">
+                     Get Location
+                  </button>
+                </div>
+                <div class="field-error" id="error-gps"
+                  style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Issue Details -->
+      <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
+        <div
+          style="background:var(--primary-light); color:var(--primary); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
+          <i class="bi bi-file-earmark-medical"></i>
+        </div>
+        <div style="flex:1;">
+          <div class="panel-header" style="border:none; padding-bottom:0;">
+            <h2 class="panel-title" style="display:flex; align-items:center; gap:12px;">
+              <div
+                style="background:var(--primary); color:#fff; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px;">
+                4</div>
+              Issue Description
+            </h2>
+          </div>
+          <div class="panel-body">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label>Description of Issue <span class="required">*</span></label>
+                <textarea id="description" required
+                  placeholder="Describe the patient's condition, visible symptoms, living situation, or any concerns..."></textarea>
+              </div>
+            </div>
+
+            <div
+              style="margin-top:40px; padding-top:20px; border-top:1px solid var(--border); display:flex; flex-direction:column; gap:16px;">
+              <div style="display:flex; justify-content:space-between; width:100%; gap:12px;">
+                <button type="button" class="btn btn-outline"
+                  style="flex:1; justify-content:center; border-color:var(--border); color:var(--text-normal);"
+                  onclick="window.location.href='dashboard.html'"><i class="bi bi-x-lg"></i> Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btnSubmit"
+                  style="flex:1; justify-content:center; font-size:15px;"><i class="bi bi-send-fill"
+                    style="transform:rotate(45deg);"></i> Submit Report</button>
+              </div>
+              <div
+                style="text-align:center; font-size:11px; color:var(--text-muted); display:flex; align-items:center; justify-content:center; gap:6px; font-weight:500;">
+                <i class="bi bi-lock"></i> Your information is secure and used only for verification and care purposes.
+              </div>
+              <div id="formStatus" style="font-weight:600; text-align:center; display:none; font-size:14px;"></div>
+            </div>
+            </form>
+          </div>
+        </div>
   </main>
-  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+
+ 
+  <div class="map-modal-overlay" id="mapModal">
+    <div class="map-modal">
+      <div class="map-modal-header">
+        <h3>Pinpoint Accurate Location</h3>
+        <button type="button" class="close-map-btn" onclick="closeMapModal()">&times;</button>
+      </div>
+      <div class="map-search-bar" style="position: relative;">
+        <input type="text" id="mapSearchInput" placeholder="Type a city or street (e.g. Gampaha)"
+          oninput="debouncedSearchAddress()" autocomplete="off">
+        <button type="button" class="btn btn-primary" onclick="forceSearch()"><i class="bi bi-search"></i>
+          Search</button>
+        <div id="mapSearchResults" class="custom-options-container"
+          style="top: 50px; width: 100%; max-height: 250px; overflow-y: auto;"></div>
+      </div>
+      <div id="leafletMap"></div>
+      <div class="map-modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeMapModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="confirmLocation()">Confirm Exact Location</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Submission Success Modal -->
+  <div class="success-overlay" id="successOverlay">
+    <div class="success-modal">
+      <div class="success-icon-container">
+        <i class="bi bi-check-circle-fill"></i>
+      </div>
+      <h2>Patient Successfully Reported!</h2>
+      <p>Thank you for submitting this report. The location and details have been securely logged into the CareReach
+        system.</p>
+      <div style="margin-top: 24px; font-weight: 600; color: var(--primary);">
+        <i class="bi bi-arrow-repeat" style="animation: spin 2s linear infinite; display: inline-block;"></i>
+        Redirecting to Dashboard...
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+ 
+    let mapInstance = null;
+    let marker = null;
+    let currentLat = 0;
+    let currentLng = 0;
+
+    function getLocation() {
+      if (navigator.geolocation) {
+        document.getElementById('gpsCoordinates').value = "Connecting to Satellite...";
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            currentLat = position.coords.latitude;
+            currentLng = position.coords.longitude;
+            openMapModal(currentLat, currentLng);
+          },
+          (error) => {
+            alert('Unable to retrieve GPS signal. Please ensure location services are allowed in your browser.');
+            document.getElementById('gpsCoordinates').value = "";
+          },
+          { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        );
+      } else {
+        alert("Geolocation is currently unsupported by this browser.");
+      }
+    }
+
+    function openMapModal(lat, lng) {
+      document.getElementById('gpsCoordinates').value = "Awaiting Confirmation...";
+      const modal = document.getElementById('mapModal');
+      modal.classList.add('active');
+
+      if (!mapInstance) {
+        mapInstance = L.map('leafletMap').setView([lat, lng], 16);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: 19,
+          attribution: '© OpenStreetMap'
+        }).addTo(mapInstance);
+
+        marker = L.marker([lat, lng], { draggable: true }).addTo(mapInstance);
+
+        marker.on('dragend', function () {
+          const position = marker.getLatLng();
+          currentLat = position.lat;
+          currentLng = position.lng;
+        });
+      } else {
+        mapInstance.setView([lat, lng], 16);
+        marker.setLatLng([lat, lng]);
+      }
+
+ 
+      setTimeout(() => {
+        mapInstance.invalidateSize();
+        mapInstance.setView([lat, lng], 16);
+      }, 300);
+    }
+
+    function closeMapModal() {
+      document.getElementById('mapModal').classList.remove('active');
+      document.getElementById('mapSearchResults').classList.remove('open');
+      if (document.getElementById('gpsCoordinates').value === "Awaiting Confirmation...") {
+        document.getElementById('gpsCoordinates').value = "";
+      }
+    }
+
+    
+    let searchTimeout = null;
+
+    function debouncedSearchAddress() {
+      clearTimeout(searchTimeout);
+      const query = document.getElementById('mapSearchInput').value.trim();
+      const resultsContainer = document.getElementById('mapSearchResults');
+
+      if (!query || query.length < 3) {
+        resultsContainer.classList.remove('open');
+        return;
+      }
+
+    
+      resultsContainer.innerHTML = '<div class="custom-option text-muted" style="color: #6b7280; text-align: center;">Searching satellites...</div>';
+      resultsContainer.classList.add('open');
+      resultsContainer.style.zIndex = "9999";
+
+      searchTimeout = setTimeout(() => {
+       
+        fetch(`https://photon.komoot.io/api/?q=${encodeURIComponent(query + " Sri Lanka")}&limit=5`)
+          .then(res => res.json())
+          .then(data => {
+            resultsContainer.innerHTML = '';
+            if (data && data.features && data.features.length > 0) {
+              data.features.forEach(feature => {
+                const place = feature.properties;
+                const lng = feature.geometry.coordinates[0];
+                const lat = feature.geometry.coordinates[1];
+
+                const opt = document.createElement('div');
+                opt.className = 'custom-option';
+
+                let title = place.name || place.city || place.town || place.village || place.state || "Unknown Area";
+                let subtitle = [place.county, place.state, "Sri Lanka"].filter(Boolean).join(', ');
+
+                opt.innerHTML = `<strong style="color: var(--primary);">${title}</strong> <br><small style="color: #6b7280;">${subtitle}</small>`;
+
+                opt.onclick = () => {
+                  currentLat = lat;
+                  currentLng = lng;
+
+                  mapInstance.setView([lat, lng], 16);
+                  marker.setLatLng([lat, lng]);
+
+                  document.getElementById('mapSearchInput').value = title;
+                  resultsContainer.classList.remove('open');
+                };
+                resultsContainer.appendChild(opt);
+              });
+              resultsContainer.classList.add('open');
+            } else {
+              resultsContainer.innerHTML = '<div class="custom-option text-muted" style="color: #ef4444; text-align: center;">No matches found</div>';
+            }
+          })
+          .catch(err => {
+            resultsContainer.innerHTML = '<div class="custom-option text-muted" style="color: #ef4444; text-align: center;">Network error</div>';
+          });
+      }, 500);
+    }
+
+  
+    function forceSearch() {
+      debouncedSearchAddress();
+    }
+
+    function confirmLocation() {
+      document.getElementById('gpsCoordinates').value = `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`;
+      closeMapModal();
+    }
+ 
+    document.addEventListener('DOMContentLoaded', () => {
+      const userFullName = localStorage.getItem('userFullName') || 'Volunteer';
+      const userId = localStorage.getItem('userId');
+      document.querySelector('.user-info h4').innerText = userFullName;
+
+  
+      if (userId) {
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${userId}/profile`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.profilePhoto) {
+              const avatar = document.getElementById('nav-avatar-img');
+              if (avatar) avatar.src = data.profilePhoto;
+            }
+          })
+          .catch(e => console.error("Could not load global avatar:", e));
+      }
+
+
+      fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts')
+        .then(response => response.json())
+        .then(districts => {
+          const list = document.getElementById('districtList');
+          districts.forEach(d => {
+            const opt = document.createElement('div');
+            opt.className = 'custom-option';
+            opt.innerText = d.name;
+            opt.onclick = (e) => {
+              e.stopPropagation();
+              selectOption('district', d.name, d.name);
+              onDistrictChange(d.id);
+            };
+            list.appendChild(opt);
+          });
+        })
+        .catch(console.error);
+    });
+
+    let allGnDivisions = [];
+
+    
+    fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/divisions')
+      .then(response => response.json())
+      .then(divisions => {
+        allGnDivisions = divisions.sort((a, b) => a.name.localeCompare(b.name));
+        renderGnList(allGnDivisions);
+      })
+      .catch(console.error);
+
+    function toggleDropdown(type) {
+      if (type !== 'gn') return; 
+      const container = document.getElementById('gnContainer');
+      container.classList.toggle('open');
+      if (container.classList.contains('open')) {
+        document.getElementById('gnSearch').focus();
+      }
+    }
+
+    function filterGnOptions() {
+      const search = document.getElementById('gnSearch').value.toLowerCase();
+      const filtered = allGnDivisions.filter(d =>
+        d.name.toLowerCase().includes(search) ||
+        d.dsName.toLowerCase().includes(search) ||
+        d.districtName.toLowerCase().includes(search)
+      );
+      renderGnList(filtered);
+    }
+
+    function renderGnList(dataArray) {
+      const gnList = document.getElementById('gnList');
+      gnList.innerHTML = '';
+
+      if (dataArray.length === 0) {
+        gnList.innerHTML = '<div style="padding: 10px; color: var(--text-muted); font-size: 13px; text-align: center;">No divisions found</div>';
+        return;
+      }
+
+      dataArray.forEach(d => {
+        const item = document.createElement('div');
+        item.className = 'custom-option';
+        item.innerHTML = `<strong>${d.name}</strong> <span style="font-size:11px;color:var(--text-muted);display:block;">${d.dsName} - ${d.districtName}</span>`;
+        item.onclick = (e) => {
+          e.stopPropagation();
+          selectGnDivision(d);
+        };
+        gnList.appendChild(item);
+      });
+    }
+
+    function selectGnDivision(division) {
+
+      const textSpan = document.getElementById('gnText');
+      textSpan.innerText = division.name;
+      textSpan.style.color = "var(--text-dark)";
+      textSpan.style.fontWeight = "600";
+
+      document.getElementById('gnContainer').classList.remove('open');
+
+     
+      document.getElementById('gnDivision').value = division.name;
+      document.getElementById('divisionalSecretariat').value = division.dsName;
+      document.getElementById('district').value = division.districtName;
+
+     
+      document.getElementById('dsDisplay').value = division.dsName;
+      document.getElementById('districtDisplay').value = division.districtName;
+    }
+
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.custom-dropdown')) {
+        document.querySelectorAll('.custom-options-container').forEach(c => c.classList.remove('open'));
+      }
+    });
+
+    function submitReport(event) {
+      event.preventDefault();
+
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        alert('Authentication Error: Please sign in again.');
+        window.location.replace('../../login.html');
+        return;
+      }
+
+      const status = document.getElementById('formStatus');
+      status.style.display = 'none'; 
+
+      document.querySelectorAll('.field-error').forEach(el => el.style.display = 'none');
+      let hasError = false;
+      let firstErrorElement = null;
+
+      const ageStr = document.getElementById('age').value;
+      if (ageStr) {
+        const ageNum = parseInt(ageStr);
+        if (isNaN(ageNum) || ageNum < 0 || ageNum > 150) {
+          const err = document.getElementById('error-age');
+          err.style.display = 'block';
+          err.innerText = 'Please enter a valid age between 0 and 150.';
+          hasError = true;
+          if (!firstErrorElement) firstErrorElement = document.getElementById('age');
+        }
+      }
+
+      const nicStr = document.getElementById('nic').value.trim();
+      if (nicStr) {
+        const nicRegex = /^([0-9]{9}[vVxX]|[0-9]{12})$/;
+        if (!nicRegex.test(nicStr)) {
+          const err = document.getElementById('error-nic');
+          err.style.display = 'block';
+          err.innerText = 'Please enter a valid NIC (e.g., 851234567V or 198512345678).';
+          hasError = true;
+          if (!firstErrorElement) firstErrorElement = document.getElementById('nic');
+        }
+      }
+
+      const phoneStr = document.getElementById('guardianPhone').value.trim();
+      if (phoneStr) {
+        const phoneRegex = /^0[0-9]{9}$/;
+        if (!phoneRegex.test(phoneStr)) {
+          const err = document.getElementById('error-guardianPhone');
+          err.style.display = 'block';
+          err.innerText = 'Please enter a valid 10-digit phone number starting with 0.';
+          hasError = true;
+          if (!firstErrorElement) firstErrorElement = document.getElementById('guardianPhone');
+        }
+      }
+
+      const districtId = document.getElementById('district').value;
+      const dsId = document.getElementById('divisionalSecretariat').value;
+      const gnName = document.getElementById('gnDivision').value;
+
+      if (!districtId || !dsId || !gnName) {
+        const err = document.getElementById('error-location');
+        err.style.display = 'block';
+        err.innerText = 'Please specify the District, Divisional Secretariat, and GN Division.';
+        hasError = true;
+        if (!firstErrorElement) firstErrorElement = document.getElementById('districtDropdown');
+      }
+
+      const gpsStr = document.getElementById('gpsCoordinates').value.trim();
+      if (!gpsStr || gpsStr === "Awaiting Confirmation..." || gpsStr === "Connecting to Satellite...") {
+        const err = document.getElementById('error-gps');
+        err.style.display = 'block';
+        err.innerText = 'GPS Coordinates are mandatory. Please click "Get Location".';
+        hasError = true;
+        if (!firstErrorElement) firstErrorElement = document.getElementById('gpsCoordinates');
+      }
+
+      if (hasError) {
+        if (firstErrorElement) {
+          firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          if (typeof firstErrorElement.focus === 'function') firstErrorElement.focus();
+        }
+        return;
+      }
+
+      const data = {
+        name: document.getElementById('patientName').value,
+        age: parseInt(document.getElementById('age').value) || null,
+        gender: document.getElementById('gender').value,
+        nic: document.getElementById('nic').value,
+        patientEmail: document.getElementById('patientEmail').value,
+        patientPhone: document.getElementById('patientPhone').value,
+        guardianName: document.getElementById('guardianName').value,
+        guardianPhone: document.getElementById('guardianPhone').value,
+        guardianEmail: document.getElementById('guardianEmail').value,
+        address: document.getElementById('address').value,
+        district: document.getElementById('district').value,
+        divisionalSecretariat: document.getElementById('divisionalSecretariat').value,
+        gnDivision: document.getElementById('gnDivision').value,
+        gpsCoordinates: document.getElementById('gpsCoordinates').value,
+        description: document.getElementById('description').value,
+        reportedById: parseInt(userId)
+      };
+
+      const btn = document.getElementById('btnSubmit');
+
+      btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Submitting...';
+      btn.disabled = true;
+
+      fetch('https://care-reach-host-production.up.railway.app/api/v1/patients/report', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+        .then(async response => {
+          if (!response.ok) {
+            const err = await response.text();
+            throw new Error(err || "Submission failed");
+          }
+          return response.json();
+        })
+        .then(res => {
+         
+          document.getElementById('successOverlay').classList.add('active');
+
+          setTimeout(() => {
+            window.location.href = 'dashboard.html';
+          }, 2500);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          const errMsg = (error.message || '').toLowerCase();
+          let showedFieldError = false;
+
+         
+          if (errMsg.includes('nic is already registered')) {
+            const errDiv = document.getElementById('error-nic');
+            errDiv.style.display = 'block';
+            errDiv.innerText = 'This NIC is already registered for another patient.';
+            const field = document.getElementById('nic');
+            field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (typeof field.focus === 'function') field.focus();
+            showedFieldError = true;
+          }
+       
+          else if (errMsg.includes('email is already registered')) {
+            const errDiv = document.getElementById('error-patientEmail');
+            errDiv.style.display = 'block';
+            errDiv.innerText = 'This Email Address is already registered for another patient.';
+            const field = document.getElementById('patientEmail');
+            field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if (typeof field.focus === 'function') field.focus();
+            showedFieldError = true;
+          }
+
+          if (!showedFieldError) {
+            status.style.display = 'block';
+            status.style.color = '#ef4444';
+            status.innerText = 'Error: ' + error.message;
+          }
+
+          btn.innerHTML = '<i class="bi bi-send-fill"></i> Submit Report';
+          btn.disabled = false;
+        });
+    }
+
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const uId = localStorage.getItem("userId");
+      const wrapperElement = document.getElementById("bellIconWrapper");
+      const dropdownElement = document.getElementById("notifDropdown");
+      const badgeElement = document.getElementById("notifBadge");
+      const listElement = document.getElementById("notifList");
+      let dropdownOpen = false;
+
+      if (wrapperElement && dropdownElement) {
+        wrapperElement.addEventListener("click", (e) => {
+          e.stopPropagation();
+          dropdownOpen = !dropdownOpen;
+          if (dropdownOpen) {
+            dropdownElement.classList.add("active");
+            dropdownElement.style.display = "flex";
+          } else {
+            dropdownElement.classList.remove("active");
+            dropdownElement.style.display = "none";
+          }
+        });
+
+        document.addEventListener("click", () => {
+          if (dropdownOpen) {
+            dropdownOpen = false;
+            dropdownElement.classList.remove("active");
+            dropdownElement.style.display = "none";
+          }
+        });
+        dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+      }
+
+      function fetchNotifications() {
+        if (!uId) return;
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${uId}/latest`)
+          .then(res => res.json())
+          .then(data => {
+            if (data.unreadCount > 0) {
+              if (badgeElement) {
+                badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                badgeElement.style.display = 'flex';
+              }
+            } else {
+              if (badgeElement) badgeElement.style.display = 'none';
+            }
+
+            if (!data.notifications || data.notifications.length === 0) {
+              if (listElement) {
+                listElement.innerHTML = `
+                  <div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;">
+                      <i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                      No new notifications
+                  </div>`;
+              }
+            } else {
+              if (listElement) listElement.innerHTML = "";
+              data.notifications.forEach(notif => {
+                let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+
+                const date = new Date(notif.createdAt);
+                let secs = Math.floor((new Date() - date) / 1000);
+                if (secs < 0) secs = 0;
+                let timeStr = secs + " secs ago";
+                if (secs <= 10) timeStr = "just now";
+                else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+
+                const item = document.createElement("div");
+                item.className = `notif-item ${!notif.read ? 'unread' : ''}`;
+                item.style.padding = "16px 20px";
+                item.style.borderBottom = "1px solid #f1f5f9";
+                item.style.display = "flex";
+                item.style.gap = "16px";
+                item.style.cursor = "pointer";
+                if (!notif.read) item.style.background = "#f8fafc";
+
+                item.innerHTML = `
+                  <div style="flex-shrink: 0; margin-top: 2px;">${iconHtml}</div>
+                  <div style="flex-grow: 1;">
+                      <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.5; font-weight: ${!notif.read ? '700' : '500'};">
+                          ${notif.message}
+                      </p>
+                      <span style="display: block; margin-top: 6px; font-size: 11px; color: #94a3b8;">${timeStr}</span>
+                  </div>
+                  ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                `;
+
+                item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+
+                item.addEventListener("click", () => {
+                  if (!notif.read) {
+                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                      .then(() => {
+                        notif.read = true;
+                        item.classList.remove("unread");
+                        item.style.background = "transparent";
+                        const dot = item.querySelector(".u-dot");
+                        if (dot) dot.remove();
+
+                        if (badgeElement) {
+                          let curr = parseInt(badgeElement.textContent);
+                          if (!isNaN(curr) && curr > 0) {
+                            curr--;
+                            if (curr === 0) badgeElement.style.display = 'none';
+                            else badgeElement.textContent = curr;
+                          }
+                        }
+                      });
+                  }
+                });
+                if (listElement) listElement.appendChild(item);
+              });
+            }
+          })
+          .catch(console.error);
+      }
+
+      if (uId) {
+        fetchNotifications();
+        setInterval(fetchNotifications, 5000);
+      }
+    });
+  </script>
+  </script>
+
+  <!-- Logout Confirmation Modal -->
+  <div class="logout-modal-overlay" id="logoutModal">
+    <div class="logout-modal-content">
+      <div class="logout-modal-icon">
+        <i class="bi bi-box-arrow-right"></i>
+      </div>
+      <h3 class="logout-modal-title">Sign Out</h3>
+      <p class="logout-modal-text">Are you sure you want to sign out of your account?</p>
+      <div class="logout-modal-actions">
+        <button class="logout-btn-cancel" onclick="closeLogoutModal()">Cancel</button>
+        <button class="logout-btn-confirm" onclick="confirmLogout()">Sign Out</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function showLogoutModal(e) {
+      if (e) e.preventDefault();
+      document.getElementById('logoutModal').style.display = 'flex';
+    }
+    function closeLogoutModal() {
+      document.getElementById('logoutModal').style.display = 'none';
+    }
+    function confirmLogout() {
+      localStorage.clear();
+      window.location.replace('../../login.html');
+    }
+  </script>
+
+  
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        </style>
+
 </body>
 
 </html>

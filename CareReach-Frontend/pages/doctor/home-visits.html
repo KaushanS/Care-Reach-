@@ -2,6 +2,27 @@
 <html lang="en">
 
 <head>
+
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Doctor Home Visits</title>
@@ -417,6 +438,10 @@
             line-height: 1.6
         }
 
+        .mobile-close-btn {
+            display: block !important;
+        }
+
         .mobile-toggle {
             display: none;
             font-size: 24px;
@@ -435,6 +460,10 @@
 
             .main-content {
                 margin-left: 0
+            }
+
+            .mobile-close-btn {
+                display: block !important;
             }
 
             .mobile-toggle {
@@ -537,11 +566,381 @@
             margin-top: 4px;
             display: block;
         }
+
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 380px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 480px;
+            overflow-y: hidden;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-icon.blue {
+            background: var(--info-bg, #eff6ff);
+            color: var(--info, #3b82f6);
+        }
+
+        .noti-icon.green {
+            background: var(--success-bg, #ecfdf5);
+            color: var(--success, #10b981);
+        }
+
+        .noti-icon.orange {
+            background: var(--warning-bg, #fffbeb);
+            color: var(--warning, #f59e0b);
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        .noti-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+    </style>
+    <style>
+        /* CareReach Master Mobile Responsiveness */
+        @media (max-width: 768px) {
+            * {
+                box-sizing: border-box !important;
+            }
+
+            html,
+            body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .content-area {
+                padding: 15px 10px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
+            .metric-card,
+            .panel,
+            .dashboard-card {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+
+            .panel {
+                padding: 15px !important;
+                margin-bottom: 20px !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+            .panel-body {
+                padding: 10px 0 !important;
+                width: 100% !important;
+                overflow-x: auto !important;
+            }
+
+      
+            .modal,
+            .modal-content {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 5% auto !important;
+                padding: 15px !important;
+                overflow-y: auto !important;
+                max-height: 90vh !important;
+            }
+
+            .details-grid,
+            .info-grid,
+            .data-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+
+            .detail-item,
+            .info-item {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+
+            .modal-body div[style*="display: flex"] {
+                flex-wrap: wrap !important;
+            }
+
+            .map-search-bar {
+                flex-direction: column !important;
+            }
+
+            .map-modal-footer {
+                flex-direction: column-reverse !important;
+                gap: 10px !important;
+            }
+
+            .map-modal-footer .btn {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .map-modal-header {
+                flex-wrap: nowrap !important;
+            }
+
+            .close-map-btn {
+                width: auto !important;
+                padding: 10px !important;
+            }
+
+            /* Forms, Inputs, Buttons */
+            .form-group,
+            .panel-header,
+            div[style*="display: flex"],
+            div[style*="display:flex"] {
+                flex-wrap: wrap !important;
+            }
+
+            input,
+            select,
+            textarea,
+            .form-control,
+            .custom-dropdown {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+            }
+
+            .form-group {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .form-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 10px !important;
+            }
+
+            .btn {
+                width: 100% !important;
+                white-space: normal !important;
+                margin-bottom: 8px !important;
+            }
+
+            .panel-body>div[style*="display: flex"],
+            .panel-body>div[style*="display:flex"] {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+
+            .panel-body button {
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+
+         
+            .table-container,
+            .table-responsive {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            td,
+            th {
+                white-space: nowrap !important;
+            }
+
+            .filter-tabs {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 5px !important;
+            }
+
+            .filter-tab {
+                flex: 1 1 auto !important;
+                text-align: center !important;
+            }
+
+            .header-search {
+                display: none !important;
+            }
+
+            .top-header {
+                padding: 0 16px !important;
+                height: auto !important;
+                min-height: 72px !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            .mobile-toggle {
+                margin-right: 15px !important;
+                display: block !important;
+                flex-shrink: 0 !important;
+            }
+
+            .user-profile {
+                padding-left: 10px !important;
+                border-left: none !important;
+            }
+
+            .notification-wrapper {
+                flex-shrink: 0 !important;
+            }
+
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+                z-index: 9999 !important;
+            }
+        }
     </style>
 </head>
 
 <body>
     <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn"
+            style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;"
+            onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
         </div>
@@ -552,11 +951,11 @@
             <a href="appointments.html" class="menu-item"><i class="bi bi-calendar-event"></i> Appointments</a>
             <a href="patients.html" class="menu-item"><i class="bi bi-person-lines-fill"></i> Patients</a>
             <a href="home-visits.html" class="menu-item active"><i class="bi bi-house-heart"></i> Home Visits</a>
-            <!-- <a href="prescriptions.html" class="menu-item"><i class="bi bi-prescription2"></i> Prescriptions</a> -->
+        
             <div class="menu-title">Management</div>
-            <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-text"></i> Reports</a> -->
+           
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
-            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+            <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
         </nav>
@@ -570,12 +969,26 @@
             </div>
 
             <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
-                <div class="action-icon" title="Notifications"
-                    onclick="document.getElementById('notificationDropdown').classList.toggle('active')"
-                    style="font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative;">
-                    <i class="bi bi-bell"></i>
-                    <div class="dot"
-                        style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--warning); border-radius: 50%; border: 2px solid white;">
+
+                <div class="notification-wrapper">
+                    <div class="notification-icon" onclick="toggleNotifications()">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge" style="display:none;">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;"
+                                onclick="markAllNotificationsAsRead()">Mark all read</a>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- JS populated -->
+                        </div>
+                        <a href="notifications.html"
+                            style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
+                            View All Notifications
+                        </a>
                     </div>
                 </div>
 
@@ -587,50 +1000,14 @@
                     </div>
                 </a>
 
-                <!-- NOTIFICATION DROPDOWN -->
-                <div class="notification-dropdown" id="notificationDropdown">
-                    <div class="notification-header">
-                        <span><i class="bi bi-bell"></i> Notifications</span>
-                        <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark
-                            all as read</span>
-                    </div>
-                    <a href="home-visits.html" class="notification-item">
-                        <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
-                        <div class="notification-content">
-                            <h4>New GN-Verified Visit</h4>
-                            <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
-                            <span class="notification-time">10 mins ago</span>
-                        </div>
-                    </a>
-                    <a href="appointments.html" class="notification-item">
-                        <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
-                        <div class="notification-content">
-                            <h4>Appointment Reminder</h4>
-                            <p>You have 4 pending clinic appointments for today.</p>
-                            <span class="notification-time">1 hour ago</span>
-                        </div>
-                    </a>
-                    <a href="notifications.html" class="notification-item"
-                        style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
-                        View All Notifications
-                    </a>
-                </div>
-
         </header>
         <div class="content-area">
             <div class="metrics-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
                 <div class="metric-card">
                     <div class="metric-icon icon-orange"><i class="bi bi-house-exclamation-fill"></i></div>
                     <div class="metric-info">
-                        <h3>02</h3>
-                        <p>Pending Visits</p>
-                    </div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-icon icon-green"><i class="bi bi-check2-circle"></i></div>
-                    <div class="metric-info">
-                        <h3>14</h3>
-                        <p>Visits Completed</p>
+                        <h3 id="metricPendingVisits" style="color: var(--warning);">-</h3>
+                        <p style="color: var(--warning);">Pending Visits</p>
                     </div>
                 </div>
             </div>
@@ -647,61 +1024,271 @@
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="font-weight: 600; color: var(--text-dark);">Amaya Perera</div>
-                                <div style="font-size: 13px; color: var(--text-muted);">ID: PT-1024</div>
-                            </td>
-                            <td>Kasun Perera</td>
-                            <td>Ward 03, Gampaha</td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-outline" onclick="alert('Opening map navigation...')"><i
-                                            class="bi bi-geo-alt-fill"></i> View Location</button>
-                                    <a href="add_visit_details.html" class="btn btn-primary"><i
-                                            class="bi bi-person-plus"></i> Add User</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight: 600; color: var(--text-dark);">Ruwan Madushanka</div>
-                                <div style="font-size: 13px; color: var(--text-muted);">ID: PT-1112</div>
-                            </td>
-                            <td>Sunil Fernando</td>
-                            <td>Near Central Road, Kandy</td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-outline" onclick="alert('Opening map navigation...')"><i
-                                            class="bi bi-geo-alt-fill"></i> View Location</button>
-                                    <a href="add_visit_details.html" class="btn btn-primary"><i
-                                            class="bi bi-person-plus"></i> Add User</a>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="font-weight: 600; color: var(--text-dark);">Sanduni Karunaratne</div>
-                                <div style="font-size: 13px; color: var(--text-muted);">ID: PT-1088</div>
-                            </td>
-                            <td>Menaka Silva</td>
-                            <td>Village Lane, Kurunegala</td>
-                            <td>
-                                <div style="display: flex; gap: 8px;">
-                                    <button class="btn btn-outline" onclick="alert('Opening map navigation...')"><i
-                                            class="bi bi-geo-alt-fill"></i> View Location</button>
-                                    <a href="add_visit_details.html" class="btn btn-primary"><i
-                                            class="bi bi-person-plus"></i> Add User</a>
-                                </div>
-                            </td>
-                        </tr>
+                    <tbody id="visitQueueList">
+                      
                     </tbody>
                 </table>
             </section>
         </div>
     </main>
-    <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+    <script>
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Restore User Name 
+            const userFullName = localStorage.getItem('userFullName');
+            if (userFullName) {
+                const docNames = document.querySelectorAll('.doctor-info h4');
+                docNames.forEach(n => n.textContent = 'Dr. ' + userFullName);
+                const avatars = document.querySelectorAll('.doctor-profile img');
+                avatars.forEach(img => img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent('Dr ' + userFullName)}&background=0f766e&color=fff`);
+            }
+
+            const userId = localStorage.getItem('userId');
+            if (userId) {
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/doctor/${userId}/dashboard`)
+                    .then(res => res.json())
+                    .then(data => {
+                     
+                        document.getElementById('metricPendingVisits').textContent = String(data.pendingVerifiedVisits).padStart(2, '0');
+                  
+
+                   
+                        const tbody = document.getElementById('visitQueueList');
+                        tbody.innerHTML = '';
+
+                        if (data.verifiedHomeVisits && data.verifiedHomeVisits.length > 0) {
+                            data.verifiedHomeVisits.forEach(visit => {
+                                const tr = document.createElement('tr');
+
+                                const safeGps = visit.gpsCoordinates ? visit.gpsCoordinates.replace(/'/g, "\\'") : '';
+                                const mapAction = visit.gpsCoordinates
+                                    ? `onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(visit.gpsCoordinates)}', '_blank')"`
+                                    : `onclick="alert('No GPS coordinates provided for this patient.')"`;
+
+                                tr.innerHTML = `
+                                    <td>
+                                        <div style="font-weight: 600; color: var(--text-dark);">${visit.name || 'Unknown Patient'}</div>
+                                        <div style="font-size: 13px; color: var(--text-muted);"><i class="bi bi-exclamation-circle text-danger"></i> ${visit.description || 'Verified Request'}</div>
+                                    </td>
+                                    <td>${visit.verifiedGnName || '-'}</td>
+                                    <td>
+                                        ${visit.address || '-'}
+                                        <div style="font-size: 11px; margin-top:4px; opacity:0.8;">GN Div: ${visit.gnDivision || '-'}</div>
+                                    </td>
+                                    <td>
+                                        <div style="display: flex; gap: 8px;">
+                                            <button class="btn btn-outline" ${mapAction}><i class="bi bi-geo-alt-fill"></i> View Location</button>
+                                            <a href="add_visit_details.html?patientId=${visit.id}" class="btn btn-primary"><i class="bi bi-file-earmark-medical"></i> Add Visit Details</a>
+                                        </div>
+                                    </td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+                        } else {
+                            tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">No Pending Verified Visits Found. Awesome!</td></tr>';
+                        }
+                    })
+                    .catch(err => console.error("Error loading doctor visits:", err));
+            }
+        });
+    </script>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModalOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+        <div id="logoutModal"
+            style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+            <h3 style="font-size:22px; font-weight:800; color:#1e293b; margin-bottom:12px;">Confirm Logout</h3>
+            <p style="font-size:15px; color:#64748b; margin-bottom:32px; font-weight:500;">Are you sure you want to
+                securely log out of the system?</p>
+            <div style="display:flex; gap:16px;">
+                <button type="button" onclick="closeLogoutModal()" class="btn btn-outline"
+                    style="flex:1;">Cancel</button>
+                <button type="button" onclick="confirmLogout()" class="btn btn-primary"
+                    style="flex:1; background-color: #ef4444; border-color: #ef4444;">Log Out</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showLogoutModal(e) {
+            if (e) e.preventDefault();
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.style.opacity = '1';
+            modal.style.transform = 'scale(1) translateY(0)';
+        }
+        function closeLogoutModal() {
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.opacity = '0';
+            modal.style.transform = 'scale(0.85) translateY(20px)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+        }
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fn = localStorage.getItem('userFullName');
+            if (fn) {
+                document.querySelectorAll('.doctor-info h4').forEach(el => el.textContent = 'Dr. ' + fn);
+            }
+            const pp = localStorage.getItem('profilePhoto');
+            if (pp) {
+                document.querySelectorAll('.doctor-profile img').forEach(el => el.src = pp);
+            }
+        });
+    </script>
+
+
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .mobile-close-btn {
+                display: block !important;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
+
+            .header-search {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .metrics-grid,
+            .form-grid,
+            .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    </style>
+
+
+
+    <script>
+        function toggleNotifications() {
+            document.getElementById('notificationDropdown').classList.toggle('show');
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function setupNotifications(userId) {
+            const listElement = document.getElementById('notificationList');
+            const badgeElement = document.querySelector('.notification-badge');
+
+            if (!listElement) return;
+
+       
+            const isFullPage = typeof fetchAllNotifications === 'function';
+
+            function fetchDropdown() {
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
+                    .then(res => res.json())
+                    .then(data => {
+                        listElement.innerHTML = '';
+                        let count = 0;
+
+                        const notifs = data.notifications || [];
+                        if (notifs.length > 0) {
+                            notifs.forEach(notif => {
+
+                                const item = document.createElement('div');
+                                item.className = 'notification-item';
+                                if (!notif.read) item.style.background = '#f8fafc';
+
+                                let colorClass = 'blue';
+                                let iconHTML = '<i class="bi bi-info-circle"></i>';
+                                if (notif.type === 'ALERT' || notif.type === 'EMERGENCY') { colorClass = 'orange'; iconHTML = '<i class="bi bi-exclamation-triangle"></i>'; }
+                                else if (notif.type === 'SUCCESS') { colorClass = 'green'; iconHTML = '<i class="bi bi-check-circle"></i>'; }
+                                else if (notif.type === 'WARNING') { colorClass = 'orange'; iconHTML = '<i class="bi bi-shield-exclamation"></i>'; }
+
+                                item.innerHTML = `
+                                    <div class="noti-icon ${colorClass}">${iconHTML}</div>
+                                    <div class="noti-content" style="flex-grow: 1;">
+                                        <h4>${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                        <p style="font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                        <span class="noti-time">${new Date(notif.createdAt).toLocaleString()}</span>
+                                    </div>
+                                    ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                                `;
+
+                                item.addEventListener('click', () => {
+                                    if (!notif.read) {
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                            .then(() => {
+                                                fetchDropdown();
+                                                if (isFullPage) fetchAllNotifications(userId);
+                                            });
+                                    }
+                                });
+                                listElement.appendChild(item);
+                            });
+                        } else {
+                            listElement.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">No new notifications</div>';
+                        }
+
+                        if (badgeElement) { badgeElement.textContent = data.unreadCount || 0; badgeElement.style.display = (data.unreadCount > 0) ? 'flex' : 'none'; }
+                    });
+            }
+            fetchDropdown();
+            window.refreshDoctorDropdown = fetchDropdown;
+        }
+
+        function markAllNotificationsAsRead() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+                .then(() => {
+                    if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
+                    if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) setupNotifications(userId);
+        });
+    </script>
+
 </body>
 
 </html>

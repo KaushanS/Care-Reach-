@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <script>
+        (function() {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+    
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | Local Emergencies</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+      box-shadow: 4px 0 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      overflow-y: auto;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .badge-alert {
+      margin-left: auto;
+      background: var(--danger);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+      color: var(--text-dark);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--bg-surface);
+      padding: 24px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .metric-card.alert-card {
+      border-color: rgba(220, 38, 38, 0.3);
+      background: linear-gradient(135deg, #fff 0%, #fef2f2 100%);
+    }
+
+    .metric-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+
+    .icon-red {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .icon-orange {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .icon-green {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .icon-blue {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    .metric-info h3 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+      line-height: 1;
+    }
+
+    .metric-info p {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    td {
+      padding: 20px 24px;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #f9fafb;
+    }
+
+    .patient-cell {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .patient-name {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 15px;
+    }
+
+    .patient-meta {
+      font-size: 13px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .status-responding {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .status-resolved {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .action-cell {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-normal);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-page);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn-danger:hover {
+      background: #b91c1c;
+    }
+
+    @keyframes pulse-dot {
+
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--danger);
+      border-radius: 50%;
+      display: inline-block;
+      animation: pulse-dot 1.5s infinite;
+    }
+
+    .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+    }
+  
+    /* --- NOTIFICATION DROPDOWN --- */
+    .notification-dropdown {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 16px;
+      width: 380px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      border: 1px solid var(--border);
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+    .notification-dropdown.active {
+      display: flex;
+    }
+    .notif-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .notif-header h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 0;
+    }
+    .notif-list {
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    .notif-item {
+      padding: 16px 20px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .notif-item:hover {
+      background: #f1f5f9;
+    }
+    .notif-item.unread {
+      background: #f8fafc;
+    }
+    .notif-footer {
+      padding: 12px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+    .notif-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 600;
+    }
+  
+        </style>
+
+
+    
+<style>
+
+    /* CareReach Master Mobile Responsiveness */
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+        
+  
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+   
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+    
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+        
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+      <div style="display:flex; flex-direction:column; line-height: 1.2;">
+        <span style="color:#ffffff; font-weight:800; font-size:22px; letter-spacing:-0.5px;">CARE<span
+            style="font-weight:300; font-size:22px; color:#5eead4; margin-left:2px;">REACH</span></span>
+        <span style="font-size:11px; font-weight:500; color:#5eead4;">GN Operations Hub</span>
+      </div>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div class="menu-title">GN Operations</div>
+      <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="home-visits.html" class="menu-item"><i class="bi bi-patch-check"></i> Verification Queue</a>
+      <a href="patients.html" class="menu-item"><i class="bi bi-people"></i> Division Patients</a>
+     
+      <div class="menu-title">Administration</div>
+    
+      <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+    
+            <!-- Logout Button -->
+            <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn" style="color: #f97316; margin-top: auto; border: 1px solid rgba(249,115,22,0.2);"><i class="bi bi-box-arrow-right" style="color:#f97316;"></i> Sign Out</a>
+        </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search emergencies...">
+        </div>
+      </div>
+      
+        <div style="display:flex; align-items:center; gap:24px;">
+        <div style="position:relative; cursor:pointer;" class="nav-bell" id="bellIconWrapper">
+          <i class="bi bi-bell" style="font-size:22px; color:var(--text-normal);"></i>
+          <span id="notifBadge"
+            style="position:absolute; top:-4px; right:-4px; background:var(--danger); color:white; font-size:10px; font-weight:700; width:16px; height:16px; border-radius:50%; display:none; align-items:center; justify-content:center; box-shadow:0 0 0 2px var(--bg-surface);">0</span>
+
+          <div id="notifDropdown" class="notification-dropdown" style="display:none;">
+            <div class="notif-header">
+              <h3>Notifications</h3>
+            </div>
+            <div id="notifList" class="notif-list">
+              <div style="padding: 30px; text-align: center; color: var(--text-muted); font-size: 14px;">
+                <i class="bi bi-arrow-repeat" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                Loading...
+              </div>
+            </div>
+            <div class="notif-footer">
+              <a href="notifications.html">See All Notifications</a>
+            </div>
+          </div>
+        </div>
+        <div style="width:1px; height:32px; background:rgba(0,0,0,0.1);"></div>
+        <a href="profile.html" class="user-profile">
+        <div class="user-info">
+                    <h4 id="nav-user-name">Mr. Kasun Perera</h4>
+          <p>Grama Niladhari</p>
+        </div>
+                <img id="nav-avatar-img" src="https://ui-avatars.com/api/?name=Kasun+Perera&background=042f2e&color=fff" alt="GN Officer">
+      </a>
+    </div>
+        </header>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>Local Emergencies</h1>
+        <p>Monitor and coordinate emergency responses within your GN division.</p>
+      </div>
+      <div class="metrics-grid">
+        <div class="metric-card alert-card">
+          <div class="metric-icon icon-red"><i class="bi bi-activity"></i></div>
+          <div class="metric-info">
+            <h3 style="color:var(--danger);">02</h3>
+            <p style="color:var(--danger);">Active Emergencies</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-orange"><i class="bi bi-clock-history"></i></div>
+          <div class="metric-info">
+            <h3>01</h3>
+            <p>Responding</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-green"><i class="bi bi-check-circle-fill"></i></div>
+          <div class="metric-info">
+            <h3>15</h3>
+            <p>Resolved This Month</p>
+          </div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-icon icon-blue"><i class="bi bi-speedometer2"></i></div>
+          <div class="metric-info">
+            <h3>12m</h3>
+            <p>Avg Response Time</p>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><span class="pulse-dot"></span> Active & Recent Emergency Alerts</h2>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Patient / Location</th>
+                <th>Emergency Type</th>
+                <th>Reported By</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="patient-cell"><span class="patient-name">Sunil Jayasooriya</span><span
+                      class="patient-meta"><i class="bi bi-geo-alt-fill" style="color:var(--danger);"></i> 45, High
+                      Level Rd, Colombo 05</span></div>
+                </td>
+                <td><strong style="color:var(--danger);">Cardiac Emergency</strong></td>
+                <td>
+                  <div style="font-weight:600;color:var(--text-dark);">Nimal S. (Volunteer)</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Mobile SOS</div>
+                </td>
+                <td style="font-weight:600;color:var(--danger);">5 mins ago</td>
+                <td><span class="status-badge status-active"><span class="pulse-dot"
+                      style="width:6px;height:6px;"></span> Active</span></td>
+                <td>
+                  <div class="action-cell"><button class="btn btn-danger"><i class="bi bi-telephone-fill"></i>
+                      Call</button><button class="btn btn-outline"><i class="bi bi-geo-alt"></i> Map</button></div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="patient-cell"><span class="patient-name">Unknown Elderly Female</span><span
+                      class="patient-meta"><i class="bi bi-geo-alt-fill" style="color:var(--danger);"></i> Near
+                      Thimbirigasyaya Bus Stop</span></div>
+                </td>
+                <td><strong style="color:var(--warning);">Severe Dehydration</strong></td>
+                <td>
+                  <div style="font-weight:600;color:var(--text-dark);">Public Report</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Web Portal</div>
+                </td>
+                <td style="font-weight:600;color:var(--danger);">18 mins ago</td>
+                <td><span class="status-badge status-active"><span class="pulse-dot"
+                      style="width:6px;height:6px;"></span> Active</span></td>
+                <td>
+                  <div class="action-cell"><button class="btn btn-primary"><i class="bi bi-send-fill"></i>
+                      Dispatch</button><button class="btn btn-outline"><i class="bi bi-geo-alt"></i> Map</button></div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="patient-cell"><span class="patient-name">Ayesha Mendis</span><span class="patient-meta"><i
+                        class="bi bi-geo-alt-fill" style="color:var(--primary);"></i> 78, Kirulapone Ave, Colombo
+                      05</span></div>
+                </td>
+                <td><strong>Asthma Attack</strong></td>
+                <td>
+                  <div style="font-weight:600;color:var(--text-dark);">Namal Fernando (Guardian)</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Mobile App</div>
+                </td>
+                <td>35 mins ago</td>
+                <td><span class="status-badge status-responding"><i class="bi bi-arrow-repeat"></i> Responding</span>
+                </td>
+                <td>
+                  <div class="action-cell"><button class="btn btn-outline"><i class="bi bi-eye"></i> Track</button>
+                  </div>
+                </td>
+              </tr>
+              <tr style="opacity:0.7;">
+                <td>
+                  <div class="patient-cell"><span class="patient-name">Kamal Perera</span><span class="patient-meta"><i
+                        class="bi bi-geo-alt-fill" style="color:var(--text-muted);"></i> 12, Temple Road, Colombo
+                      05</span></div>
+                </td>
+                <td>Low Blood Sugar</td>
+                <td>
+                  <div style="font-weight:600;color:var(--text-dark);">Namal Fernando</div>
+                  <div style="font-size:12px;color:var(--text-muted);">Mobile App</div>
+                </td>
+                <td>2 hrs ago</td>
+                <td><span class="status-badge status-resolved"><i class="bi bi-check-circle-fill"></i> Resolved</span>
+                </td>
+                <td>
+                  <div class="action-cell"><button class="btn btn-outline"><i class="bi bi-file-text"></i>
+                      Report</button></div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            }
+        }
+        
+        // Auto-close sidebar 
+        document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('click', function(event) {
+                const sidebar = document.getElementById('sidebar');
+                const toggleElements = document.querySelectorAll('.mobile-toggle');
+                
+                if (sidebar && sidebar.classList.contains('open')) {
+                    let clickedOnToggle = false;
+                    toggleElements.forEach(el => {
+                        if (el.contains(event.target)) clickedOnToggle = true;
+                    });
+                    
+                    if (!sidebar.contains(event.target) && !clickedOnToggle) {
+                        sidebar.classList.remove('open');
+                    }
+                }
+            }, true); 
+        });
+    </script>
+
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        
+         const navUserFullName = localStorage.getItem("userFullName") || "Officer";
+         const navUId = localStorage.getItem("userId");
+         
+         const navUserName = document.getElementById("nav-user-name");
+         const navAvatarImg = document.getElementById("nav-avatar-img");
+         
+         if (navUserName) navUserName.innerText = navUserFullName;
+         if (navAvatarImg) navAvatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(navUserFullName)}&background=042f2e&color=fff`;
+
+         if (navUId) {
+           fetch(`https://care-reach-host-production.up.railway.app/api/v1/users/${navUId}/profile`)
+             .then(res => res.json())
+             .then(data => {
+               if (data.profilePhoto && navAvatarImg) {
+                 navAvatarImg.src = data.profilePhoto;
+               }
+             }).catch(err => {  });
+         }
+      });
+    </script>
+
+
+    <!-- Logout Modal -->
+    <div class="modal-overlay" id="logoutModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center;">
+        <div style="background: white; border-radius: 16px; padding: 32px; width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: #fef2f2; color: #dc2626; font-size: 32px; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 700; color: #111827; margin-bottom: 12px;">Ready to leave?</h3>
+            <p style="font-size: 14px; color: #6b7280; margin-bottom: 24px;">You are about to sign out of your officer account. Are you sure you want to continue?</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button onclick="document.getElementById('logoutModal').style.display='none'" style="padding: 10px 24px; border-radius: 8px; border: 1px solid #e5e7eb; background: white; color: #374151; font-weight: 600; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#f9fafb'" onmouseout="this.style.background='white'">Cancel</button>
+                <button onclick="confirmLogout()" style="padding: 10px 24px; border-radius: 8px; border: none; background: #dc2626; color: white; font-weight: 600; cursor: pointer; transition: 0.2s;" onmouseover="this.style.background='#b91c1c'" onmouseout="this.style.background='#dc2626'">Sign Out</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showLogoutModal(e) {
+            if(e) e.preventDefault();
+            const m = document.getElementById('logoutModal');
+            if(m) {
+                m.style.display = 'flex';
+            }
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            sessionStorage.clear();
+            window.location.replace('../../login.html');
+        }
+    </script>
+
+  <!-- Notification System  -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const uId = localStorage.getItem("userId");
+      const bellIconWrapper = document.getElementById("bellIconWrapper");
+      const notifDropdown = document.getElementById("notifDropdown");
+      const badgeElement = document.getElementById("notifBadge");
+      const listElement = document.getElementById("notifList");
+
+      if (bellIconWrapper) {
+        bellIconWrapper.addEventListener("click", (e) => {
+          e.stopPropagation();
+          if (notifDropdown) notifDropdown.style.display = (notifDropdown.style.display === 'flex') ? 'none' : 'flex';
+        });
+      }
+
+      document.addEventListener("click", (e) => {
+        if (notifDropdown && (notifDropdown.style.display === 'flex')) {
+          if (!notifDropdown.contains(e.target) && !bellIconWrapper.contains(e.target)) {
+            notifDropdown.style.display = 'none';
+          }
+        }
+      });
+
+      function fetchNotifications() {
+        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${uId}/latest`)
+          .then(res => res.json())
+          .then(data => {
+            if (badgeElement) {
+              const unreadCount = data.unreadCount || 0;
+              if (unreadCount > 0) {
+                badgeElement.textContent = unreadCount;
+                badgeElement.style.display = 'flex';
+              } else {
+                badgeElement.style.display = 'none';
+              }
+            }
+
+            if (!data.notifications || data.notifications.length === 0) {
+              if (listElement) {
+                listElement.innerHTML = `
+                  <div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;">
+                      <i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>
+                      No new notifications
+                  </div>`;
+              }
+            } else {
+              if (listElement) listElement.innerHTML = "";
+              data.notifications.slice(0, 5).forEach(notif => {
+                let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+
+                const date = new Date(notif.createdAt);
+                let secs = Math.floor((new Date() - date) / 1000);
+                if (secs < 0) secs = 0;
+                let timeStr = secs + " secs ago";
+                if (secs <= 10) timeStr = "just now";
+                else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+
+                const item = document.createElement("div");
+                item.className = `notif-item ${!notif.read ? 'unread' : ''}`;
+                item.style.padding = "16px 20px";
+                item.style.borderBottom = "1px solid #f1f5f9";
+                item.style.display = "flex";
+                item.style.gap = "16px";
+                item.style.cursor = "pointer";
+                if (!notif.read) item.style.background = "#f8fafc";
+
+                item.innerHTML = `
+                  <div style="flex-shrink: 0; margin-top: 2px;">${iconHtml}</div>
+                  <div style="flex-grow: 1;">
+                      <p style="margin: 0; font-size: 13px; color: #334155; line-height: 1.5; font-weight: ${!notif.read ? '700' : '500'};">
+                          ${notif.message}
+                      </p>
+                      <span style="display: block; margin-top: 6px; font-size: 11px; color: #94a3b8;">${timeStr}</span>
+                  </div>
+                  ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                `;
+
+                item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+
+                item.addEventListener("click", () => {
+                  if (!notif.read) {
+                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                      .then(() => {
+                        notif.read = true;
+                        item.classList.remove("unread");
+                        item.style.background = "transparent";
+                        const dot = item.querySelector(".u-dot");
+                        if (dot) dot.remove();
+                        if (badgeElement) {
+                          let curr = parseInt(badgeElement.textContent);
+                          if (!isNaN(curr) && curr > 0) {
+                            curr--;
+                            if (curr === 0) badgeElement.style.display = 'none';
+                            else badgeElement.textContent = curr;
+                          }
+                        }
+                      });
+                  }
+                });
+                if (listElement) listElement.appendChild(item);
+              });
+            }
+          })
+          .catch(console.error);
+      }
+
+      if (uId) {
+        
+        fetchNotifications();
+        setInterval(fetchNotifications, 5000);
+      }
+    });
+  </script>
+
+   
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        </style>
+
+</body>
+
+</html>

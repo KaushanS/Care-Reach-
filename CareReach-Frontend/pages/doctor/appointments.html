@@ -2,6 +2,26 @@
 <html lang="en">
 
 <head>
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Doctor Appointments</title>
@@ -14,12 +34,12 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+        
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #ccfbf1;
 
-            /* Sidebar Specific Colors */
+       
             --sidebar-bg: #042f2e;
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
@@ -32,7 +52,7 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
 
-            /* Status Colors */
+      
             --danger: #ef4444;
             --danger-bg: #fef2f2;
             --warning: #f59e0b;
@@ -109,6 +129,14 @@
             flex-direction: column;
             gap: 4px;
             overflow-y: auto;
+          
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+       
+        .sidebar-menu::-webkit-scrollbar {
+            display: none;
         }
 
         .menu-title {
@@ -393,7 +421,7 @@
 
         .btn-primary {
             background-color: var(--primary);
-            color: var(--white);
+            color: #fff;
             box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
         }
 
@@ -591,6 +619,10 @@
             border-color: rgba(239, 68, 68, 0.2);
         }
 
+        .mobile-close-btn {
+            display: block !important;
+        }
+
         .mobile-toggle {
             display: none;
             font-size: 24px;
@@ -610,6 +642,10 @@
 
             .main-content {
                 margin-left: 0;
+            }
+
+            .mobile-close-btn {
+                display: block !important;
             }
 
             .mobile-toggle {
@@ -632,7 +668,7 @@
             }
         }
 
-        /* NOTIFICATION DROPDOWN */
+   
         .notification-dropdown {
             position: absolute;
             top: 60px;
@@ -723,13 +759,206 @@
             margin-top: 4px;
             display: block;
         }
-    </style>
+
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 380px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 480px;
+            overflow-y: hidden;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-icon.blue {
+            background: var(--info-bg, #eff6ff);
+            color: var(--info, #3b82f6);
+        }
+
+        .noti-icon.green {
+            background: var(--success-bg, #ecfdf5);
+            color: var(--success, #10b981);
+        }
+
+        .noti-icon.orange {
+            background: var(--warning-bg, #fffbeb);
+            color: var(--warning, #f59e0b);
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        .noti-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+    
+        </style>
+<style>
+
+    /*  CareReach Master Mobile Responsiveness*/
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+        
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+        
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+        
+      
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+        
+      
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
 </head>
 
 <body>
 
     <!-- DOCTOR SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+      
+        <i class="bi bi-x-lg mobile-close-btn"
+            style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;"
+            onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
             CARE<span>REACH</span>
@@ -745,7 +974,7 @@
             <!-- APPOINTMENTS ACTIVE -->
             <a href="appointments.html" class="menu-item active">
                 <i class="bi bi-calendar-event"></i> Appointments
-                <span class="badge-alert">3</span>
+
             </a>
             <a href="patients.html" class="menu-item">
                 <i class="bi bi-person-lines-fill"></i> Patients
@@ -753,18 +982,13 @@
             <a href="home-visits.html" class="menu-item">
                 <i class="bi bi-house-heart"></i> Home Visits
             </a>
-            <!-- <a href="prescriptions.html" class="menu-item">
-                <i class="bi bi-prescription2"></i> Prescriptions
-            </a> -->
 
             <div class="menu-title">Management</div>
-            <!-- <a href="reports.html" class="menu-item">
-                <i class="bi bi-file-earmark-text"></i> Reports
-            </a> -->
+           
             <a href="profile.html" class="menu-item">
                 <i class="bi bi-person-badge"></i> Profile
             </a>
-            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+            <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
         </nav>
@@ -783,10 +1007,26 @@
             </div>
 
             <div class="header-actions" style="margin-left: auto;">
-                <div class="action-icon" title="Notifications"
-                    onclick="document.getElementById('notificationDropdown').classList.toggle('active')">
-                    <i class="bi bi-bell"></i>
-                    <div class="dot"></div>
+                <div class="notification-wrapper">
+                    <div class="notification-icon" onclick="toggleNotifications()">
+                        <i class="bi bi-bell"></i>
+                        <span class="notification-badge" style="display:none;">0</span>
+                    </div>
+                    <div class="notification-dropdown" id="notificationDropdown">
+                        <div class="notification-header">
+                            <h3>Notifications</h3>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;"
+                                onclick="markAllNotificationsAsRead()">Mark all read</a>
+                        </div>
+                        <div class="notification-list" id="notificationList">
+                            <!-- JS populated -->
+                        </div>
+                        <a href="notifications.html"
+                            style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
+                            View All Notifications
+                        </a>
+                    </div>
                 </div>
 
                 <a href="profile.html" class="doctor-profile">
@@ -796,34 +1036,6 @@
                         <p>Medical Officer</p>
                     </div>
                 </a>
-            </div>
-
-            <!-- NOTIFICATION DROPDOWN -->
-            <div class="notification-dropdown" id="notificationDropdown">
-                <div class="notification-header">
-                    <span><i class="bi bi-bell"></i> Notifications</span>
-                    <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark all as
-                        read</span>
-                </div>
-                <a href="home-visits.html" class="notification-item">
-                    <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
-                    <div class="notification-content">
-                        <h4>New GN-Verified Visit</h4>
-                        <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
-                        <span class="notification-time">10 mins ago</span>
-                    </div>
-                </a>
-                <a href="appointments.html" class="notification-item">
-                    <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
-                    <div class="notification-content">
-                        <h4>Appointment Reminder</h4>
-                        <p>You have 4 pending clinic appointments for today.</p>
-                        <span class="notification-time">1 hour ago</span>
-                    </div>
-                </a>
-                <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
-                View All Notifications
-                    </a>
             </div>
 
         </header>
@@ -842,7 +1054,7 @@
                 <div class="metric-card">
                     <div class="metric-icon icon-blue"><i class="bi bi-calendar-day-fill"></i></div>
                     <div class="metric-info">
-                        <h3>06</h3>
+                        <h3 id="mTotal">--</h3>
                         <p>Total Today</p>
                     </div>
                 </div>
@@ -850,7 +1062,7 @@
                 <div class="metric-card">
                     <div class="metric-icon icon-teal"><i class="bi bi-building"></i></div>
                     <div class="metric-info">
-                        <h3>04</h3>
+                        <h3 id="mPending">--</h3>
                         <p>Pending Today Visit</p>
                     </div>
                 </div>
@@ -858,162 +1070,370 @@
                 <div class="metric-card">
                     <div class="metric-icon icon-green"><i class="bi bi-check-circle-fill"></i></div>
                     <div class="metric-info">
-                        <h3>02</h3>
+                        <h3 id="mCompleted">--</h3>
                         <p>Completed Today</p>
                     </div>
                 </div>
             </div>
 
+            <!-- TAB CONTROLS -->
+            <div
+                style="display: flex; gap: 12px; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                <button class="btn btn-primary" id="tabUpcoming" onclick="switchTab('upcoming')">Upcoming
+                    Appointments</button>
+                <button class="btn btn-outline" id="tabCompleted" onclick="switchTab('completed')">Completed
+                    Visits</button>
+            </div>
+
             <!-- APPOINTMENTS TABLE PANEL -->
-            <div class="panel">
+            <div class="panel" id="panelUpcoming" style="display: block;">
                 <div class="panel-header">
-                    <h2 class="panel-title"><i class="bi bi-list-task text-primary"></i> Consultation Roster</h2>
-
-                    <div class="filter-group">
-                        <input type="date" class="filter-date" value="2026-07-04" onchange="filterAppointments()">
-                        <select class="filter-select" id="statusFilter" onchange="filterAppointments()">
-                            <option value="all">All Statuses</option>
-                            <option value="upcoming">Pending</option>
-                            <option value="completed">Completed</option>
-                        </select>
-                    </div>
+                    <h2 class="panel-title"><i class="bi bi-clock-history text-primary"></i> Upcoming Appointments</h2>
                 </div>
-
                 <div style="overflow-x: auto;">
-                    <table id="appointmentsTable">
+                    <table>
                         <thead>
                             <tr>
                                 <th>Patient Name</th>
-                                <th>Appointment Date</th>
+                                <th>Upcoming Date</th>
                                 <th>Status</th>
-                                <th>Last Visit Date</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Row 1 -->
-                            <tr data-type="routine" data-status="upcoming">
-                                <td>
-                                    <div class="patient-cell">
-                                        <div class="patient-avatar">KP</div>
-                                        <div class="patient-info">
-                                            <span class="patient-name">Kamal Perera</span>
-                                            <span class="patient-meta">ID: CR-1092 • 65 Yrs</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600; color: var(--text-dark);">July 04, 2026</div>
-                                </td>
-                                <td><span class="status-badge status-upcoming">Pending</span></td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">June 15,
-                                        2026</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="appointment-details.html" class="btn btn-outline"
-                                            style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View
-                                            Details</a>
-                                    </div>
+                        <tbody id="upcomingTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center; color: var(--text-muted)">Loading upcoming...
                                 </td>
                             </tr>
-
-                            <!-- Row 2 -->
-                            <tr data-type="followup" data-status="upcoming">
-                                <td>
-                                    <div class="patient-cell">
-                                        <img src="https://ui-avatars.com/api/?name=Ayesha+Mendis&background=d1f2eb&color=0f766e"
-                                            class="patient-avatar" alt="Ayesha">
-                                        <div class="patient-info">
-                                            <span class="patient-name">Ayesha Mendis</span>
-                                            <span class="patient-meta">ID: CR-8830 • 42 Yrs</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600; color: var(--text-dark);">July 04, 2026</div>
-                                </td>
-                                <td><span class="status-badge status-upcoming">Pending</span></td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">June 29,
-                                        2026</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="appointment-details.html" class="btn btn-outline"
-                                            style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View
-                                            Details</a>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 3 -->
-                            <tr data-type="routine" data-status="completed">
-                                <td>
-                                    <div class="patient-cell">
-                                        <div class="patient-avatar"
-                                            style="background: var(--bg-page); color: var(--text-muted);">SJ</div>
-                                        <div class="patient-info">
-                                            <span class="patient-name">Sunil Jayasooriya</span>
-                                            <span class="patient-meta">ID: CR-1102 • 28 Yrs</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 600; color: var(--text-dark);">July 04, 2026</div>
-                                </td>
-                                <td><span class="status-badge status-completed"><i class="bi bi-check2-all"></i>
-                                        Completed</span></td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-muted); font-weight: 500;">May 10,
-                                        2026</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <a href="appointment-details.html" class="btn btn-outline"
-                                            style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View
-                                            Details</a>
-                                    </div>
-                                </td>
-                            </tr>
-
                         </tbody>
                     </table>
                 </div>
             </div>
 
+            <div class="panel" id="panelCompleted" style="display: none;">
+                <div class="panel-header">
+                    <h2 class="panel-title"><i class="bi bi-check-circle-fill" style="color: var(--success)"></i>
+                        Completed Visits</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Patient Name</th>
+                                <th>Conclusion Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="completedTableBody">
+                            <tr>
+                                <td colspan="4" style="text-align:center; color: var(--text-muted)">Loading completed...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </main>
 
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            sidebar.classList.toggle('open');
+        function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+        function switchTab(tabId) {
+            if (tabId === 'upcoming') {
+                document.getElementById('panelUpcoming').style.display = 'block';
+                document.getElementById('panelCompleted').style.display = 'none';
+
+                document.getElementById('tabUpcoming').classList.replace('btn-outline', 'btn-primary');
+                document.getElementById('tabCompleted').classList.replace('btn-primary', 'btn-outline');
+            } else {
+                document.getElementById('panelUpcoming').style.display = 'none';
+                document.getElementById('panelCompleted').style.display = 'block';
+
+                document.getElementById('tabCompleted').classList.replace('btn-outline', 'btn-primary');
+                document.getElementById('tabUpcoming').classList.replace('btn-primary', 'btn-outline');
+            }
         }
 
-        function filterAppointments() {
-            const typeFilter = document.getElementById('typeFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            const rows = document.querySelectorAll('#appointmentsTable tbody tr');
+        document.addEventListener('DOMContentLoaded', () => {
+            const userFullName = localStorage.getItem('userFullName');
+            if (userFullName) {
+                const docNames = document.querySelectorAll('.doctor-info h4');
+                docNames.forEach(n => n.textContent = 'Dr. ' + userFullName);
+                const avatars = document.querySelectorAll('.doctor-profile img');
+                avatars.forEach(img => img.src = `https://ui-avatars.com/api/?name=${encodeURIComponent('Dr ' + userFullName)}&background=0f766e&color=fff`);
+            }
 
-            rows.forEach(row => {
-                const rowType = row.getAttribute('data-type');
-                const rowStatus = row.getAttribute('data-status');
+            const doctorId = localStorage.getItem('userId');
+            if (!doctorId) return;
 
-                const typeMatch = (typeFilter === 'all' || typeFilter === rowType);
-                const statusMatch = (statusFilter === 'all' || statusFilter === rowStatus);
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/doctor/${doctorId}/appointments`)
+                .then(res => res.json())
+                .then(data => {
+                    document.getElementById('mTotal').textContent = data.totalToday < 10 ? '0' + data.totalToday : data.totalToday;
+                    document.getElementById('mPending').textContent = data.pendingToday < 10 ? '0' + data.pendingToday : data.pendingToday;
+                    document.getElementById('mCompleted').textContent = data.completedToday < 10 ? '0' + data.completedToday : data.completedToday;
 
-                if (typeMatch && statusMatch) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
+                    renderTable('upcomingTableBody', data.upcomingVisits, 'status-upcoming', 'Pending');
+                    renderTable('completedTableBody', data.completedVisits, 'status-completed', 'Completed');
+                })
+                .catch(err => {
+                    console.error("API error", err);
+                    document.getElementById('upcomingTableBody').innerHTML = '<tr><td colspan="4" style="text-align:center; color: var(--danger)">Failed to load data.</td></tr>';
+                });
+        });
+
+        function renderTable(tbodyId, rows, badgeClass, badgeText) {
+            const tbody = document.getElementById(tbodyId);
+            tbody.innerHTML = '';
+
+            if (!rows || rows.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: var(--text-muted)">No ${badgeText.toLowerCase()} records found.</td></tr>`;
+                return;
+            }
+
+            rows.forEach(r => {
+                let init = r.patientName ? r.patientName.substring(0, 2).toUpperCase() : '??';
+
+                let conductAction = (tbodyId === 'upcomingTableBody')
+                    ? `<a href="conduct_visit.html?patientId=${r.patientId}" class="btn btn-primary" style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-file-medical"></i> Conduct Visit</a>`
+                    : '';
+
+                let locationAction = '';
+                if (tbodyId === 'upcomingTableBody') {
+                    const safeGps = r.gpsCoordinates ? r.gpsCoordinates.replace(/'/g, "\\'") : '';
+                    const mapAction = r.gpsCoordinates
+                        ? `onclick="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(r.gpsCoordinates)}', '_blank')"`
+                        : `onclick="alert('No GPS coordinates assigned.')"`;
+                    locationAction = `<button class="btn btn-outline" ${mapAction} style="padding: 6px 12px; font-size: 12px; margin-right: 8px;"><i class="bi bi-geo-alt-fill"></i> View Location</button>`;
                 }
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="patient-cell">
+                            <div class="patient-avatar">${init}</div>
+                            <div class="patient-info">
+                                <span class="patient-name">${r.patientName}</span>
+                                <span class="patient-meta">ID: PT-${r.patientId}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight: 600; color: var(--text-dark);">${r.appointmentDate}</div>
+                    </td>
+                    <td><span class="status-badge ${badgeClass}">${badgeText}</span></td>
+                    <td>
+                        <div class="actions-cell">
+                            ${locationAction}
+                            ${conductAction}
+                            <a href="patient-details.html?patientId=${r.patientId}" class="btn btn-outline"
+                                style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View Profile</a>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
             });
         }
     </script>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModalOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+        <div id="logoutModal"
+            style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+            <h3 style="font-size:22px; font-weight:800; color:#1e293b; margin-bottom:12px;">Confirm Logout</h3>
+            <p style="font-size:15px; color:#64748b; margin-bottom:32px; font-weight:500;">Are you sure you want to
+                securely log out of the system?</p>
+            <div style="display:flex; gap:16px;">
+                <button type="button" onclick="closeLogoutModal()" class="btn btn-outline"
+                    style="flex:1;">Cancel</button>
+                <button type="button" onclick="confirmLogout()" class="btn btn-primary"
+                    style="flex:1; background-color: #ef4444; border-color: #ef4444;">Log Out</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        function showLogoutModal(e) {
+            if (e) e.preventDefault();
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.style.opacity = '1';
+            modal.style.transform = 'scale(1) translateY(0)';
+        }
+        function closeLogoutModal() {
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.opacity = '0';
+            modal.style.transform = 'scale(0.85) translateY(20px)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+        }
+    </script>
+   
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fn = localStorage.getItem('userFullName');
+            if (fn) {
+                document.querySelectorAll('.doctor-info h4').forEach(el => el.textContent = 'Dr. ' + fn);
+            }
+            const pp = localStorage.getItem('profilePhoto');
+            if (pp) {
+                document.querySelectorAll('.doctor-profile img').forEach(el => el.src = pp);
+            }
+        });
+    </script>
+
+    <!-- RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .mobile-close-btn {
+                display: block !important;
+            }
+
+            .mobile-toggle {
+                display: block !important;
+            }
+
+            .header-search {
+                display: none !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .metrics-grid,
+            .form-grid,
+            .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        </style>
+
+
+
+    <script>
+        function toggleNotifications() {
+            document.getElementById('notificationDropdown').classList.toggle('show');
+        }
+
+        document.addEventListener('click', function (e) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function setupNotifications(userId) {
+            const listElement = document.getElementById('notificationList');
+            const badgeElement = document.querySelector('.notification-badge');
+
+            if (!listElement) return;
+
+            // Optional custom callback if page is notifications.html
+            const isFullPage = typeof fetchAllNotifications === 'function';
+
+            function fetchDropdown() {
+                fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
+                    .then(res => res.json())
+                    .then(data => {
+                        listElement.innerHTML = '';
+                        let count = 0;
+
+                        const notifs = data.notifications || [];
+                        if (notifs.length > 0) {
+                            notifs.forEach(notif => {
+
+                                const item = document.createElement('div');
+                                item.className = 'notification-item';
+                                if (!notif.read) item.style.background = '#f8fafc';
+
+                                let colorClass = 'blue';
+                                let iconHTML = '<i class="bi bi-info-circle"></i>';
+                                if (notif.type === 'ALERT' || notif.type === 'EMERGENCY') { colorClass = 'orange'; iconHTML = '<i class="bi bi-exclamation-triangle"></i>'; }
+                                else if (notif.type === 'SUCCESS') { colorClass = 'green'; iconHTML = '<i class="bi bi-check-circle"></i>'; }
+                                else if (notif.type === 'WARNING') { colorClass = 'orange'; iconHTML = '<i class="bi bi-shield-exclamation"></i>'; }
+
+                                item.innerHTML = `
+                                    <div class="noti-icon ${colorClass}">${iconHTML}</div>
+                                    <div class="noti-content" style="flex-grow: 1;">
+                                        <h4>${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                        <p style="font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                        <span class="noti-time">${new Date(notif.createdAt).toLocaleString()}</span>
+                                    </div>
+                                    ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                                `;
+
+                                item.addEventListener('click', () => {
+                                    if (!notif.read) {
+                                        fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                            .then(() => {
+                                                fetchDropdown();
+                                                if (isFullPage) fetchAllNotifications(userId);
+                                            });
+                                    }
+                                });
+                                listElement.appendChild(item);
+                            });
+                        } else {
+                            listElement.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">No new notifications</div>';
+                        }
+
+                        if (badgeElement) { badgeElement.textContent = data.unreadCount || 0; badgeElement.style.display = (data.unreadCount > 0) ? 'flex' : 'none'; }
+                    });
+            }
+            fetchDropdown();
+            window.refreshDoctorDropdown = fetchDropdown;
+        }
+
+        function markAllNotificationsAsRead() {
+            const userId = localStorage.getItem('userId');
+            if (!userId) return;
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/read-all`, { method: 'PUT' })
+                .then(() => {
+                    if (window.refreshDoctorDropdown) window.refreshDoctorDropdown();
+                    if (typeof fetchAllNotifications === 'function') fetchAllNotifications(userId);
+                });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const userId = localStorage.getItem('userId');
+            if (userId) setupNotifications(userId);
+        });
+    </script>
+
 </body>
 
 </html>
-
-

@@ -2,6 +2,27 @@
 <html lang="en">
 
 <head>
+    <!-- Core Session Manager -->
+    <script>
+        (function () {
+            function enforceProtectedSession() {
+                const userId = localStorage.getItem('userId');
+                const role = localStorage.getItem('userRole');
+                if (!userId || !role) {
+                    const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+                    window.location.replace(targetLogin);
+                }
+            }
+            enforceProtectedSession();
+            window.addEventListener('pageshow', function (event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                    enforceProtectedSession();
+                }
+            });
+        })();
+    </script>
+
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Manage Doctors</title>
@@ -13,12 +34,11 @@
 
     <style>
         :root {
-            /* CareReach Theme Colors */
+
             --primary: #0f766e;
             --primary-hover: #0a5c56;
             --primary-light: #ccfbf1;
 
-            /* Sidebar Specific Colors (Dark Highlighted) */
             --sidebar-bg: #042f2e;
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
@@ -31,7 +51,6 @@
             --text-muted: #64748b;
             --border: #e2e8f0;
 
-            /* Status Colors */
             --danger: #ef4444;
             --danger-bg: #fef2f2;
             --warning: #f59e0b;
@@ -60,7 +79,6 @@
             overflow-x: hidden;
         }
 
-        /* --- SIDEBAR --- */
         .sidebar {
             width: var(--sidebar-width);
             background-color: var(--sidebar-bg);
@@ -108,6 +126,14 @@
             flex-direction: column;
             gap: 4px;
             overflow-y: auto;
+   
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+     
+        .sidebar-menu::-webkit-scrollbar {
+            display: none;
         }
 
         .menu-title {
@@ -604,7 +630,8 @@
             border-color: rgba(239, 68, 68, 0.2);
         }
 
-        .mobile-toggle {
+        .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
             display: none;
             font-size: 24px;
             cursor: pointer;
@@ -625,6 +652,7 @@
                 margin-left: 0;
             }
 
+            .mobile-close-btn { display: block !important; }
             .mobile-toggle {
                 display: block;
             }
@@ -656,32 +684,279 @@
                 flex: 1;
             }
         }
-    
+
         /* Notifications */
-        .notification-wrapper { position: relative; }
-        .notification-icon-bell { font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative; text-decoration: none; display: flex; align-items: center; justify-content: center; }
-        .notification-icon-bell:hover { color: var(--primary); }
-        .notification-badge-new { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
-        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; overflow: hidden; text-align: left; }
-        .notification-dropdown.show { display: block; }
-        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .notification-list { max-height: 360px; overflow-y: auto; }
-        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; }
-        .notification-item:hover { background: var(--bg-page); }
-        .notification-item:last-child { border-bottom: none; }
-        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
-        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
-    </style>
+        .notification-wrapper {
+            position: relative;
+        }
+
+        .notification-icon-bell {
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+            position: relative;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .notification-icon-bell:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge-new {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 320px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 360px;
+            overflow-y: auto;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        /* Modals */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            z-index: 1000;
+            padding: 20px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border-radius: 16px;
+            padding: 32px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            margin-top: 5vh;
+            animation: modalFadeIn 0.3s ease-out;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-box h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 6px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s;
+            background: var(--bg-page);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+            background: white;
+        }
+    
+        </style>
+<style>
+
+    /*CareReach Master Mobile Responsiveness */
+    @media (max-width: 768px) {
+        * { box-sizing: border-box !important; }
+        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
+        .main-content { margin-left: 0 !important; width: 100% !important; }
+        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
+        .sidebar.open { transform: translateX(0); }
+        
+       
+        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
+        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
+        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
+        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
+        
+        
+        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
+        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
+        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
+        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
+        .map-search-bar { flex-direction: column !important; }
+        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
+        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
+        .map-modal-header { flex-wrap: nowrap !important; }
+        .close-map-btn { width: auto !important; padding: 10px !important; }
+        
+        
+        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
+        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
+        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
+        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
+        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
+        .panel-body button { width: 100% !important; margin-top: 10px !important; }
+        
+       
+        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        td, th { white-space: nowrap !important; }
+        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
+        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
+        .header-search { display: none !important; }
+        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
+        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
+        .user-profile { padding-left: 10px !important; border-left: none !important; }
+        .notification-wrapper { flex-shrink: 0 !important; }
+        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
+    }
+
+</style>
 </head>
 
 <body>
 
     <aside class="sidebar" id="sidebar">
+        <!-- MOBILE CLOSE BUTTON -->
+        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
-            CARE<span>REACH</span>
+            <div><div style="line-height: 1.2;">CARE<span>REACH</span></div><div style="font-size: 11px; font-weight: 500; color: #5eead4; opacity: 0.7; letter-spacing: 0.3px;">Admin Control Center</div></div>
         </div>
 
         <nav class="sidebar-menu">
@@ -691,14 +966,14 @@
             </a>
             <a href="emergency.html" class="menu-item">
                 <i class="bi bi-exclamation-triangle"></i> Emergencies
-                <span class="badge-alert">2 Active</span>
+                
             </a>
 
             <div class="menu-title">Network Management</div>
             <a href="patients.html" class="menu-item">
                 <i class="bi bi-person-rolodex"></i> Patients
             </a>
-            <!-- Active State moved to Doctors -->
+  
             <a href="doctors.html" class="menu-item active">
                 <i class="bi bi-heart-pulse"></i> Doctors
             </a>
@@ -719,6 +994,11 @@
             <a href="reports.html" class="menu-item">
                 <i class="bi bi-file-earmark-text"></i> Reports
             </a>
+
+            <div class="menu-title" style="margin-top:auto;">Account</div>
+            <a href="#" class="menu-item" onclick="logout()" style="color: #fca5a5; margin-bottom: 24px;">
+                <i class="bi bi-box-arrow-left" style="color: #fca5a5;"></i> Logout
+            </a>
         </nav>
     </aside>
 
@@ -734,7 +1014,7 @@
             </div>
 
             <div class="header-actions">
-                                <!-- Notifications Icon -->
+                <!-- Notifications Icon -->
                 <div class="notification-wrapper">
                     <div class="notification-icon-bell" onclick="toggleNotifications()" title="Notifications">
                         <i class="bi bi-bell"></i>
@@ -743,11 +1023,14 @@
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="notification-header">
                             <h3>Notifications</h3>
-                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark all read</a>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark
+                                all read</a>
                         </div>
                         <div class="notification-list">
                             <div class="notification-item">
-                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i class="bi bi-calendar-event"></i></div>
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i
+                                        class="bi bi-calendar-event"></i></div>
                                 <div class="noti-content">
                                     <h4>New Registration</h4>
                                     <p>Dr. Silva has submitted registration for approval.</p>
@@ -756,12 +1039,14 @@
                             </div>
                         </div>
                         <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
-                            <a href="notifications.html" style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See all notifications</a>
+                            <a href="notifications.html"
+                                style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See
+                                all notifications</a>
                         </div>
                     </div>
                 </div>
 
-                <a href="profile.html" class="admin-profile">
+                <a href="settings.html" class="admin-profile">
                     <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
                     <div class="admin-info">
                         <h4>System Admin</h4>
@@ -780,34 +1065,46 @@
                     <p>Manage registered doctors, specialties, and their current availability status.</p>
                 </div>
                 <div>
-                    <a href="add_doctor.html" class="btn btn-primary" style="color: #e2e8f0;"><i
-                            class="bi bi-person-plus"></i> Add New Doctor</a>
+                    <button class="btn btn-primary" style="color: #e2e8f0; border:none;" onclick="openDoctorModal()">
+                        <i class="bi bi-person-plus"></i> Add New Doctor
+                    </button>
                 </div>
             </div>
 
-            <!-- Metrics Grid for Doctors -->
+ 
             <div class="metrics-grid">
                 <div class="metric-card">
                     <div class="metric-icon icon-blue"><i class="bi bi-people-fill"></i></div>
                     <div class="metric-info">
-                        <h3>156</h3>
+                        <h3 id="doctorCount">0</h3>
                         <p>Total Doctors</p>
                     </div>
                 </div>
             </div>
 
-            <!-- Data Table Panel -->
+  
             <div class="panel">
                 <div class="panel-header">
                     <h2 class="panel-title">Registered Doctors</h2>
-                    <div class="filter-group">
-                        <select class="filter-select">
+                    <div class="filter-group" style="display: flex; gap: 12px;">
+                        <select class="filter-select" id="specialtyFilter" onchange="applyDoctorFilters()">
                             <option value="all">All Specialties</option>
-                            <option value="cardiology">Cardiology</option>
-                            <option value="pediatrics">Pediatrics</option>
-                            <option value="neurology">Neurology</option>
-                            <option value="general">General Practice</option>
+                            <option value="Cardiology">Cardiology</option>
+                            <option value="Pediatrics">Pediatrics</option>
+                            <option value="Neurology">Neurology</option>
+                            <option value="General Practice">General Practice</option>
+                            <!-- We can also add others dynamically or keep it generic -->
                         </select>
+                        <div class="custom-select-wrapper" style="width: 200px;">
+                            <input type="text" id="adminDsSearch" class="filter-select"
+                                placeholder="Divisional Secretariat" data-value="all" autocomplete="off"
+                                onfocus="showAdminDsDropdown()" oninput="filterAdminDsDropdown()">
+                            <div class="custom-select-dropdown" id="adminDsDropdown">
+                                <div class="custom-select-option"
+                                    onclick="selectAdminDs('all', 'Divisional Secretariat')">Divisional Secretariat
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -822,186 +1119,1667 @@
                                 <th>Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <!-- Row 1 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <div class="profile-avatar">RK</div>
-                                        <div>
-                                            <span class="profile-name">Dr. Ravi Kumar</span>
-                                            <span class="profile-specialty">Cardiologist • DOC-0192</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> r.kumar@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 77 123 4567</span>
-                                    </div>
-                                </td>
-                                <td>Colombo General<br><span style="font-size: 12px; color: var(--text-muted);">Western
-                                        Province</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Colombo Division</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Western Province</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 2 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <img src="https://ui-avatars.com/api/?name=Sarah+Fernando&background=d1f2eb&color=0f766e"
-                                            alt="Avatar" class="profile-avatar">
-                                        <div>
-                                            <span class="profile-name">Dr. Sarah Fernando</span>
-                                            <span class="profile-specialty">Pediatrician • DOC-0441</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> s.fernando@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 71 987 6543</span>
-                                    </div>
-                                </td>
-                                <td>Kandy Teaching Hospital<br><span
-                                        style="font-size: 12px; color: var(--text-muted);">Central Province</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Kandy Division</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Central Province</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 3 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <div class="profile-avatar">AR</div>
-                                        <div>
-                                            <span class="profile-name">Dr. Ahamed Rizvi</span>
-                                            <span class="profile-specialty">Neurologist • DOC-1120</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> a.rizvi@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 76 555 1234</span>
-                                    </div>
-                                </td>
-                                <td>National HQ Dispatch<br><span style="font-size: 12px; color: var(--text-muted);">All
-                                        Regions</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">National HQ</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">All Regions</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <!-- Row 4 -->
-                            <tr>
-                                <td>
-                                    <div class="profile-cell">
-                                        <div class="profile-avatar">MJ</div>
-                                        <div>
-                                            <span class="profile-name">Dr. Maya Jayasuriya</span>
-                                            <span class="profile-specialty">General Practice • DOC-2055</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="contact-info">
-                                        <span><i class="bi bi-envelope"></i> m.jayasuriya@carereach.lk</span>
-                                        <span><i class="bi bi-telephone"></i> +94 70 222 3344</span>
-                                    </div>
-                                </td>
-                                <td>Karapitiya Hospital<br><span
-                                        style="font-size: 12px; color: var(--text-muted);">Southern Province</span></td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Galle Division</div>
-                                    <div style="font-size: 12px; color: var(--text-muted);">Southern Province</div>
-                                </td>
-                                <td>
-                                    <div class="actions-cell">
-                                        <button class="icon-btn" title="View Profile"><i class="bi bi-eye"></i></button>
-                                        <button class="icon-btn" title="Edit Doctor"><i
-                                                class="bi bi-pencil-square"></i></button>
-                                        <button class="icon-btn delete" title="Remove Doctor"><i
-                                                class="bi bi-trash"></i></button>
-                                    </div>
-                                </td>
-                            </tr>
-
+                        <tbody id="doctorTableBody">
+                            <!-- Dynamic rows will inject here -->
                         </tbody>
                     </table>
-                </div>
-
-                <!-- Simple Pagination Example -->
-                <div
-                    style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
-                    <p style="font-size: 13px; color: var(--text-muted);">Showing 1 to 4 of 156 doctors</p>
-                    <div style="display: flex; gap: 8px;">
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;"
-                            disabled>Previous</button>
-                        <button class="btn btn-primary" style="padding: 6px 12px; font-size: 13px;">1</button>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">2</button>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">3</button>
-                        <button class="btn btn-outline" style="padding: 6px 12px; font-size: 13px;">Next</button>
-                    </div>
-                </div>
+                </div>             
 
             </div>
 
         </div>
     </main>
 
+    <!-- Modals -->
+    <style>
+        .hf-modal {
+            max-width: 900px !important;
+            padding: 0 !important;
+            overflow: hidden !important;
+        }
+
+        .hf-modal-header {
+            background: linear-gradient(135deg, #f0fbf9 0%, #e0f6f2 100%);
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 1px solid var(--border);
+            position: relative;
+        }
+
+
+
+        .hf-icon-box {
+            background: var(--primary);
+            color: white;
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+        }
+
+        .hf-header-text h3 {
+            font-size: 24px !important;
+            font-weight: 800 !important;
+            color: var(--text-dark) !important;
+            margin: 0 0 4px 0 !important;
+        }
+
+        .hf-header-text p {
+            margin: 0;
+            color: var(--text-normal);
+            font-size: 14px;
+        }
+
+        .hf-modal-body {
+            padding: 32px 40px;
+            max-height: 75vh;
+            overflow-y: auto;
+        }
+
+        .hf-section {
+            display: flex;
+            gap: 32px;
+            margin-bottom: 40px;
+        }
+
+        .hf-section-icon {
+            background: var(--primary-light);
+            color: var(--primary);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+            margin-top: -4px;
+        }
+
+        .hf-section-content {
+            flex: 1;
+        }
+
+        .hf-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 2px;
+        }
+
+        .hf-section-subtitle {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hf-grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .hf-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 200px;
+            gap: 24px;
+        }
+
+        .hf-fields-area {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .hf-form-group {
+            margin-bottom: 0;
+        }
+
+        .hf-form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .hf-req {
+            color: #ef4444;
+        }
+
+        .hf-input-wrapper {
+            position: relative;
+        }
+
+        .hf-input-wrapper i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            font-size: 16px;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .hf-input-wrapper input,
+        .hf-input-wrapper select {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.2s;
+            background: #ffffff;
+        }
+
+        .hf-input-wrapper input::placeholder {
+            color: #94a3b8;
+        }
+
+        .hf-input-wrapper input:focus,
+        .hf-input-wrapper select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+        }
+
+        .hf-photo-upload {
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            text-align: center;
+            background: #f8fafc;
+            cursor: pointer;
+            transition: all 0.2s;
+            height: 100%;
+            grid-row: span 3;
+        }
+
+        .hf-photo-upload:hover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+
+        .hf-photo-upload:hover {
+            border-color: var(--primary);
+            background: #f0fdf4;
+        }
+
+        .hf-help-text {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            display: block;
+        }
+
+        .hf-info-banner {
+            display: flex;
+            background: #f0fdf4;
+            border-radius: 8px;
+            margin-bottom: 32px;
+        }
+
+        .hf-info-item {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            gap: 16px;
+            border-right: 1px solid rgba(15, 118, 110, 0.1);
+        }
+
+        .hf-info-item:last-child {
+            border-right: none;
+        }
+
+        .hf-info-item i {
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .hf-info-item h6 {
+            margin: 0 0 4px 0;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .hf-info-item p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        .hf-modal-footer {
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+
+        .hf-btn-cancel {
+            padding: 12px 24px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            font-weight: 600;
+            color: var(--text-dark);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .hf-btn-cancel:hover {
+            background: var(--bg-page);
+        }
+
+        .hf-btn-submit {
+            padding: 12px 24px;
+            border: none;
+            background: var(--primary);
+            border-radius: 8px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+            transition: all 0.2s;
+        }
+
+        .hf-btn-submit:hover {
+            background: var(--primary-hover);
+        }
+
+        .val-err {
+            display: none;
+            color: #ef4444;
+            font-size: 11px;
+            margin-top: 4px;
+            margin-left: 4px;
+            font-weight: 500;
+        }
+
+        .custom-select-wrapper {
+            position: relative;
+        }
+
+        .custom-select-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1050;
+            max-height: 180px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 4px;
+            padding: 4px;
+        }
+
+        .custom-select-dropdown.show {
+            display: block;
+        }
+
+        .custom-select-option {
+            padding: 8px 12px;
+            font-size: 13px;
+            cursor: pointer;
+            border-radius: 4px;
+            color: var(--text-dark);
+            transition: background 0.1s;
+        }
+
+        .custom-select-option:hover {
+            background: var(--bg-page);
+            color: var(--primary);
+            font-weight: 500;
+        }
+    
+        </style>
+
+    <div class="modal-overlay" id="doctorModal">
+        <div class="modal-box hf-modal">
+
+            <div class="hf-modal-header">
+                <div class="hf-icon-box">
+                    <i class="bi bi-person-plus"></i>
+                </div>
+                <div class="hf-header-text">
+                    <h3>Register New Doctor</h3>
+                    <p>Enter the doctor's identification and professional career details.</p>
+                </div>
+                <button class="icon-btn"
+                    style="position: absolute; right: 24px; top: 50%; transform: translateY(-50%); background: white; border-radius: 50%; box-shadow: 0 2px 8px rgba(0,0,0,0.05); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); transition: all 0.2s;"
+                    onclick="closeModal('doctorModal')"
+                    onmouseover="this.style.color='var(--text-dark)'; this.style.transform='translateY(-50%) scale(1.05)'"
+                    onmouseout="this.style.color='var(--text-muted)'; this.style.transform='translateY(-50%) scale(1)'">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="hf-modal-body">
+
+                <!-- Section 1 -->
+                <div class="hf-section">
+                    <div class="hf-section-icon"><i class="bi bi-person-badge"></i></div>
+                    <div class="hf-section-content">
+                        <div class="hf-section-title">Personal Identity</div>
+                        <div class="hf-section-subtitle">Basic information about the doctor</div>
+
+                        <div>
+                            <div class="hf-grid-2">
+                                <div class="hf-form-group">
+                                    <label>Full Name <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper">
+                                        <i class="bi bi-person"></i>
+                                        <input type="text" id="dmName" placeholder="e.g. Dr. Nimal Perera">
+                                    </div>
+                                </div>
+                                <div class="hf-form-group">
+                                    <label>Email Address <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper">
+                                        <i class="bi bi-envelope"></i>
+                                        <input type="email" id="dmEmail" placeholder="e.g. nimal.perera@gmail.com"
+                                            onkeyup="validateEmail()">
+                                    </div>
+                                    <span id="dmEmailErr" class="val-err"></span>
+                                </div>
+                                <div class="hf-form-group">
+                                    <label>NIC Number <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper">
+                                        <i class="bi bi-credit-card-2-front"></i>
+                                        <input type="text" id="dmNic" placeholder="e.g. 199012345678"
+                                            onkeyup="validateNic()">
+                                    </div>
+                                    <span id="dmNicErr" class="val-err"></span>
+                                </div>
+                                <div class="hf-form-group">
+                                    <label>Phone Number <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper">
+                                        <i class="bi bi-telephone"></i>
+                                        <input type="text" id="dmPhone" placeholder="e.g. 077 123 4567"
+                                            onkeyup="validatePhone()">
+                                    </div>
+                                    <span id="dmPhoneErr" class="val-err"></span>
+                                </div>
+                                <div class="hf-form-group" style="grid-column: span 2;">
+                                    <label>Address <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper">
+                                        <i class="bi bi-geo-alt"></i>
+                                        <input type="text" id="dmAddress" placeholder="Enter complete address">
+                                    </div>
+                                </div>
+                                <div class="hf-form-group">
+                                    <label>Divisional Secretariat <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper custom-select-wrapper">
+                                        <i class="bi bi-pin-map"></i>
+                                        <input type="text" id="dmDsSearch" placeholder="Search Secretariat..."
+                                            autocomplete="off">
+                                        <i class="bi bi-chevron-down"
+                                            style="left: auto; right: 14px; font-size: 12px; pointer-events: none;"></i>
+                                        <input type="hidden" id="dmDsId">
+                                        <div class="custom-select-dropdown" id="dsDropdown"></div>
+                                    </div>
+                                </div>
+                                <div class="hf-form-group">
+                                    <label>District <span class="hf-req">*</span></label>
+                                    <div class="hf-input-wrapper custom-select-wrapper">
+                                        <i class="bi bi-compass"></i>
+                                        <input type="text" id="dmDistrictSearch" placeholder="Search District..."
+                                            autocomplete="off">
+                                        <i class="bi bi-chevron-down"
+                                            style="left: auto; right: 14px; font-size: 12px; pointer-events: none;"></i>
+                                        <div class="custom-select-dropdown" id="distDropdown"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="hf-section">
+                    <div class="hf-section-icon"><i class="bi bi-briefcase"></i></div>
+                    <div class="hf-section-content">
+                        <div class="hf-section-title">Professional Career Details</div>
+                        <div class="hf-section-subtitle">Information about the doctor's professional background
+                        </div>
+
+                        <div class="hf-grid-2">
+                            <div class="hf-form-group">
+                                <label>Specialization <span class="hf-req">*</span></label>
+                                <div class="hf-input-wrapper">
+                                    <i class="bi bi-stethoscope"></i>
+                                    <select id="dmSpecialization">
+                                        <option value="">Select Specialization</option>
+                                        <option value="Cardiologist">Cardiologist</option>
+                                        <option value="Pediatrician">Pediatrician</option>
+                                        <option value="Neurologist">Neurologist</option>
+                                        <option value="General Practitioner">General Practitioner</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hf-form-group">
+                                <label>Hospital / Clinic Name <span class="hf-req">*</span></label>
+                                <div class="hf-input-wrapper">
+                                    <i class="bi bi-building-add"></i>
+                                    <select id="dmHospital">
+                                        <option value="">Select Hospital / Clinic</option>
+                                        <option value="Colombo General">Colombo General</option>
+                                        <option value="Kandy Teaching">Kandy Teaching</option>
+                                        <option value="Karapitiya Hospital">Karapitiya Hospital</option>
+                                        <option value="Private Clinic">Private Clinic</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="hf-form-group">
+                                <label>Qualification(s) <span class="hf-req">*</span></label>
+                                <div class="hf-input-wrapper">
+                                    <i class="bi bi-mortarboard"></i>
+                                    <input type="text" id="dmQualification" placeholder="e.g. MBBS, MD, MRCP...">
+                                </div>
+                                <span class="hf-help-text">Separate multiple qualifications with commas</span>
+                            </div>
+                            <div class="hf-form-group">
+                                <label>Experience (Years) <span class="hf-req">*</span></label>
+                                <div class="hf-input-wrapper">
+                                    <i class="bi bi-calendar-event"></i>
+                                    <input type="number" id="dmExperience" placeholder="e.g. 5" onkeyup="validateExp()">
+                                </div>
+                                <span id="dmExpErr" class="val-err" style="margin-top:-2px;"></span>
+                                <span class="hf-help-text">Total years of professional experience</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Banner -->
+                <div class="hf-info-banner">
+                    <div class="hf-info-item">
+                        <i class="bi bi-shield-check"></i>
+                        <div>
+                            <h6>Secure & Verified</h6>
+                            <p>All doctor information is securely stored and verified</p>
+                        </div>
+                    </div>
+                    <div class="hf-info-item">
+                        <i class="bi bi-people"></i>
+                        <div>
+                            <h6>Better Patient Care</h6>
+                            <p>Accurate information helps deliver better healthcare services</p>
+                        </div>
+                    </div>
+                    <div class="hf-info-item">
+                        <i class="bi bi-bar-chart"></i>
+                        <div>
+                            <h6>Data Accuracy</h6>
+                            <p>Ensure all details are correct before submitting</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hf-modal-footer">
+                    <button class="hf-btn-cancel" onclick="closeModal('doctorModal')">
+                        <i class="bi bi-x"></i> Cancel
+                    </button>
+                    <button class="hf-btn-submit" onclick="confirmDoctorRegistration()">
+                        <i class="bi bi-check2"></i> Register Doctor
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Modern Loaders -->
+    <div id="modernConfirm" class="modal-overlay" style="align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fef08a; color: #ca8a04; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Confirm Registration</h3>
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;">Are you sure you
+                want to register this doctor? Their system credentials will be auto-generated and emailed immediately.
+            </p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="btn"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 14px; border: 1px solid var(--border); background: white; color: var(--text-dark);"
+                    onclick="closeModal('modernConfirm')">Cancel</button>
+                <button class="btn"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 14px; border: none; background: var(--primary); color: white;"
+                    onclick="proceedDoctorRegistration()">Yes, Register</button>
+            </div>
+        </div>
+    </div>
+    <div id="modernLoader" class="modal-overlay" style="align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 24px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <div
+                style="width: 40px; height: 40px; border: 4px solid #e2e8f0; border-top: 4px solid var(--primary); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 16px;">
+            </div>
+            <style>
+                @keyframes spin {
+                    0% {
+                        transform: rotate(0deg);
+                    }
+
+                    100% {
+                        transform: rotate(360deg);
+                    }
+                }
+            
+        </style>
+            <h3 style="font-size: 16px; color: var(--text-dark); margin: 0;">Creating Account...</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0 0 0;">Please wait while we secure
+                credentials.</p>
+        </div>
+    </div>
+
+    <div id="modernSuccess" class="modal-overlay" style="align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #dcfce7; color: #16a34a; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-check-circle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Doctor Registered!</h3>
+            <p id="modernSuccessMsg"
+                style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;"></p>
+            <button class="btn btn-primary"
+                style="width: 100%; padding: 10px; border-radius: 8px; font-size: 15px; border:none; color: white;"
+                onclick="closeModal('modernSuccess'); window.location.reload();">Awesome</button>
+        </div>
+    </div>
+
+    <div id="modernError" class="modal-overlay" style="align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-x-circle-fill"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Registration Failed</h3>
+            <p id="modernErrorMsg"
+                style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;"></p>
+            <button class="btn btn-primary"
+                style="width: 100%; padding: 10px; border-radius: 8px; font-size: 15px; background: #dc2626; border: none; color: white;"
+                onclick="closeModal('modernError')">OK</button>
+        </div>
+    </div>
+
+    <div id="deleteDoctorConfirmModal" class="modal-overlay" style="align-items: center; justify-content: center;">
+        <div
+            style="background: white; padding: 32px 40px; border-radius: 12px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 25px rgba(0,0,0,0.1); width: 400px; text-align: center;">
+            <div
+                style="width: 60px; height: 60px; background: #fee2e2; color: #dc2626; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 20px;">
+                <i class="bi bi-trash"></i>
+            </div>
+            <h3 style="font-size: 20px; color: var(--text-dark); margin: 0 0 8px 0;">Remove Doctor</h3>
+            <p style="font-size: 14px; color: var(--text-muted); margin: 0 0 24px 0; line-height: 1.5;">Are you sure you
+                want to remove this doctor from the system? This action cannot be undone.</p>
+            <input type="hidden" id="deleteDoctorId">
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="btn"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 14px; border: 1px solid var(--border); background: white; color: var(--text-dark);"
+                    onclick="closeModal('deleteDoctorConfirmModal')">Cancel</button>
+                <button class="btn"
+                    style="flex: 1; padding: 10px; border-radius: 8px; font-size: 14px; border: none; background: #dc2626; color: white;"
+                    onclick="proceedDeleteDoctor()">Yes, Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Doctor Profile Modal (High Fidelity Redesign) -->
+    <div id="viewDoctorProfileModal" class="modal-overlay">
+        <div class="modal-box hf-modal"
+            style="position: relative; max-width: 900px; width: 95%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; padding: 0; border-radius: 20px; background: #f1f5f9; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+
+            <!-- Header Banner -->
+            <div
+                style="background: #046a62; padding: 32px 40px; position: relative; overflow: hidden; border-bottom: 2px solid white;">
+                <i class="bi bi-heart-pulse"
+                    style="position: absolute; right: 20px; text-shadow: 0 0 40px rgba(255,255,255,0.1); bottom: -30px; font-size: 200px; color: rgba(255,255,255,0.05); z-index: 0; pointer-events: none; transform: rotate(15deg);"></i>
+                <i class="bi bi-stethoscope"
+                    style="position: absolute; right: -20px; top: -30px; font-size: 220px; color: rgba(255,255,255,0.03); z-index: 0; pointer-events: none; transform: rotate(-25deg);"></i>
+
+                <button class="icon-btn"
+                    style="position: absolute; right: 24px; top: 24px; background: #ffffff; border-radius: 50%; border: none; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; color: var(--text-dark); z-index: 100; cursor: pointer; transition: transform 0.2s;"
+                    onmouseover="this.style.transform='scale(1.05)';" onmouseout="this.style.transform='scale(1)';"
+                    onclick="closeModal('viewDoctorProfileModal')">
+                    <i class="bi bi-x-lg" style="font-size: 14px;"></i>
+                </button>
+
+                <div
+                    style="position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center;">
+        
+                    <div style="display: flex; align-items: center; gap: 24px;">
+                        <div style="position: relative;">
+                            <div id="vdpAvatar"
+                                style="width: 120px; height: 120px; border-radius: 50%; background: #ffffff; display: flex; align-items: center; justify-content: center; font-size: 40px; font-weight: 700; color: #046a62; border: 4px solid #34d399; overflow: hidden;">
+                            </div>
+                            <div
+                                style="position: absolute; bottom: 4px; right: 4px; width: 28px; height: 28px; background: #10b981; border: 3px solid white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white;">
+                                <i class="bi bi-check" style="font-size: 18px; font-weight: bold;"></i>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 6px;">
+                            <h3
+                                style="margin: 0; font-size: 26px; color: white; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                                <span id="vdpName"></span>
+                                <i class="bi bi-patch-check-fill" style="color: #60a5fa; font-size: 18px;"></i>
+                            </h3>
+                            <div
+                                style="display: flex; align-items: center; gap: 12px; color: rgba(255,255,255,0.9); font-size: 15px;">
+                                <div style="display: flex; align-items: center; gap: 6px;">
+                                    <i class="bi bi-person-fill" style="color: #6ee7b7;"></i>
+                                    <span id="vdpSpecialty"></span>
+                                </div>
+                            </div>
+                            <div
+                                style="display: inline-flex; align-items: center; gap: 8px; background: rgba(0,0,0,0.15); color: white; padding: 6px 14px; border-radius: 12px; font-size: 12px; font-weight: 600; width: fit-content; margin-top: 8px;">
+                                <i class="bi bi-calendar4"></i> Joined on <span id="vdpCreated"></span>
+                            </div>
+                        </div>
+                    </div>
+
+         
+                    <div style="display: flex; gap: 16px;">
+                        <div
+                            style="background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1); padding: 14px 20px; border-radius: 16px; display: flex; align-items: center; gap: 16px; min-width: 120px;">
+                            <div
+                                style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                                <i class="bi bi-shield-check"></i>
+                            </div>
+                            <div>
+                                <div id="vdpKpiExp" style="font-size: 18px; font-weight: 700; color: white;"></div>
+                                <div
+                                    style="font-size: 11px; color: rgba(255,255,255,0.7); display: flex; flex-direction: column;">
+                                    <span>Years</span><span>Experience</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            style="background: rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.1); padding: 14px 20px; border-radius: 16px; display: flex; align-items: center; gap: 16px; min-width: 150px;">
+                            <div
+                                style="width: 44px; height: 44px; border-radius: 50%; background: rgba(255,255,255,0.1); color: #34d399; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                                <i class="bi bi-people-fill"></i>
+                            </div>
+                            <div>
+                                <div id="vdpKpiSpecialty" style="font-size: 16px; font-weight: 700; color: white;">
+                                </div>
+                                <div style="font-size: 11px; color: rgba(255,255,255,0.7);">Specialization</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        
+            <div style="flex: 1; overflow-y: auto; padding: 32px 40px 48px 40px;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start;">
+
+                    <!-- Column 1: Personal Identity -->
+                    <div
+                        style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #f0fdf4, white); padding: 16px 20px; border-radius: 12px; margin-bottom: 24px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i class="bi bi-person" style="font-size: 24px; color: #046a62;"></i>
+                                <div>
+                                    <h6 style="color: #046a62; font-size: 15px; margin: 0; font-weight: 700;">Personal
+                                        Identity</h6>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Basic information of the
+                                        doctor</div>
+                                </div>
+                            </div>
+                            <i class="bi bi-person-badge" style="font-size: 24px; color: #6ee7b7; opacity: 0.5;"></i>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <!-- Item -->
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 16px;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #e0f2fe; color: #0369a1; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-envelope"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Email
+                                            Address</span>
+                                        <span id="vdpEmail"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item -->
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 16px;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #e0f2fe; color: #0369a1; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-telephone"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Phone
+                                            Number</span>
+                                        <span id="vdpPhone"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item -->
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 16px;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #e0f2fe; color: #0369a1; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-credit-card-2-front"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">National
+                                            Identity Card</span>
+                                        <span id="vdpNic"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item -->
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 16px;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #f1f5f9; color: #475569; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-geo-alt"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Physical
+                                            Address</span>
+                                        <span id="vdpAddress"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item -->
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #f1f5f9; color: #475569; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-building"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Location</span>
+                                        <span id="vdpLocation"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Career Details -->
+                    <div
+                        style="background: white; padding: 24px; border-radius: 16px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); display: flex; flex-direction: column;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #eff6ff, white); padding: 16px 20px; border-radius: 12px; margin-bottom: 24px;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i class="bi bi-briefcase" style="font-size: 24px; color: #1e3a8a;"></i>
+                                <div>
+                                    <h6 style="color: #1e3a8a; font-size: 15px; margin: 0; font-weight: 700;">
+                                        Professional Career</h6>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Work & qualification details
+                                    </div>
+                                </div>
+                            </div>
+                            <i class="bi bi-hospital" style="font-size: 24px; color: #93c5fd; opacity: 0.5;"></i>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 20px;">
+                            <!-- Item -->
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 16px;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-hospital"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Hospital
+                                            / Clinic</span>
+                                        <span id="vdpHospital"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item -->
+                            <div
+                                style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px dashed #f1f5f9; padding-bottom: 16px;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-mortarboard"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Qualifications</span>
+                                        <span id="vdpQual"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Item -->
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; gap: 16px; align-items: center;">
+                                    <div
+                                        style="width: 40px; height: 40px; border-radius: 10px; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                                        <i class="bi bi-award"></i>
+                                    </div>
+                                    <div>
+                                        <span
+                                            style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 600; margin-bottom: 2px;">Experience</span>
+                                        <span id="vdpExp"
+                                            style="font-size: 14px; color: var(--text-dark); font-weight: 700;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
-        // Simple script for mobile sidebar toggle
+        // mobile sidebar toggle
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
         }
-    
+
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
             dropdown.classList.toggle('show');
         }
-        document.addEventListener('click', function(event) {
+
+        document.addEventListener('click', function (event) {
             const wrapper = document.querySelector('.notification-wrapper');
             const dropdown = document.getElementById('notificationDropdown');
             if (wrapper && dropdown && !wrapper.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
+
+        // Modal Controls
+        function openDoctorModal() {
+            document.getElementById('doctorModal').classList.add('active');
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+        }
+
+        let allDistricts = [];
+        let allSecretariats = [];
+
+        async function loadLocationData() {
+            try {
+                const dsRes = await fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/divisional-secretariats');
+                allSecretariats = await dsRes.json();
+
+                const distRes = await fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/districts');
+                allDistricts = await distRes.json();
+            } catch (e) {
+                console.error("Failed loading locations", e);
+            }
+        }
+        loadLocationData();
+
+        const dsSearch = document.getElementById('dmDsSearch');
+        const dsDropdown = document.getElementById('dsDropdown');
+        const distSearch = document.getElementById('dmDistrictSearch');
+        const distDropdown = document.getElementById('distDropdown');
+
+        function renderDropdown(items, dropdownEl, onSelect) {
+            if (items.length === 0) {
+                dropdownEl.innerHTML = '<div style="padding:8px;font-size:12px;color:grey">No results found</div>';
+                return;
+            }
+            dropdownEl.innerHTML = '';
+            items.forEach(item => {
+                let div = document.createElement('div');
+                div.className = 'custom-select-option';
+                div.textContent = item.name;
+                div.onclick = (e) => {
+                    onSelect(item);
+                    dropdownEl.classList.remove('show');
+                };
+                dropdownEl.appendChild(div);
+            });
+        }
+
+        // Divisional Secretariat Logic
+        if (dsSearch) {
+            dsSearch.addEventListener('focus', () => {
+                dsDropdown.classList.add('show');
+                renderDropdown(allSecretariats, dsDropdown, (selected) => {
+                    dsSearch.value = selected.name;
+                    document.getElementById('dmDsId').value = selected.id;
+                    if (selected.districtName) distSearch.value = selected.districtName;
+                });
+            });
+            dsSearch.addEventListener('input', (e) => {
+                dsDropdown.classList.add('show');
+                const q = e.target.value.toLowerCase();
+                const filtered = allSecretariats.filter(s => s.name.toLowerCase().includes(q));
+                renderDropdown(filtered, dsDropdown, (selected) => {
+                    dsSearch.value = selected.name;
+                    document.getElementById('dmDsId').value = selected.id;
+                    if (selected.districtName) distSearch.value = selected.districtName;
+                });
+            });
+        }
+
+        // District Logic
+        if (distSearch) {
+            distSearch.addEventListener('focus', () => {
+                distDropdown.classList.add('show');
+                renderDropdown(allDistricts, distDropdown, (selected) => {
+                    distSearch.value = selected.name;
+                });
+            });
+            distSearch.addEventListener('input', (e) => {
+                distDropdown.classList.add('show');
+                const q = e.target.value.toLowerCase();
+                const filtered = allDistricts.filter(s => s.name.toLowerCase().includes(q));
+                renderDropdown(filtered, distDropdown, (selected) => {
+                    distSearch.value = selected.name;
+                });
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#distDropdown') && e.target !== distSearch && distDropdown) {
+                distDropdown.classList.remove('show');
+            }
+            if (!e.target.closest('#dsDropdown') && e.target !== dsSearch && dsDropdown) {
+                dsDropdown.classList.remove('show');
+            }
+        });
+
+        // Validations
+        function validateEmail() {
+            const el = document.getElementById('dmEmail');
+            const errEl = document.getElementById('dmEmailErr');
+            const val = el.value.trim();
+            if (val && !val.endsWith('@gmail.com')) {
+                errEl.textContent = 'Currently we only support @gmail.com addresses';
+                errEl.style.display = 'block';
+                return false;
+            }
+            errEl.style.display = 'none';
+            return true;
+        }
+
+        function validateNic() {
+            const el = document.getElementById('dmNic');
+            const errEl = document.getElementById('dmNicErr');
+            const val = el.value.trim();
+            const oldRegex = /^[0-9]{9}[vVxX]$/;
+            const newRegex = /^[0-9]{12}$/;
+            if (val && !oldRegex.test(val) && !newRegex.test(val)) {
+                errEl.textContent = 'Invalid NIC format (e.g. 123456789012 or 123456789V)';
+                errEl.style.display = 'block';
+                return false;
+            }
+            errEl.style.display = 'none';
+            return true;
+        }
+
+        function validatePhone() {
+            const el = document.getElementById('dmPhone');
+            const errEl = document.getElementById('dmPhoneErr');
+            const val = el.value.trim();
+            const regex = /^[0-9]{10}$/;
+            if (val && !regex.test(val)) {
+                errEl.textContent = 'Phone number must be exactly 10 digits';
+                errEl.style.display = 'block';
+                return false;
+            }
+            errEl.style.display = 'none';
+            return true;
+        }
+
+        function validateExp() {
+            const el = document.getElementById('dmExperience');
+            const errEl = document.getElementById('dmExpErr');
+            const val = el.value.trim();
+            if (val && (isNaN(val) || parseInt(val) < 0 || parseInt(val) > 70)) {
+                errEl.textContent = 'Please enter a valid number of years';
+                errEl.style.display = 'block';
+                return false;
+            }
+            errEl.style.display = 'none';
+            return true;
+        }
+
+        function confirmDoctorRegistration() {
+            
+            let hasError = false;
+            if (!validateEmail()) hasError = true;
+            if (!validateNic()) hasError = true;
+            if (!validatePhone()) hasError = true;
+            if (!validateExp()) hasError = true;
+
+         
+            const name = document.getElementById('dmName').value.trim();
+            const email = document.getElementById('dmEmail').value.trim();
+            const nic = document.getElementById('dmNic').value.trim();
+
+            if (!name || !email || !nic) {
+                document.getElementById('modernErrorMsg').textContent = 'Please fill in Name, Email, and NIC.';
+                document.getElementById('modernError').classList.add('active');
+                return;
+            }
+
+            if (hasError) return;
+
+            
+            document.getElementById('modernConfirm').classList.add('active');
+        }
+
+        async function proceedDoctorRegistration() {
+            closeModal('modernConfirm');
+            closeModal('doctorModal');
+
+            const name = document.getElementById('dmName').value.trim();
+            const email = document.getElementById('dmEmail').value.trim();
+            const nic = document.getElementById('dmNic').value.trim();
+
+            const payload = {
+                fullName: name,
+                email: email,
+                nic: nic,
+                phone: document.getElementById('dmPhone').value.trim(),
+                address: document.getElementById('dmAddress').value.trim(),
+                divisionalSecretariat: document.getElementById('dmDsSearch').value.trim(),
+                role: 'DOCTOR',
+                specialization: document.getElementById('dmSpecialization').value.trim(),
+                hospitalName: document.getElementById('dmHospital').value.trim(),
+                qualification: document.getElementById('dmQualification').value.trim(),
+                experienceYears: document.getElementById('dmExperience').value ? parseInt(document.getElementById('dmExperience').value) : null
+            };
+
+            document.getElementById('modernLoader').classList.add('active');
+
+            try {
+                const res = await fetch('https://care-reach-host-production.up.railway.app/api/v1/users/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const text = await res.text();
+                document.getElementById('modernLoader').classList.remove('active');
+
+                if (res.ok) {
+                    document.getElementById('modernSuccessMsg').textContent = 'Doctor details saved and credentials emailed to ' + email;
+                    document.getElementById('modernSuccess').classList.add('active');
+                } else {
+                    document.getElementById('modernErrorMsg').textContent = text;
+                    document.getElementById('modernError').classList.add('active');
+                }
+            } catch (err) {
+                document.getElementById('modernLoader').classList.remove('active');
+                document.getElementById('modernErrorMsg').textContent = 'Failed to communicate with API.';
+                document.getElementById('modernError').classList.add('active');
+            }
+        }
+
+        async function fetchAdminDoctors() {
+            try {
+                const res = await fetch('https://care-reach-host-production.up.railway.app/api/v1/admin/doctors');
+                if (!res.ok) return;
+
+                const doctors = await res.json();
+                window.allDoctorsData = doctors;
+
+                // Populate searchable DS dropdown dynamically from Database
+                const dsDropdown = document.getElementById('adminDsDropdown');
+                dsDropdown.innerHTML = `<div class="custom-select-option" onclick="selectAdminDs('all', 'Divisional Secretariat')">Divisional Secretariat</div>`;
+
+                try {
+                    const dsRes = await fetch('https://care-reach-host-production.up.railway.app/api/v1/locations/divisional-secretariats');
+                    if (dsRes.ok) {
+                        const dsList = await dsRes.json();
+                        dsList.forEach(dsObj => {
+                            const opt = document.createElement('div');
+                            opt.className = 'custom-select-option';
+                            opt.textContent = dsObj.name;
+                            opt.onclick = () => selectAdminDs(dsObj.name, dsObj.name);
+                            dsDropdown.appendChild(opt);
+                        });
+                    }
+                } catch (err) {
+                    console.error("Failed to load DS locations for filter:", err);
+                }
+
+                renderDoctors(doctors);
+
+            } catch (e) {
+                console.error('Error fetching doctors', e);
+            }
+        }
+
+        function confirmDeleteDoctor(docId) {
+            document.getElementById('deleteDoctorId').value = docId;
+            document.getElementById('deleteDoctorConfirmModal').classList.add('active');
+        }
+
+        async function proceedDeleteDoctor() {
+            const docId = document.getElementById('deleteDoctorId').value;
+            closeModal('deleteDoctorConfirmModal');
+            document.getElementById('modernLoader').classList.add('active');
+
+            try {
+                const res = await fetch('https://care-reach-host-production.up.railway.app/api/v1/users/' + docId, {
+                    method: 'DELETE'
+                });
+
+                document.getElementById('modernLoader').classList.remove('active');
+
+                if (res.ok) {
+                    document.getElementById('modernSuccessMsg').textContent = 'Doctor has been successfully removed.';
+                    document.getElementById('modernSuccess').classList.add('active');
+                } else {
+                    document.getElementById('modernErrorMsg').textContent = 'Failed to remove doctor. They may have active assignments.';
+                    document.getElementById('modernError').classList.add('active');
+                }
+            } catch (err) {
+                document.getElementById('modernLoader').classList.remove('active');
+                document.getElementById('modernErrorMsg').textContent = 'Error connecting to API.';
+                document.getElementById('modernError').classList.add('active');
+            }
+        }
+
+        function renderDoctors(doctorsList) {
+            const tbody = document.getElementById('doctorTableBody');
+            tbody.innerHTML = '';
+
+            document.getElementById('doctorCount').textContent = doctorsList.length;
+
+            if (doctorsList.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 20px;">No doctors found.</td></tr>';
+                return;
+            }
+
+            doctorsList.forEach(doc => {
+                let initials = doc.fullName.split(' ').map(n => n.trim()[0]).filter(Boolean).join('').substring(0, 2).toUpperCase();
+                let photoHtml = doc.profilePhoto
+                    ? `<img src="${doc.profilePhoto}" alt="Avatar" class="profile-avatar">`
+                    : `<div class="profile-avatar">${initials}</div>`;
+
+                let tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="profile-cell">
+                            ${photoHtml}
+                            <div>
+                                <span class="profile-name">${doc.fullName}</span>
+                                <span class="profile-specialty">${doc.specialization || 'General'} • DOC-00${doc.id}</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="contact-info">
+                            <span><i class="bi bi-envelope"></i> ${doc.email}</span>
+                            <span><i class="bi bi-telephone"></i> ${doc.phone || 'N/A'}</span>
+                        </div>
+                    </td>
+                    <td>${doc.hospitalName || 'Not Assigned'}<br><span style="font-size: 12px; color: var(--text-muted);">${doc.qualification || 'MBBS'} / ${doc.experienceYears || 0} Yrs Exp</span></td>
+                    <td>
+                        <div style="font-weight: 500; color: var(--text-dark);">${doc.divisionalSecretariat || 'N/A'}</div>
+                        <div style="font-size: 12px; color: var(--text-muted);">${doc.district || 'N/A'}</div>
+                    </td>
+                    <td>
+                        <div class="actions-cell">
+                            <button class="icon-btn" title="View Profile" onclick="viewDoctorProfile(${doc.id})"><i class="bi bi-eye"></i></button>
+                            <button class="icon-btn delete" title="Remove Doctor" onclick="confirmDeleteDoctor(${doc.id})"><i class="bi bi-trash"></i></button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function applyDoctorFilters() {
+            if (!window.allDoctorsData) return;
+
+            const specialty = document.getElementById('specialtyFilter').value;
+            const ds = document.getElementById('adminDsSearch').dataset.value || 'all';
+
+            let filtered = window.allDoctorsData;
+
+            if (specialty !== 'all') {
+                filtered = filtered.filter(d => (d.specialization || 'General Practice').toLowerCase() === specialty.toLowerCase());
+            }
+            if (ds !== 'all') {
+                filtered = filtered.filter(d => (d.divisionalSecretariat || '') === ds);
+            }
+
+            renderDoctors(filtered);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchAdminDoctors();
+        });
+
+      
+        function showAdminDsDropdown() {
+            document.getElementById('adminDsDropdown').classList.add('show');
+        }
+
+        function filterAdminDsDropdown() {
+            const query = document.getElementById('adminDsSearch').value.toLowerCase();
+            const opts = document.getElementById('adminDsDropdown').querySelectorAll('.custom-select-option');
+            opts.forEach(opt => {
+                if (opt.textContent.toLowerCase().includes(query)) {
+                    opt.style.display = 'block';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        }
+
+        function selectAdminDs(val, label) {
+            const inp = document.getElementById('adminDsSearch');
+            if (val === 'all') {
+                inp.value = '';
+                inp.placeholder = 'Divisional Secretariat';
+                inp.dataset.value = 'all';
+            } else {
+                inp.value = label;
+                inp.dataset.value = val;
+            }
+            document.getElementById('adminDsDropdown').classList.remove('show');
+            applyDoctorFilters();
+        }
+
+    
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('#adminDsSearch') && !e.target.closest('#adminDsDropdown')) {
+                const dd = document.getElementById('adminDsDropdown');
+                if (dd) dd.classList.remove('show');
+            }
+        });
+
+        function viewDoctorProfile(doctorId) {
+            if (!window.allDoctorsData) return;
+            const doc = window.allDoctorsData.find(d => d.id === doctorId);
+            if (!doc) return;
+
+            let initials = doc.fullName.split(' ').map(n => n.trim()[0]).filter(Boolean).join('').substring(0, 2).toUpperCase();
+            document.getElementById('vdpAvatar').textContent = initials;
+            if (doc.profilePhoto) {
+                document.getElementById('vdpAvatar').innerHTML = `<img src="${doc.profilePhoto}" style="width:100%; height:100%; border-radius:50%; object-fit: cover;">`;
+            }
+
+            document.getElementById('vdpName').textContent = doc.fullName;
+            document.getElementById('vdpSpecialty').textContent = doc.specialization || 'General Practitioner';
+
+            document.getElementById('vdpKpiExp').textContent = (doc.experienceYears || 0) + '+';
+            document.getElementById('vdpKpiSpecialty').textContent = (doc.specialization || 'General Care').split(' ')[0]; // just first word
+
+            document.getElementById('vdpEmail').textContent = doc.email;
+            document.getElementById('vdpPhone').textContent = doc.phone || 'N/A';
+            document.getElementById('vdpNic').textContent = doc.nic || 'N/A';
+            document.getElementById('vdpAddress').textContent = doc.address || 'N/A';
+            document.getElementById('vdpLocation').textContent = (doc.divisionalSecretariat || 'N/A') + (doc.district ? `, ${doc.district}` : '');
+
+            document.getElementById('vdpHospital').textContent = doc.hospitalName || 'Not Assigned';
+            document.getElementById('vdpQual').textContent = doc.qualification || 'MBBS';
+            document.getElementById('vdpExp').textContent = (doc.experienceYears || 0) + ' Years';
+
+            if (doc.createdAt) {
+            
+                let dtStr = doc.createdAt;
+                if (Array.isArray(doc.createdAt)) {
+                    dtStr = `${doc.createdAt[0]}-${String(doc.createdAt[1]).padStart(2, '0')}-${String(doc.createdAt[2]).padStart(2, '0')}`;
+                }
+                document.getElementById('vdpCreated').textContent = dtStr.substring(0, 10);
+            } else {
+                document.getElementById('vdpCreated').textContent = 'N/A';
+            }
+
+            document.getElementById('viewDoctorProfileModal').classList.add('active');
+        }
     </script>
+    <!-- Logout Confirmation Modal -->
+    <style>
+        .logout-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        .logout-cancel {
+            border: 1px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+        }
+
+        .logout-cancel:hover {
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        .logout-confirm {
+            border: none;
+            background: #ef4444;
+            color: white;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+        .logout-confirm:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(239, 68, 68, 0.3);
+        }
+
+        #logoutModal .modal-content {
+            border-radius: 16px !important;
+            border: none;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: logoutModalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes logoutModalFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+    
+        </style>
+    <div id="logoutModal"
+        style="display: none; position: fixed; inset: 0; background-color: rgba(15, 23, 42, 0.6); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(2px);">
+        <div class="modal-content"
+            style="background: white; max-width: 380px; text-align: center; padding: 32px 24px; align-items: center;">
+            <div
+                style="width: 64px; height: 64px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-bottom: 20px; font-size: 28px; color: #ef4444; margin-left: auto; margin-right: auto;">
+                <i class="bi bi-box-arrow-right" style="position: relative; left: 2px;"></i>
+            </div>
+            <h2 style="font-size: 20px; font-weight: 800; color: #1e293b; margin-bottom: 12px;">Confirm Logout</h2>
+            <p style="font-size: 14px; color: #64748b; margin-bottom: 28px; line-height: 1.5; padding: 0 10px;">Are you
+                sure you want to log out of the admin portal? You will need to enter your credentials to return.</p>
+            <div style="display: flex; gap: 12px; width: 100%;">
+                <button class="logout-btn logout-cancel"
+                    onclick="document.getElementById('logoutModal').style.display='none'">Cancel</button>
+                <button class="logout-btn logout-confirm" onclick="confirmLogout()">Yes, Log Out</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            document.getElementById('logoutModal').style.display = 'flex';
+        }
+        function closeLogoutModal() {
+            document.getElementById('logoutModal').style.display = 'none';
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            const targetLogin = window.location.pathname.includes('/pages/') ? '../../login.html' : 'login.html';
+            window.location.replace(targetLogin);
+        }
+    </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const adminProfile = document.querySelector('.admin-profile');
+    if (adminProfile) {
+        const fullName = localStorage.getItem('userFullName') || 'System Admin';
+        const photo = localStorage.getItem('profilePhoto');
+        const role = localStorage.getItem('userRole') || 'Administrator';
+
+        const nameEl = adminProfile.querySelector('.admin-info h4');
+        if (nameEl) nameEl.textContent = fullName;
+        
+        const roleEl = adminProfile.querySelector('.admin-info p');
+        if (roleEl) {
+          
+        }
+
+        const imgEl = adminProfile.querySelector('img');
+        if (imgEl) {
+            if (photo) {
+                imgEl.src = photo;
+            } else {
+                const initials = fullName.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                imgEl.src = 'https://ui-avatars.com/api/?name=' + initials + '&background=0f766e&color=fff';
+            }
+        }
+    }
+});
+</script>
+
+
+
+
+<script>
+    function toggleNotifications() { } 
+    document.addEventListener('click', function (event) { });
+
+    function setupNotifications(userId) {
+        let dropdownOpen = false;
+        const wrapperElement = document.querySelector('.notification-wrapper');
+        const dropdownElement = document.getElementById('notificationDropdown') || document.querySelector('.notification-dropdown');
+        const badgeElement = document.querySelector('.notification-badge-new') || document.querySelector('.notification-badge');
+        const listElement = document.querySelector('.notification-list');
+        
+        if (wrapperElement && dropdownElement) {
+            const iconEl = wrapperElement.querySelector('.notification-icon') || wrapperElement.querySelector('.notification-icon-bell') || wrapperElement;
+            iconEl.removeAttribute('onclick');
+            wrapperElement.addEventListener("click", (e) => {
+                e.stopPropagation();
+                dropdownOpen = !dropdownOpen;
+                if (dropdownOpen) dropdownElement.classList.add("show");
+                else dropdownElement.classList.remove("show");
+            });
+            document.addEventListener("click", () => {
+                if (dropdownOpen) {
+                    dropdownOpen = false;
+                    dropdownElement.classList.remove("show");
+                }
+            });
+            dropdownElement.addEventListener("click", (e) => e.stopPropagation());
+        }
+
+        function fetchNotifications() {
+            if (!userId) return;
+            fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/user/${userId}/latest`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.unreadCount > 0) {
+                        if (badgeElement) {
+                            badgeElement.textContent = data.unreadCount > 9 ? '9+' : data.unreadCount;
+                            badgeElement.style.display = 'flex';
+                        }
+                    } else {
+                        if (badgeElement) badgeElement.style.display = 'none';
+                    }
+                    if (!data.notifications || data.notifications.length === 0) {
+                        if (listElement) listElement.innerHTML = `<div style="padding: 30px; text-align: center; color: #94a3b8; font-size: 14px;"><i class="bi bi-inbox" style="font-size: 24px; display: block; margin-bottom: 8px;"></i>No new notifications</div>`;
+                    } else {
+                        if (listElement) listElement.innerHTML = "";
+                        data.notifications.forEach(notif => {
+                            let iconHtml = '<i class="bi bi-info-circle-fill" style="color: #3b82f6; font-size: 20px;"></i>';
+                            if (notif.type === 'SUCCESS') iconHtml = '<i class="bi bi-check-circle-fill" style="color: #10b981; font-size: 20px;"></i>';
+                            if (notif.type === 'WARNING') iconHtml = '<i class="bi bi-exclamation-triangle-fill" style="color: #f59e0b; font-size: 20px;"></i>';
+                            if (notif.type === 'ALERT') iconHtml = '<i class="bi bi-bell-fill" style="color: #ef4444; font-size: 20px;"></i>';
+                            
+                            const date = new Date(notif.createdAt);
+                            let secs = Math.floor((new Date() - date) / 1000);
+                            if (secs < 0) secs = 0;
+                            let timeStr = secs + " secs ago";
+                            if (secs <= 10) timeStr = "just now";
+                            else if (secs > 60 && secs < 3600) timeStr = Math.floor(secs / 60) + " mins ago";
+                            else if (secs >= 3600 && secs < 86400) timeStr = Math.floor(secs / 3600) + " hours ago";
+                            else if (secs >= 86400) timeStr = Math.floor(secs / 86400) + " days ago";
+                            
+                            const item = document.createElement("div");
+                            item.className = 'notification-item ' + (!notif.read ? 'unread' : '');
+                            item.style.padding = "16px";
+                            item.style.borderBottom = "1px solid var(--border)";
+                            item.style.display = "flex";
+                            item.style.gap = "12px";
+                            item.style.cursor = "pointer";
+                            item.style.transition = "0.2s";
+                            if (!notif.read) item.style.background = "#f8fafc";
+                            
+                            item.innerHTML = `
+                                <div class="noti-icon" style="width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; background: ${notif.type === 'SUCCESS' ? 'var(--success-bg)' : notif.type === 'WARNING' ? 'var(--warning-bg)' : notif.type === 'ALERT' ? 'var(--danger-bg)' : '#eff6ff'}; color: ${notif.type === 'SUCCESS' ? 'var(--success)' : notif.type === 'WARNING' ? 'var(--warning)' : notif.type === 'ALERT' ? 'var(--danger)' : '#3b82f6'};">${iconHtml}</div>
+                                <div class="noti-content" style="flex-grow: 1;">
+                                    <h4 style="font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark);">${notif.type === 'SUCCESS' ? 'Success' : notif.type === 'WARNING' ? 'Security Warning' : notif.type === 'ALERT' ? 'Important Alert' : 'Information'}</h4>
+                                    <p style="font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; font-weight: ${!notif.read ? '700' : '500'};">${notif.message.replace(/^.*:\s*/i, '')}</p>
+                                    <span class="noti-time" style="display: block; font-size: 11px; color: var(--text-muted); font-weight: 500;">${timeStr}</span>
+                                </div>
+                                ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
+                            `;
+                            item.addEventListener("mouseenter", () => { item.style.background = "#f1f5f9"; });
+                            item.addEventListener("mouseleave", () => { item.style.background = !notif.read ? "#f8fafc" : "transparent"; });
+                            
+                            item.addEventListener("click", () => {
+                                if (!notif.read) {
+                                    fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
+                                        .then(() => {
+                                            notif.read = true;
+                                            item.classList.remove("unread");
+                                            item.style.background = "transparent";
+                                            const dot = item.querySelector(".u-dot");
+                                            if (dot) dot.remove();
+                                            if (badgeElement) {
+                                                let curr = parseInt(badgeElement.textContent);
+                                                if (!isNaN(curr) && curr > 0) {
+                                                    curr--;
+                                                    if (curr === 0) badgeElement.style.display = 'none';
+                                                    else badgeElement.textContent = curr;
+                                                }
+                                            }
+                                        });
+                                }
+                            });
+                            
+                            if (listElement) listElement.appendChild(item);
+                        });
+                    }
+                })
+                .catch(err => console.error("Notification load error:", err));
+        }
+        fetchNotifications();
+    }
+    function initNotifications() {
+        const userId = localStorage.getItem('userId') || '1';
+        setupNotifications(userId);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNotifications);
+    } else {
+        initNotifications();
+    }
+</script>
+
+    <!-- SUPREME RESPONSIVE FIX -->
+    <style>
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%) !important;
+                position: fixed !important;
+                z-index: 9999 !important;
+            }
+            .sidebar.open {
+                transform: translateX(0) !important;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+            .mobile-close-btn { display: block !important; }
+            .mobile-toggle {
+                display: block !important;
+            }
+            .header-search {
+                display: none !important;
+            }
+        }
+        @media (max-width: 768px) {
+            .metrics-grid, .form-grid, .dashboard-layout {
+                grid-template-columns: 1fr !important;
+            }
+            .format-options {
+                flex-direction: column !important;
+            }
+        }
+    
+        </style>
+
 </body>
 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
