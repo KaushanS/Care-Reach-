@@ -20,13 +20,11 @@ public class MedicalReport {
     @JoinColumn(name = "doctor_id", nullable = false)
     private User doctor;
 
-    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
     @Column(name = "visit_date")
-    private LocalDate visitDate;
+    private String visitDate;
 
-    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
     @Column(name = "next_visit_date")
-    private LocalDate nextVisitDate;
+    private String nextVisitDate;
 
     @Column(columnDefinition = "TEXT")
     private String symptoms;
@@ -83,19 +81,19 @@ public class MedicalReport {
         this.doctor = doctor;
     }
 
-    public LocalDate getVisitDate() {
+    public String getVisitDate() {
         return visitDate;
     }
 
-    public void setVisitDate(LocalDate visitDate) {
+    public void setVisitDate(String visitDate) {
         this.visitDate = visitDate;
     }
 
-    public LocalDate getNextVisitDate() {
+    public String getNextVisitDate() {
         return nextVisitDate;
     }
 
-    public void setNextVisitDate(LocalDate nextVisitDate) {
+    public void setNextVisitDate(String nextVisitDate) {
         this.nextVisitDate = nextVisitDate;
     }
 

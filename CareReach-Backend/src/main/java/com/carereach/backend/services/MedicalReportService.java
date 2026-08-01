@@ -47,9 +47,8 @@ public class MedicalReportService {
         MedicalReport report = new MedicalReport();
         report.setPatient(patient);
         report.setDoctor(doctor);
-        report.setVisitDate(dto.getVisitDate() != null ? java.time.LocalDate.parse(dto.getVisitDate()) : null);
-        report.setNextVisitDate(
-                dto.getNextVisitDate() != null ? java.time.LocalDate.parse(dto.getNextVisitDate()) : null);
+        report.setVisitDate(dto.getVisitDate());
+        report.setNextVisitDate(dto.getNextVisitDate());
         report.setSymptoms(dto.getSymptoms());
         report.setDiagnosis(dto.getDiagnosis());
         report.setMedicines(dto.getMedicines());
@@ -82,8 +81,8 @@ public class MedicalReportService {
         dto.setId(report.getId());
         dto.setPatientId(report.getPatient().getId());
         dto.setDoctorId(report.getDoctor().getId());
-        dto.setVisitDate(report.getVisitDate() != null ? report.getVisitDate().toString() : null);
-        dto.setNextVisitDate(report.getNextVisitDate() != null ? report.getNextVisitDate().toString() : null);
+        dto.setVisitDate(report.getVisitDate());
+        dto.setNextVisitDate(report.getNextVisitDate());
         dto.setSymptoms(report.getSymptoms());
         dto.setDiagnosis(report.getDiagnosis());
         dto.setMedicines(report.getMedicines());

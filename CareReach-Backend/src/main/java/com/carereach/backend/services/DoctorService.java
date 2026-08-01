@@ -146,9 +146,9 @@ public class DoctorService {
                     java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter
                             .ofPattern("MMM dd, yyyy hh:mm a");
                     map.put("lastVisit", latest.getCreatedAt() != null ? latest.getCreatedAt().format(fmt)
-                            : (latest.getVisitDate() != null ? latest.getVisitDate().toString() : "Unknown"));
+                            : (latest.getVisitDate() != null ? latest.getVisitDate() : "Unknown"));
                     map.put("nextVisit",
-                            latest.getNextVisitDate() != null ? latest.getNextVisitDate().toString() : "Not Scheduled");
+                            latest.getNextVisitDate() != null ? latest.getNextVisitDate() : "Not Scheduled");
                     return map;
                 })
                 .collect(Collectors.toList());
@@ -177,7 +177,7 @@ public class DoctorService {
             java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter
                     .ofPattern("MMM dd, yyyy hh:mm a");
             map.put("appointmentDate", r.getCreatedAt() != null ? r.getCreatedAt().format(fmt)
-                    : (r.getVisitDate() != null ? r.getVisitDate().toString() : "Unknown"));
+                    : (r.getVisitDate() != null ? r.getVisitDate() : "Unknown"));
             map.put("status", "Completed");
             return map;
         })
@@ -193,15 +193,16 @@ public class DoctorService {
         // We interpret 'upcomingVisits' as any target patient who has a MedicalReport
         // with a nextVisitDate exactly matching today or later.
         List<Map<String, Object>> upcomingVisits = reports.stream()
-                .filter(r -> r.getNextVisitDate() != null && !r.getNextVisitDate().isBefore(today))
+                .filter(r -> r.getNextVisitDate() != null
+                        && !java.time.LocalDate.parse(r.getNextVisitDate()).isBefore(today))
                 .filter(r -> !patientsSeenToday.contains(r.getPatient().getId()))
                 .map(r -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("patientName", r.getPatient().getName());
                     map.put("patientId", r.getPatient().getId());
                     map.put("gpsCoordinates", r.getPatient().getGpsCoordinates());
-                    map.put("appointmentDate", r.getNextVisitDate().toString());
-                    map.put("lastVisitDate", r.getVisitDate() != null ? r.getVisitDate().toString() : "Unknown");
+                    map.put("appointmentDate", r.getNextVisitDate());
+                    map.put("lastVisitDate", r.getVisitDate() != null ? r.getVisitDate() : "Unknown");
                     map.put("status", "Pending");
                     return map;
                 })
@@ -221,7 +222,8 @@ public class DoctorService {
                 .count();
 
         long pendingTodayCount = reports.stream()
-                .filter(r -> r.getNextVisitDate() != null && r.getNextVisitDate().isEqual(today))
+                .filter(r -> r.getNextVisitDate() != null
+                        && java.time.LocalDate.parse(r.getNextVisitDate()).isEqual(today))
                 .filter(r -> !patientsSeenToday.contains(r.getPatient().getId()))
                 .map(r -> r.getPatient().getId())
                 .distinct()
