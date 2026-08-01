@@ -147,6 +147,8 @@ public class DoctorService {
                             .ofPattern("MMM dd, yyyy hh:mm a");
                     map.put("lastVisit", latest.getCreatedAt() != null ? latest.getCreatedAt().format(fmt)
                             : (latest.getVisitDate() != null ? latest.getVisitDate().toString() : "Unknown"));
+                    map.put("nextVisit",
+                            latest.getNextVisitDate() != null ? latest.getNextVisitDate().toString() : "Not Scheduled");
                     return map;
                 })
                 .collect(Collectors.toList());
@@ -182,12 +184,10 @@ public class DoctorService {
                 .sorted((a, b) -> b.get("appointmentDate").toString().compareTo(a.get("appointmentDate").toString()))
                 .collect(Collectors.toList());
 
-        java.time.LocalDate tomorrow = today.plusDays(1);
-
         // We interpret 'upcomingVisits' as any target patient who has a MedicalReport
-        // with a nextVisitDate exactly matching tomorrow.
+        // with a nextVisitDate exactly matching today.
         List<Map<String, Object>> upcomingVisits = reports.stream()
-                .filter(r -> r.getNextVisitDate() != null && r.getNextVisitDate().isEqual(tomorrow))
+                .filter(r -> r.getNextVisitDate() != null && r.getNextVisitDate().isEqual(today))
                 .map(r -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("patientName", r.getPatient().getName());
@@ -210,7 +210,7 @@ public class DoctorService {
                 .collect(Collectors.toList());
 
         long completedTodayCount = reports.stream()
-                .filter(r -> r.getVisitDate() != null && r.getVisitDate().isEqual(today))
+                .filter(r -> r.getCreatedAt() != null && r.getCreatedAt().toLocalDate().isEqual(today))
                 .count();
 
         long pendingTodayCount = reports.stream()
