@@ -88,11 +88,30 @@ public class DoctorService {
             return map;
         }).collect(Collectors.toList());
 
+        List<com.carereach.backend.models.MedicalReport> reports = medicalReportRepository.findByDoctorId(doctorId);
+        java.time.LocalDate today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Colombo"));
+
+        List<Map<String, Object>> todayAdded = reports.stream()
+                .filter(r -> r.getCreatedAt().toLocalDate().isEqual(today))
+                .sorted((a, b) -> b.getCreatedAt().compareTo(a.getCreatedAt()))
+                .map(r -> {
+                    Map<String, Object> map = new HashMap<>();
+                    map.put("patientId", r.getPatient().getId());
+                    map.put("patientName", r.getPatient().getName());
+                    map.put("diagnosis", r.getDiagnosis() != null ? r.getDiagnosis() : "No Summary Provided");
+
+                    java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("hh:mm a");
+                    map.put("completedOn", "Today, " + r.getCreatedAt().format(fmt));
+                    return map;
+                })
+                .collect(Collectors.toList());
+
         DoctorDashboardDto dto = new DoctorDashboardDto();
         dto.setPendingVerifiedVisits(pendingVisits);
         dto.setCompletedVisits(completedVisits);
         dto.setRegisteredPatients(registeredPatients);
         dto.setVerifiedHomeVisits(verifiedList);
+        dto.setTodayAdded(todayAdded);
 
         return dto;
     }

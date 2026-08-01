@@ -546,8 +546,11 @@
             gap: 10px;
         }
 
-        .mobile-close-btn { display: block !important; }
-            .mobile-toggle {
+        .mobile-close-btn {
+            display: block !important;
+        }
+
+        .mobile-toggle {
             display: none;
             font-size: 24px;
             cursor: pointer;
@@ -568,7 +571,10 @@
                 margin-left: 0;
             }
 
-            .mobile-close-btn { display: block !important; }
+            .mobile-close-btn {
+                display: block !important;
+            }
+
             .mobile-toggle {
                 display: block;
             }
@@ -669,81 +675,375 @@
             margin-top: 4px;
             display: block;
         }
-    
-        .notification-wrapper { position: relative; }
-        .notification-icon { color: var(--text-muted); font-size: 20px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
-        .notification-icon:hover { color: var(--primary); }
-        .notification-badge { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
-        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 380px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); display: none; z-index: 1000; overflow: hidden; }
-        .notification-dropdown.show { display: block; }
-        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
-        .notification-list { max-height: 480px; overflow-y: hidden; }
-        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; text-decoration: none; }
-        .notification-item:hover { background: var(--bg-page); }
-        .notification-item:last-child { border-bottom: none; }
-        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-        .noti-icon.blue { background: var(--info-bg, #eff6ff); color: var(--info, #3b82f6); }
-        .noti-icon.green { background: var(--success-bg, #ecfdf5); color: var(--success, #10b981); }
-        .noti-icon.orange { background: var(--warning-bg, #fffbeb); color: var(--warning, #f59e0b); }
-        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
-        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
-        .noti-time { font-size: 11px; color: var(--text-muted); font-weight: 500; }
 
+        .notification-wrapper {
+            position: relative;
+        }
 
-        </style>
-<style>
+        .notification-icon {
+            color: var(--text-muted);
+            font-size: 20px;
+            cursor: pointer;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    /* =========================================
+        .notification-icon:hover {
+            color: var(--primary);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--danger);
+            color: white;
+            font-size: 10px;
+            font-weight: 700;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--bg-surface);
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 12px;
+            width: 380px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .notification-dropdown.show {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .notification-header h3 {
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0;
+            color: var(--text-dark);
+        }
+
+        .notification-list {
+            max-height: 480px;
+            overflow-y: hidden;
+        }
+
+        .notification-item {
+            padding: 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+
+        .noti-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .noti-icon.blue {
+            background: var(--info-bg, #eff6ff);
+            color: var(--info, #3b82f6);
+        }
+
+        .noti-icon.green {
+            background: var(--success-bg, #ecfdf5);
+            color: var(--success, #10b981);
+        }
+
+        .noti-icon.orange {
+            background: var(--warning-bg, #fffbeb);
+            color: var(--warning, #f59e0b);
+        }
+
+        .noti-content h4 {
+            font-size: 14px;
+            margin: 0 0 4px 0;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .noti-content p {
+            font-size: 13px;
+            margin: 0 0 6px 0;
+            color: var(--text-normal);
+            line-height: 1.4;
+        }
+
+        .noti-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+    </style>
+    <style>
+        /* =========================================
        CareReach Master Mobile Responsiveness
        ========================================= */
-    @media (max-width: 768px) {
-        * { box-sizing: border-box !important; }
-        html, body { overflow-x: hidden !important; width: 100% !important; margin: 0 !important; padding: 0 !important; position: relative; }
-        .main-content { margin-left: 0 !important; width: 100% !important; }
-        .sidebar { transform: translateX(-100%); position: fixed; z-index: 1000; }
-        .sidebar.open { transform: translateX(0); }
-        
-        /* Padding and Layouts */
-        .content-area { padding: 15px 10px !important; width: 100% !important; max-width: 100% !important; overflow-x: hidden !important; }
-        .metric-card, .panel, .dashboard-card { margin-left: 0 !important; margin-right: 0 !important; width: 100% !important; overflow: visible !important; }
-        .panel { padding: 15px !important; margin-bottom: 20px !important; display: flex !important; flex-direction: column !important; }
-        .panel-body { padding: 10px 0 !important; width: 100% !important; overflow-x: auto !important; }
-        
-        /* Modals and Data Grids */
-        .modal, .modal-content { width: 95% !important; max-width: 95% !important; margin: 5% auto !important; padding: 15px !important; overflow-y: auto !important; max-height: 90vh !important; }
-        .details-grid, .info-grid, .data-grid { display: flex !important; flex-direction: column !important; gap: 15px !important; }
-        .detail-item, .info-item { display: flex !important; flex-direction: column !important; width: 100% !important; }
-        .modal-body div[style*="display: flex"] { flex-wrap: wrap !important; }
-        .map-search-bar { flex-direction: column !important; }
-        .map-modal-footer { flex-direction: column-reverse !important; gap: 10px !important; }
-        .map-modal-footer .btn { width: 100% !important; margin: 0 !important; }
-        .map-modal-header { flex-wrap: nowrap !important; }
-        .close-map-btn { width: auto !important; padding: 10px !important; }
-        
-        /* Forms, Inputs, Buttons */
-        .form-group, .panel-header, div[style*="display: flex"], div[style*="display:flex"] { flex-wrap: wrap !important; }
-        input, select, textarea, .form-control, .custom-dropdown { width: 100% !important; max-width: 100% !important; margin-left: 0 !important; }
-        .form-group { width: 100% !important; max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
-        .form-grid { display: flex !important; flex-direction: column !important; width: 100% !important; gap:10px !important; }
-        .btn { width: 100% !important; white-space: normal !important; margin-bottom: 8px !important; }
-        .panel-body > div[style*="display: flex"], .panel-body > div[style*="display:flex"] { flex-direction: column !important; gap: 15px !important; }
-        .panel-body button { width: 100% !important; margin-top: 10px !important; }
-        
-        /* Tables and Advanced Nav */
-        .table-container, .table-responsive { width: 100% !important; max-width: 100% !important; overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
-        td, th { white-space: nowrap !important; }
-        .filter-tabs { display: flex !important; flex-wrap: wrap !important; gap: 5px !important; }
-        .filter-tab { flex: 1 1 auto !important; text-align: center !important; }
-        .header-search { display: none !important; }
-        .top-header { padding: 0 16px !important; height: auto !important; min-height: 72px !important; display: flex !important; flex-wrap: nowrap !important; justify-content: space-between !important; align-items: center !important; }
-        .mobile-toggle { margin-right: 15px !important; display: block !important; flex-shrink: 0 !important; }
-        .user-profile { padding-left: 10px !important; border-left: none !important; }
-        .notification-wrapper { flex-shrink: 0 !important; }
-        .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
-    }
+        @media (max-width: 768px) {
+            * {
+                box-sizing: border-box !important;
+            }
 
-</style>
+            html,
+            body {
+                overflow-x: hidden !important;
+                width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                position: relative;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            /* Padding and Layouts */
+            .content-area {
+                padding: 15px 10px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+            }
+
+            .metric-card,
+            .panel,
+            .dashboard-card {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                width: 100% !important;
+                overflow: visible !important;
+            }
+
+            .panel {
+                padding: 15px !important;
+                margin-bottom: 20px !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+
+            .panel-body {
+                padding: 10px 0 !important;
+                width: 100% !important;
+                overflow-x: auto !important;
+            }
+
+            /* Modals and Data Grids */
+            .modal,
+            .modal-content {
+                width: 95% !important;
+                max-width: 95% !important;
+                margin: 5% auto !important;
+                padding: 15px !important;
+                overflow-y: auto !important;
+                max-height: 90vh !important;
+            }
+
+            .details-grid,
+            .info-grid,
+            .data-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+
+            .detail-item,
+            .info-item {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+            }
+
+            .modal-body div[style*="display: flex"] {
+                flex-wrap: wrap !important;
+            }
+
+            .map-search-bar {
+                flex-direction: column !important;
+            }
+
+            .map-modal-footer {
+                flex-direction: column-reverse !important;
+                gap: 10px !important;
+            }
+
+            .map-modal-footer .btn {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            .map-modal-header {
+                flex-wrap: nowrap !important;
+            }
+
+            .close-map-btn {
+                width: auto !important;
+                padding: 10px !important;
+            }
+
+            /* Forms, Inputs, Buttons */
+            .form-group,
+            .panel-header,
+            div[style*="display: flex"],
+            div[style*="display:flex"] {
+                flex-wrap: wrap !important;
+            }
+
+            input,
+            select,
+            textarea,
+            .form-control,
+            .custom-dropdown {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin-left: 0 !important;
+            }
+
+            .form-group {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+
+            .form-grid {
+                display: flex !important;
+                flex-direction: column !important;
+                width: 100% !important;
+                gap: 10px !important;
+            }
+
+            .btn {
+                width: 100% !important;
+                white-space: normal !important;
+                margin-bottom: 8px !important;
+            }
+
+            .panel-body>div[style*="display: flex"],
+            .panel-body>div[style*="display:flex"] {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+
+            .panel-body button {
+                width: 100% !important;
+                margin-top: 10px !important;
+            }
+
+            /* Tables and Advanced Nav */
+            .table-container,
+            .table-responsive {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            td,
+            th {
+                white-space: nowrap !important;
+            }
+
+            .filter-tabs {
+                display: flex !important;
+                flex-wrap: wrap !important;
+                gap: 5px !important;
+            }
+
+            .filter-tab {
+                flex: 1 1 auto !important;
+                text-align: center !important;
+            }
+
+            .header-search {
+                display: none !important;
+            }
+
+            .top-header {
+                padding: 0 16px !important;
+                height: auto !important;
+                min-height: 72px !important;
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+            }
+
+            .mobile-toggle {
+                margin-right: 15px !important;
+                display: block !important;
+                flex-shrink: 0 !important;
+            }
+
+            .user-profile {
+                padding-left: 10px !important;
+                border-left: none !important;
+            }
+
+            .notification-wrapper {
+                flex-shrink: 0 !important;
+            }
+
+            .notification-dropdown {
+                position: fixed !important;
+                top: 72px !important;
+                left: 5% !important;
+                width: 90% !important;
+                max-width: none !important;
+                right: auto !important;
+                z-index: 9999 !important;
+            }
+        }
+    </style>
 </head>
 
 <body>
@@ -751,7 +1051,9 @@
     <!-- DOCTOR SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <!-- MOBILE CLOSE BUTTON -->
-        <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
+        <i class="bi bi-x-lg mobile-close-btn"
+            style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;"
+            onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
@@ -813,12 +1115,15 @@
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="notification-header">
                             <h3>Notifications</h3>
-                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;" onclick="markAllNotificationsAsRead()">Mark all read</a>
+                            <a href="#"
+                                style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;"
+                                onclick="markAllNotificationsAsRead()">Mark all read</a>
                         </div>
                         <div class="notification-list" id="notificationList">
                             <!-- JS populated -->
                         </div>
-                        <a href="notifications.html" style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
+                        <a href="notifications.html"
+                            style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
                             View All Notifications
                         </a>
                     </div>
@@ -833,7 +1138,7 @@
                 </a>
             </div>
 
-            </header>
+        </header>
 
         <div class="content-area">
 
@@ -919,46 +1224,10 @@
                                 <th>Action</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="todayAddedList">
                             <tr>
-                                <td>
-                                    <div class="patient-cell">
-                                        <span class="patient-name">Kamal Perera</span>
-                                        <span class="patient-meta">ID: CR-1092</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-dark);">Stable. Prescribed Metformin.
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Today, 14:00 PM</div>
-                                </td>
-                                <td><span class="status-badge status-success">Profile Created</span></td>
-                                <td>
-                                    <a href="patients.html" class="btn btn-outline"
-                                        style="padding: 6px 12px; font-size: 12px;">View Profile</a>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <div class="patient-cell">
-                                        <span class="patient-name">David Fernando</span>
-                                        <span class="patient-meta">ID: CR-8830</span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div style="font-size: 13px; color: var(--text-dark);">Post-op check. Wound healing
-                                        well.</div>
-                                </td>
-                                <td>
-                                    <div style="font-weight: 500; color: var(--text-dark);">Today, 09:30 AM</div>
-                                </td>
-                                <td><span class="status-badge status-success">Profile Created</span></td>
-                                <td>
-                                    <a href="patients.html" class="btn btn-outline"
-                                        style="padding: 6px 12px; font-size: 12px;">View Profile</a>
-                                </td>
+                                <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">
+                                    Loading recent patients...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -1023,62 +1292,98 @@
                         } else {
                             tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 24px;">No Pending Verified Visits Found. Awesome!</td></tr>';
                         }
+
+                        // Render Today Added
+                        const addedTbody = document.getElementById('todayAddedList');
+                        addedTbody.innerHTML = '';
+                        if (data.todayAdded && data.todayAdded.length > 0) {
+                            data.todayAdded.forEach(pt => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td>
+                                        <div class="patient-cell">
+                                            <span class="patient-name">${pt.patientName || 'Unknown Patient'}</span>
+                                            <span class="patient-meta">ID: PT-${pt.patientId}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 13px; color: var(--text-dark);">${pt.diagnosis}</div>
+                                    </td>
+                                    <td>
+                                        <div style="font-weight: 500; color: var(--text-dark);">${pt.completedOn}</div>
+                                    </td>
+                                    <td><span class="status-badge status-success">Profile Created</span></td>
+                                    <td>
+                                        <a href="patient-details.html?patientId=${pt.patientId}" class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View Profile</a>
+                                    </td>
+                                `;
+                                addedTbody.appendChild(tr);
+                            });
+                        } else {
+                            addedTbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--text-muted); padding: 24px;">No patients added today.</td></tr>';
+                        }
                     })
                     .catch(err => console.error("Error loading doctor dash:", err));
             }
         });
     </script>
-<!-- Logout Confirmation Modal -->
-<div id="logoutModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
-    <div id="logoutModal" style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
-        <div style="width:72px; height:72px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
-            <i class="bi bi-box-arrow-right"></i>
-        </div>
-        <h3 style="font-size:22px; font-weight:800; color:#1e293b; margin-bottom:12px;">Confirm Logout</h3>
-        <p style="font-size:15px; color:#64748b; margin-bottom:32px; font-weight:500;">Are you sure you want to securely log out of the system?</p>
-        <div style="display:flex; gap:16px;">
-            <button type="button" onclick="closeLogoutModal()" class="btn btn-outline" style="flex:1;">Cancel</button>
-            <button type="button" onclick="confirmLogout()" class="btn btn-primary" style="flex:1; background-color: #ef4444; border-color: #ef4444;">Log Out</button>
+    <!-- Logout Confirmation Modal -->
+    <div id="logoutModalOverlay"
+        style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
+        <div id="logoutModal"
+            style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
+            <div
+                style="width:72px; height:72px; border-radius:50%; background:rgba(239,68,68,0.1); color:#ef4444; font-size:36px; display:inline-flex; align-items:center; justify-content:center; margin-bottom:20px;">
+                <i class="bi bi-box-arrow-right"></i>
+            </div>
+            <h3 style="font-size:22px; font-weight:800; color:#1e293b; margin-bottom:12px;">Confirm Logout</h3>
+            <p style="font-size:15px; color:#64748b; margin-bottom:32px; font-weight:500;">Are you sure you want to
+                securely log out of the system?</p>
+            <div style="display:flex; gap:16px;">
+                <button type="button" onclick="closeLogoutModal()" class="btn btn-outline"
+                    style="flex:1;">Cancel</button>
+                <button type="button" onclick="confirmLogout()" class="btn btn-primary"
+                    style="flex:1; background-color: #ef4444; border-color: #ef4444;">Log Out</button>
+            </div>
         </div>
     </div>
-</div>
-<script>
-    function showLogoutModal(e) {
-        if(e) e.preventDefault();
-        const overlay = document.getElementById('logoutModalOverlay');
-        const modal = document.getElementById('logoutModal');
-        overlay.style.display = 'flex';
-        void overlay.offsetWidth;
-        overlay.style.opacity = '1';
-        modal.style.transform = 'scale(1) translateY(0)';
-    }
-    function closeLogoutModal() {
-        const overlay = document.getElementById('logoutModalOverlay');
-        const modal = document.getElementById('logoutModal');
-        overlay.style.opacity = '0';
-        modal.style.transform = 'scale(0.85) translateY(20px)';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 300);
-    }
-    function confirmLogout() {
-        localStorage.clear();
-        window.location.replace('../../login.html');
-    }
-</script>
-<!-- Global Avatar Hydration -->
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const fn = localStorage.getItem('userFullName');
-    if (fn) {
-        document.querySelectorAll('.doctor-info h4').forEach(el => el.textContent = 'Dr. ' + fn);
-    }
-    const pp = localStorage.getItem('profilePhoto');
-    if (pp) {
-        document.querySelectorAll('.doctor-profile img').forEach(el => el.src = pp);
-    }
-});
-</script>
+    <script>
+        function showLogoutModal(e) {
+            if (e) e.preventDefault();
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.display = 'flex';
+            void overlay.offsetWidth;
+            overlay.style.opacity = '1';
+            modal.style.transform = 'scale(1) translateY(0)';
+        }
+        function closeLogoutModal() {
+            const overlay = document.getElementById('logoutModalOverlay');
+            const modal = document.getElementById('logoutModal');
+            overlay.style.opacity = '0';
+            modal.style.transform = 'scale(0.85) translateY(20px)';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 300);
+        }
+        function confirmLogout() {
+            localStorage.clear();
+            window.location.replace('../../login.html');
+        }
+    </script>
+    <!-- Global Avatar Hydration -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const fn = localStorage.getItem('userFullName');
+            if (fn) {
+                document.querySelectorAll('.doctor-info h4').forEach(el => el.textContent = 'Dr. ' + fn);
+            }
+            const pp = localStorage.getItem('profilePhoto');
+            if (pp) {
+                document.querySelectorAll('.doctor-profile img').forEach(el => el.src = pp);
+            }
+        });
+    </script>
 
     <!-- SUPREME RESPONSIVE FIX -->
     <style>
@@ -1088,31 +1393,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 position: fixed !important;
                 z-index: 9999 !important;
             }
+
             .sidebar.open {
                 transform: translateX(0) !important;
             }
+
             .main-content {
                 margin-left: 0 !important;
                 width: 100% !important;
             }
-            .mobile-close-btn { display: block !important; }
+
+            .mobile-close-btn {
+                display: block !important;
+            }
+
             .mobile-toggle {
                 display: block !important;
             }
+
             .header-search {
                 display: none !important;
             }
         }
+
         @media (max-width: 768px) {
-            .metrics-grid, .form-grid, .dashboard-layout {
+
+            .metrics-grid,
+            .form-grid,
+            .dashboard-layout {
                 grid-template-columns: 1fr !important;
             }
+
             .format-options {
                 flex-direction: column !important;
             }
         }
-    
-        </style>
+    </style>
 
 
 
@@ -1132,7 +1448,7 @@ document.addEventListener('DOMContentLoaded', () => {
         function setupNotifications(userId) {
             const listElement = document.getElementById('notificationList');
             const badgeElement = document.querySelector('.notification-badge');
-            
+
             if (!listElement) return;
 
             // Optional custom callback if page is notifications.html
@@ -1144,15 +1460,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(data => {
                         listElement.innerHTML = '';
                         let count = 0;
-                        
+
                         const notifs = data.notifications || [];
                         if (notifs.length > 0) {
                             notifs.forEach(notif => {
-                                
+
                                 const item = document.createElement('div');
                                 item.className = 'notification-item';
                                 if (!notif.read) item.style.background = '#f8fafc';
-                                
+
                                 let colorClass = 'blue';
                                 let iconHTML = '<i class="bi bi-info-circle"></i>';
                                 if (notif.type === 'ALERT' || notif.type === 'EMERGENCY') { colorClass = 'orange'; iconHTML = '<i class="bi bi-exclamation-triangle"></i>'; }
@@ -1168,7 +1484,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     </div>
                                     ${!notif.read ? '<div class="u-dot" style="width:8px; height:8px; background:var(--primary, #0f766e); border-radius:50%; flex-shrink:0; margin-top:6px;"></div>' : ''}
                                 `;
-                                
+
                                 item.addEventListener('click', () => {
                                     if (!notif.read) {
                                         fetch(`https://care-reach-host-production.up.railway.app/api/v1/notifications/${notif.id}/read`, { method: 'PUT' })
@@ -1183,7 +1499,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         } else {
                             listElement.innerHTML = '<div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">No new notifications</div>';
                         }
-                        
+
                         if (badgeElement) { badgeElement.textContent = data.unreadCount || 0; badgeElement.style.display = (data.unreadCount > 0) ? 'flex' : 'none'; }
                     });
             }
@@ -1208,4 +1524,5 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 
 </body>
+
 </html>

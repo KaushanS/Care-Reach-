@@ -10,4 +10,5 @@ public class DoctorDashboardDto {
     private long completedVisits;
     private long registeredPatients;
     private List<Map<String, Object>> verifiedHomeVisits;
+    private List<Map<String, Object>> todayAdded;
 }
