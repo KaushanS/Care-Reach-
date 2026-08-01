@@ -46,13 +46,13 @@ public class MedicalReport {
 
     @PrePersist
     protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        createdAt = LocalDateTime.now(java.time.ZoneId.of("Asia/Colombo"));
+        updatedAt = LocalDateTime.now(java.time.ZoneId.of("Asia/Colombo"));
     }
 
     @PreUpdate
     protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now(java.time.ZoneId.of("Asia/Colombo"));
     }
 
     // Getters and Setters

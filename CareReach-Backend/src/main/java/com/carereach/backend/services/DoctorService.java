@@ -144,14 +144,17 @@ public class DoctorService {
         }
 
         List<com.carereach.backend.models.MedicalReport> reports = medicalReportRepository.findByDoctorId(doctorId);
-        java.time.LocalDate today = java.time.LocalDate.now();
+        java.time.LocalDate today = java.time.LocalDate.now(java.time.ZoneId.of("Asia/Colombo"));
 
         // We interpret 'completedVisits' as any historical MedicalReport visit.
         List<Map<String, Object>> completedVisits = reports.stream().map(r -> {
             Map<String, Object> map = new HashMap<>();
             map.put("patientName", r.getPatient().getName());
             map.put("patientId", r.getPatient().getId());
-            map.put("appointmentDate", r.getVisitDate() != null ? r.getVisitDate().toString() : "Unknown");
+            java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter
+                    .ofPattern("MMM dd, yyyy hh:mm a");
+            map.put("appointmentDate", r.getCreatedAt() != null ? r.getCreatedAt().format(fmt)
+                    : (r.getVisitDate() != null ? r.getVisitDate().toString() : "Unknown"));
             map.put("status", "Completed");
             return map;
         })

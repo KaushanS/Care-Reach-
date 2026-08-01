@@ -101,7 +101,7 @@ public class VolunteerService {
         if (createdAt == null) {
             return "0 days";
         }
-        long days = ChronoUnit.DAYS.between(createdAt, LocalDateTime.now());
+        long days = ChronoUnit.DAYS.between(createdAt, LocalDateTime.now(java.time.ZoneId.of("Asia/Colombo")));
         if (days < 30) {
             return days + " days";
         } else if (days < 365) {
