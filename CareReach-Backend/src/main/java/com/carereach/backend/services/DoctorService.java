@@ -184,10 +184,17 @@ public class DoctorService {
                 .sorted((a, b) -> b.get("appointmentDate").toString().compareTo(a.get("appointmentDate").toString()))
                 .collect(Collectors.toList());
 
+        // Find which patients have already been seen today
+        List<Long> patientsSeenToday = reports.stream()
+                .filter(r -> r.getCreatedAt() != null && r.getCreatedAt().toLocalDate().isEqual(today))
+                .map(r -> r.getPatient().getId())
+                .collect(Collectors.toList());
+
         // We interpret 'upcomingVisits' as any target patient who has a MedicalReport
         // with a nextVisitDate exactly matching today.
         List<Map<String, Object>> upcomingVisits = reports.stream()
                 .filter(r -> r.getNextVisitDate() != null && r.getNextVisitDate().isEqual(today))
+                .filter(r -> !patientsSeenToday.contains(r.getPatient().getId()))
                 .map(r -> {
                     Map<String, Object> map = new HashMap<>();
                     map.put("patientName", r.getPatient().getName());
@@ -215,6 +222,7 @@ public class DoctorService {
 
         long pendingTodayCount = reports.stream()
                 .filter(r -> r.getNextVisitDate() != null && r.getNextVisitDate().isEqual(today))
+                .filter(r -> !patientsSeenToday.contains(r.getPatient().getId()))
                 .map(r -> r.getPatient().getId())
                 .distinct()
                 .count();
