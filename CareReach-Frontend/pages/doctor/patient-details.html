@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function () {
@@ -23,6 +24,8 @@
     </script>
 
 
+=======
+>>>>>>> develop
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Patient Details</title>
@@ -332,7 +335,11 @@
             font-size: 14px;
             line-height: 1.6;
         }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> develop
         /* NOTIFICATION DROPDOWN */
         .notification-dropdown {
             position: absolute;
@@ -342,16 +349,26 @@
             background: #fff;
             border: 1px solid var(--border);
             border-radius: 12px;
+<<<<<<< HEAD
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+=======
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+>>>>>>> develop
             display: none;
             flex-direction: column;
             z-index: 1000;
         }
+<<<<<<< HEAD
 
         .notification-dropdown.active {
             display: flex;
         }
 
+=======
+        .notification-dropdown.active {
+            display: flex;
+        }
+>>>>>>> develop
         .notification-header {
             padding: 16px;
             border-bottom: 1px solid var(--border);
@@ -361,7 +378,10 @@
             justify-content: space-between;
             align-items: center;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
         .notification-item {
             padding: 16px;
             border-bottom: 1px solid var(--border);
@@ -370,6 +390,7 @@
             text-decoration: none;
             transition: background 0.2s;
         }
+<<<<<<< HEAD
 
         .notification-item:hover {
             background: var(--bg-page);
@@ -379,6 +400,14 @@
             border-bottom: none;
         }
 
+=======
+        .notification-item:hover {
+            background: var(--bg-page);
+        }
+        .notification-item:last-child {
+            border-bottom: none;
+        }
+>>>>>>> develop
         .notification-icon {
             width: 32px;
             height: 32px;
@@ -389,6 +418,7 @@
             flex-shrink: 0;
             font-size: 16px;
         }
+<<<<<<< HEAD
 
         .notif-blue {
             background: #e0f2fe;
@@ -405,25 +435,37 @@
             color: #ea580c;
         }
 
+=======
+        .notif-blue { background: #e0f2fe; color: #0284c7; }
+        .notif-green { background: #dcfce7; color: #16a34a; }
+        .notif-orange { background: #ffedd5; color: #ea580c; }
+>>>>>>> develop
         .notification-content h4 {
             font-size: 13px;
             font-weight: 600;
             color: var(--text-dark);
             margin-bottom: 4px;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
         .notification-content p {
             font-size: 12px;
             color: var(--text-muted);
             line-height: 1.4;
         }
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
         .notification-time {
             font-size: 11px;
             color: var(--text-muted);
             margin-top: 4px;
             display: block;
         }
+<<<<<<< HEAD
     
         .mobile-close-btn { display: block !important; }
             .mobile-toggle {
@@ -540,15 +582,21 @@
         .notification-wrapper { flex-shrink: 0 !important; }
         .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
     }
+=======
+>>>>>>> develop
 
 </style>
 </head>
 
 <body>
+<<<<<<< HEAD
     <aside class="sidebar" id="sidebar">
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
+=======
+    <aside class="sidebar">
+>>>>>>> develop
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
         </div>
@@ -561,7 +609,11 @@
             <a href="home-visits.html" class="menu-item"><i class="bi bi-house-heart"></i> Home Visits</a>
             <div class="menu-title">Management</div>
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
+<<<<<<< HEAD
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
+=======
+            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+>>>>>>> develop
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
         </nav>
@@ -569,6 +621,7 @@
 
     <main class="main-content">
         <header class="top-header">
+<<<<<<< HEAD
         <div style="display:flex;align-items:center;"><i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
 </div>
 
@@ -603,6 +656,52 @@
                 </a>
 
                 </header>
+=======
+            
+            <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+                <div class="action-icon" title="Notifications" onclick="document.getElementById('notificationDropdown').classList.toggle('active')" style="font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative;">
+                    <i class="bi bi-bell"></i>
+                    <div class="dot" style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--warning); border-radius: 50%; border: 2px solid white;"></div>
+                </div>
+            
+<a href="profile.html" class="doctor-profile">
+                <div class="doctor-info">
+                    <h4>Dr. Aruna Silva</h4>
+                    <p>Medical Officer</p>
+                </div>
+                <!-- random face API for user -->
+                <img src="https://ui-avatars.com/api/?name=Dr+Aruna+Silva&background=0f766e&color=fff" alt="Doctor">
+            </a>
+        
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <span><i class="bi bi-bell"></i> Notifications</span>
+                <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark all as read</span>
+            </div>
+            <a href="home-visits.html" class="notification-item">
+                <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
+                <div class="notification-content">
+                    <h4>New GN-Verified Visit</h4>
+                    <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
+                    <span class="notification-time">10 mins ago</span>
+                </div>
+            </a>
+            <a href="appointments.html" class="notification-item">
+                <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
+                <div class="notification-content">
+                    <h4>Appointment Reminder</h4>
+                    <p>You have 4 pending clinic appointments for today.</p>
+                    <span class="notification-time">1 hour ago</span>
+                </div>
+            </a>
+            <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                View All Notifications
+                    </a>
+        </div>
+
+</header>
+>>>>>>> develop
 
         <div class="content-area">
             <div class="breadcrumb">
@@ -613,10 +712,17 @@
 
             <div class="page-header">
                 <div class="patient-card-header">
+<<<<<<< HEAD
                     <div class="patient-avatar-large" id="uiAvatar">--</div>
                     <div class="patient-title">
                         <h1 id="uiName">Loading Patient...</h1>
                         <p id="uiMeta">ID: PT-xxxx • -- Yrs</p>
+=======
+                    <div class="patient-avatar-large">AM</div>
+                    <div class="patient-title">
+                        <h1>Amaya Perera</h1>
+                        <p>ID: PT-1024 • 45 Yrs • Female</p>
+>>>>>>> develop
                     </div>
                 </div>
             </div>
@@ -626,6 +732,7 @@
                     Details</div>
                 <div class="patient-info-grid">
                     <div class="info-group">
+<<<<<<< HEAD
                         <div class="label">NIC Number</div>
                         <div class="value" id="uiNic">Loading...</div>
                     </div>
@@ -636,6 +743,18 @@
                     <div class="info-group">
                         <div class="label">Address</div>
                         <div class="value" id="uiAddress">Loading...</div>
+=======
+                        <div class="label">Date of Birth</div>
+                        <div class="value">12th August 1980</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="label">Contact Number</div>
+                        <div class="value">077 123 4567</div>
+                    </div>
+                    <div class="info-group">
+                        <div class="label">Address</div>
+                        <div class="value">No. 24, Main Road, Kandy</div>
+>>>>>>> develop
                     </div>
                 </div>
             </div>
@@ -644,13 +763,36 @@
                 <div class="panel-header"><i class="bi bi-journal-medical" style="color: var(--primary)"></i> Medical
                     History Let</div>
 
+<<<<<<< HEAD
                 <div class="history-list" id="uiReportsList">
                     <p style="color: var(--text-muted); font-size: 14px;">Loading medical history...</p>
+=======
+                <div class="history-list">
+                    <a href="medical-report-details.html" class="history-card"
+                        style="text-decoration: none; display: block;">
+                        <div class="history-header">
+                            <span class="history-date">July 04, 2026 (Today)</span>
+                        </div>
+                        <div class="history-diagnosis">Diagnosis: High blood pressure</div>
+                        <div class="history-desc">Patient presented with severe headache. BP recorded at 150/95. Advised
+                            strict low-sodium diet and prescribed Amlodipine 5mg. Next review in 2 weeks.</div>
+                    </a>
+                    <a href="medical-report-details.html" class="history-card"
+                        style="text-decoration: none; display: block;">
+                        <div class="history-header">
+                            <span class="history-date">June 15, 2026</span>
+                        </div>
+                        <div class="history-diagnosis">Diagnosis: Routine checkup</div>
+                        <div class="history-desc">General checkup. Vitals stable. Requested fasting blood sugar for next
+                            visit.</div>
+                    </a>
+>>>>>>> develop
                 </div>
             </div>
 
         </div>
     </main>
+<<<<<<< HEAD
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -937,3 +1079,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 </body>
 </html>
+=======
+</body>
+
+</html>
+
+
+>>>>>>> develop

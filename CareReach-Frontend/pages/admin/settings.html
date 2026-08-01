@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,6 +11,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<<<<<<< HEAD
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
@@ -20,6 +24,19 @@
 
             /* Sidebar Specific Colors (Dark Highlighted) */
             --sidebar-bg: #042f2e;
+=======
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            /* CareReach Theme Colors */
+            --primary: #0f766e; 
+            --primary-hover: #0a5c56;
+            --primary-light: #ccfbf1;
+            
+            /* Sidebar Specific Colors (Dark Highlighted) */
+            --sidebar-bg: #042f2e; 
+>>>>>>> develop
             --sidebar-hover: rgba(255, 255, 255, 0.1);
             --sidebar-text: #ccfbf1;
             --sidebar-text-muted: #99f6e4;
@@ -30,7 +47,11 @@
             --text-normal: #334155;
             --text-muted: #64748b;
             --border: #e2e8f0;
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> develop
             /* Status Colors */
             --danger: #ef4444;
             --success: #10b981;
@@ -39,12 +60,16 @@
             --font-family: 'Inter', sans-serif;
         }
 
+<<<<<<< HEAD
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: var(--font-family);
         }
+=======
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: var(--font-family); }
+>>>>>>> develop
 
         body {
             background-color: var(--bg-page);
@@ -92,6 +117,7 @@
             font-size: 18px;
         }
 
+<<<<<<< HEAD
         .brand span {
             color: #5eead4;
         }
@@ -172,10 +198,86 @@
             display: flex;
             flex-direction: column;
             min-height: 100vh;
+=======
+        .brand span { 
+          color: #5eead4; 
+        }
+
+        .sidebar-menu { 
+          padding: 20px 16px; 
+          display: flex; 
+          flex-direction: column; 
+          gap: 4px; 
+          overflow-y: auto; 
+        }
+        .menu-title { 
+          font-size: 11px; 
+          text-transform: uppercase; 
+          font-weight: 700; 
+          color: var(--sidebar-text-muted); 
+          opacity: 0.7; 
+          letter-spacing: 0.5px; 
+          margin: 16px 0 8px 8px; 
+        }
+        .menu-item { 
+          display: flex; 
+          align-items: center; 
+          gap: 12px; 
+          padding: 12px 16px; 
+          border-radius: 10px; 
+          color: var(--sidebar-text); 
+          text-decoration: none; 
+          font-size: 14px; 
+          font-weight: 500; 
+          transition: all 0.2s; 
+        }
+        .menu-item i { 
+          font-size: 18px; 
+          color: var(--sidebar-text-muted); 
+          transition: color 0.2s; 
+          opacity: 0.8; 
+        }
+        .menu-item:hover { 
+          background-color: var(--sidebar-hover); 
+          color: #ffffff; 
+        }
+        .menu-item:hover i { 
+          color: #ffffff; 
+          opacity: 1; 
+        }
+        
+        .menu-item.active {
+          background-color: var(--primary); 
+          color: #ffffff; 
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+        }
+        .menu-item.active i {
+          color: #ffffff; 
+          opacity: 1; 
+        }
+
+        .badge-alert { 
+          margin-left: auto; 
+          background: var(--danger); 
+          color: white; 
+          font-size: 11px; 
+          font-weight: 700; 
+          padding: 2px 8px;
+           border-radius: 99px; 
+          }
+
+        /* --- MAIN CONTENT --- */
+        .main-content { 
+          margin-left: var(--sidebar-width); 
+          flex: 1; display: flex; 
+          flex-direction: column; 
+          min-height: 100vh; 
+>>>>>>> develop
         }
 
         /* TOP HEADER */
         .top-header {
+<<<<<<< HEAD
             height: 72px;
             background-color: var(--bg-surface);
             border-bottom: 1px solid var(--border);
@@ -304,11 +406,131 @@
         .settings-layout {
             display: flex;
             gap: 32px;
+=======
+            height: 72px; 
+            background-color: var(--bg-surface); 
+            border-bottom: 1px solid var(--border);
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            padding: 0 32px;
+            position: sticky; 
+            top: 0; 
+            z-index: 90;
+        }
+
+        .header-search { 
+          display: flex; 
+          align-items: center; 
+          background: var(--bg-page); 
+          padding: 8px 16px; 
+          border-radius: 99px; 
+          width: 320px;
+        }
+        .header-search i { 
+          color: var(--text-muted); 
+          margin-right: 8px;
+         }
+        .header-search input { 
+          border: none; 
+          background: transparent; 
+          outline: none; 
+          width: 100%; 
+          font-size: 14px; 
+          color: var(--text-dark); 
+        }
+
+        .header-actions { 
+          display: flex; 
+          align-items: center; 
+          gap: 20px; 
+        }
+        .action-icon { 
+          font-size: 20px; 
+          color: var(--text-muted); 
+          cursor: pointer; 
+          position: relative; 
+          text-decoration: none; 
+          display: flex; 
+          align-items: center; 
+          justify-content: center;
+        }
+        .action-icon:hover { 
+          color: var(--primary); 
+        }
+        .action-icon .dot { 
+          position: absolute; 
+          top: -2px; 
+          right: -2px; 
+          width: 8px; 
+          height: 8px; 
+          background: var(--danger); 
+          border-radius: 50%; 
+          border: 2px solid white; 
+        }
+
+        .admin-profile { 
+          display: flex; 
+          align-items: center; 
+          gap: 12px; 
+          cursor: pointer; 
+          border-left: 1px solid var(--border); 
+          padding-left: 20px; 
+          text-decoration: none; 
+        }
+        .admin-profile:hover .admin-info h4 { 
+          color: var(--primary); 
+        }
+        .admin-profile img { 
+          width: 40px; 
+          height: 40px; 
+          border-radius: 50%; 
+          object-fit: cover; 
+        }
+        .admin-info h4 { 
+          font-size: 14px; 
+          font-weight: 600; 
+          color: var(--text-dark); 
+          transition: color 0.2s;
+        }
+        .admin-info p { 
+          font-size: 12px; 
+          color: var(--text-muted); 
+        }
+
+        /* --- SETTINGS SPECIFIC STYLES --- */
+        .content-area { 
+          padding: 32px; 
+          max-width: 1200px; 
+          margin: 0 auto; 
+          width: 100%;
+        }
+        
+        .page-header { 
+          margin-bottom: 24px; 
+        }
+        .page-header h1 { 
+          font-size: 28px; 
+          font-weight: 800; 
+          color: var(--text-dark); 
+          letter-spacing: -0.5px;
+        }
+        .page-header p { 
+          font-size: 15px; 
+          color: var(--text-muted); 
+          margin-top: 4px; 
+        }
+
+        .settings-layout {
+            display: flex; 
+            gap: 32px; 
+>>>>>>> develop
             align-items: flex-start;
         }
 
         /* Settings Nav (Left) */
         .settings-nav {
+<<<<<<< HEAD
             width: 250px;
             flex-shrink: 0;
             display: flex;
@@ -346,10 +568,47 @@
             color: var(--primary);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
             border: 1px solid var(--border);
+=======
+            width: 250px; 
+            flex-shrink: 0; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 4px;
+        }
+        
+        .nav-tab {
+            padding: 14px 16px; 
+            border-radius: 12px; 
+            cursor: pointer;
+            font-size: 14px; 
+            font-weight: 600;
+            color: var(--text-muted); 
+            display: flex; 
+            align-items: center;
+            gap: 12px; 
+            transition: all 0.2s;
+            background: transparent; 
+            border: none; 
+            text-align: left;
+        }
+        .nav-tab i { 
+          font-size: 18px; 
+        }
+        .nav-tab:hover { 
+          background-color: rgba(15, 118, 110, 0.05); 
+          color: var(--primary); 
+        }
+        .nav-tab.active { 
+          background-color: var(--bg-surface); 
+          color: var(--primary); 
+          box-shadow: 0 4px 12px rgba(0,0,0,0.03); 
+          border: 1px solid var(--border); 
+>>>>>>> develop
         }
 
         /* Settings Content (Right) */
         .settings-content {
+<<<<<<< HEAD
             flex: 1;
             background: var(--bg-surface);
             border-radius: 16px;
@@ -511,10 +770,148 @@
 
         input:checked+.slider:before {
             transform: translateX(20px);
+=======
+            flex: 1; 
+            background: var(--bg-surface); 
+            border-radius: 16px; 
+            border: 1px solid var(--border);
+            padding: 32px; 
+            min-height: 500px;
+        }
+
+        .tab-pane { 
+          display: none; 
+          animation: fadeIn 0.3s ease; 
+        }
+        .tab-pane.active { 
+          display: block; 
+        }
+        @keyframes fadeIn { 
+          from { opacity: 0; 
+            transform: translateY(5px); 
+          } 
+          to { 
+            opacity: 1; 
+            transform: translateY(0); 
+          } 
+        }
+
+        .pane-header { 
+          margin-bottom: 24px; 
+          padding-bottom: 16px; 
+          border-bottom: 1px solid var(--border); 
+        }
+        .pane-header h2 { 
+          font-size: 20px; 
+          font-weight: 700; 
+          color: var(--text-dark); 
+          margin-bottom: 4px; 
+        }
+        .pane-header p { 
+          font-size: 13px; 
+          color: var(--text-muted); 
+        }
+
+        /* Form Controls */
+        .form-group { 
+          margin-bottom: 24px; 
+        }
+        .form-row { 
+          display: flex; 
+          gap: 20px; 
+          margin-bottom: 24px; 
+        }
+        .form-col { 
+          flex: 1; 
+        }
+        
+        label { display: block; 
+          font-size: 13px; 
+          font-weight: 600; 
+          color: var(--text-dark); 
+          margin-bottom: 8px; 
+        }
+        
+        .form-control {
+            width: 100%; 
+            padding: 12px 16px; 
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            font-size: 14px; 
+            color: var(--text-dark); 
+            outline: none; 
+            transition: all 0.2s; 
+            background: var(--bg-page);
+        }
+        .form-control:focus { 
+          border-color: var(--primary); 
+          box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15); 
+          background: var(--bg-surface);
+        }
+        .form-control::placeholder { 
+          color: #9ca3af;
+        }
+
+        /* Custom Toggle Switch */
+        .toggle-row { 
+          display: flex; 
+          justify-content: space-between; 
+          align-items: center; 
+          padding: 16px 0; 
+          border-bottom: 1px solid var(--border); 
+        }
+        .toggle-row:last-child { 
+          border-bottom: none; 
+        }
+        .toggle-info h4 { 
+          font-size: 14px; 
+          font-weight: 600; 
+          color: var(--text-dark); 
+          margin-bottom: 4px; 
+        }
+        .toggle-info p { 
+          font-size: 13px; 
+          color: var(--text-muted); 
+        }
+
+        .switch { 
+          position: relative; 
+          display: inline-block; 
+          width: 44px; 
+          height: 24px; 
+          flex-shrink: 0;
+        }
+        .switch input { 
+          opacity: 0; 
+          width: 0; 
+          height: 0; 
+        }
+        .slider {
+            position: absolute; 
+            cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #cbd5e1; 
+            transition: .3s; 
+            border-radius: 24px;
+        }
+        .slider:before {
+            position: absolute; 
+            content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px;
+            background-color: white; 
+            transition: .3s; 
+            border-radius: 50%;
+        }
+        input:checked + .slider { 
+          background-color: var(--primary); 
+        }
+        input:checked + .slider:before { 
+          transform: translateX(20px); 
+>>>>>>> develop
         }
 
         /* Buttons */
         .btn {
+<<<<<<< HEAD
             padding: 12px 24px;
             border-radius: 10px;
             font-size: 14px;
@@ -576,10 +973,66 @@
             font-size: 24px;
             cursor: pointer;
             color: var(--text-dark);
+=======
+            padding: 12px 24px; 
+            border-radius: 10px; 
+            font-size: 14px; 
+            font-weight: 600; 
+            border: none; 
+            cursor: pointer;
+            display: inline-flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 8px; 
+            transition: all 0.2s;
+        }
+        .btn-primary { 
+          background-color: var(--primary); 
+          color: var(--white); 
+          box-shadow: 0 4px 12px rgba(15, 118, 110, 0.2);
+         }
+        .btn-primary:hover { 
+          background-color: var(--primary-hover); 
+          transform: translateY(-1px); 
+        }
+        .btn-outline { 
+          background-color: transparent; 
+          border: 1px solid var(--border); 
+          color: var(--text-normal); 
+        }
+        .btn-outline:hover {
+           background-color: var(--bg-page); 
+           color: var(--primary); 
+           border-color: var(--primary); 
+          }
+        .btn-danger-outline { 
+          border: 1px solid var(--danger); 
+          color: var(--danger); 
+          background: transparent; 
+        }
+        .btn-danger-outline:hover { 
+          background: var(--danger-bg); 
+        }
+
+        .form-actions { 
+          margin-top: 32px; 
+          display: flex; 
+          justify-content: flex-end; 
+          gap: 12px; border-top: 1px solid var(--border); 
+          padding-top: 24px;
+        }
+        
+        .mobile-toggle { 
+          display: none; 
+          font-size: 24px; 
+          cursor: pointer; 
+          color: var(--text-dark); 
+>>>>>>> develop
         }
 
         /* Responsive */
         @media (max-width: 1024px) {
+<<<<<<< HEAD
             .sidebar {
                 transform: translateX(-100%);
             }
@@ -933,6 +1386,47 @@
             <div><div style="line-height: 1.2;">CARE<span>REACH</span></div><div style="font-size: 11px; font-weight: 500; color: #5eead4; opacity: 0.7; letter-spacing: 0.3px;">Admin Control Center</div></div>
         </div>
 
+=======
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .mobile-toggle { display: block; }
+            .header-search { display: none; }
+        }
+        @media (max-width: 768px) {
+            .settings-layout { flex-direction: column; }
+            .settings-nav { width: 100%; flex-direction: row; overflow-x: auto; padding-bottom: 8px; }
+            .nav-tab { white-space: nowrap; padding: 12px; }
+            .form-row { flex-direction: column; gap: 0; }
+        }
+    
+        /* Notifications */
+        .notification-wrapper { position: relative; }
+        .notification-icon-bell { font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .notification-icon-bell:hover { color: var(--primary); }
+        .notification-badge-new { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
+        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; overflow: hidden; text-align: left; }
+        .notification-dropdown.show { display: block; }
+        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .notification-list { max-height: 360px; overflow-y: auto; }
+        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; }
+        .notification-item:hover { background: var(--bg-page); }
+        .notification-item:last-child { border-bottom: none; }
+        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
+        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+            CARE<span>REACH</span>
+        </div>
+        
+>>>>>>> develop
         <nav class="sidebar-menu">
             <div class="menu-title">Main</div>
             <a href="dashboard.html" class="menu-item">
@@ -940,7 +1434,11 @@
             </a>
             <a href="emergency.html" class="menu-item">
                 <i class="bi bi-exclamation-triangle"></i> Emergencies
+<<<<<<< HEAD
                 
+=======
+                <span class="badge-alert">2 Active</span>
+>>>>>>> develop
             </a>
 
             <div class="menu-title">Network Management</div>
@@ -967,6 +1465,7 @@
             <a href="reports.html" class="menu-item">
                 <i class="bi bi-file-earmark-text"></i> Reports
             </a>
+<<<<<<< HEAD
         
 <div class="menu-title" style="margin-top:auto;">Account</div>
             <a href="#" class="menu-item" onclick="logout()" style="color: #fca5a5; margin-bottom: 24px;">
@@ -978,6 +1477,13 @@
 
     <main class="main-content">
 
+=======
+        </nav>
+    </aside>
+
+    <main class="main-content">
+        
+>>>>>>> develop
         <header class="top-header">
             <div style="display: flex; align-items: center; gap: 20px;">
                 <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
@@ -988,7 +1494,11 @@
             </div>
 
             <div class="header-actions">
+<<<<<<< HEAD
                 <!-- Notifications Icon -->
+=======
+                                <!-- Notifications Icon -->
+>>>>>>> develop
                 <div class="notification-wrapper">
                     <div class="notification-icon-bell" onclick="toggleNotifications()" title="Notifications">
                         <i class="bi bi-bell"></i>
@@ -997,6 +1507,7 @@
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="notification-header">
                             <h3>Notifications</h3>
+<<<<<<< HEAD
                             <a href="#"
                                 style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark
                                 all read</a>
@@ -1005,6 +1516,13 @@
                             <div class="notification-item">
                                 <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i
                                         class="bi bi-calendar-event"></i></div>
+=======
+                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark all read</a>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i class="bi bi-calendar-event"></i></div>
+>>>>>>> develop
                                 <div class="noti-content">
                                     <h4>New Registration</h4>
                                     <p>Dr. Silva has submitted registration for approval.</p>
@@ -1013,6 +1531,7 @@
                             </div>
                         </div>
                         <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+<<<<<<< HEAD
                             <a href="notifications.html"
                                 style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See
                                 all notifications</a>
@@ -1026,20 +1545,40 @@
                     <div class="admin-info">
                         <h4 id="headerAdminName">System Admin</h4>
                         <p id="headerAdminLocation">Colombo HQ</p>
+=======
+                            <a href="notifications.html" style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See all notifications</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <a href="profile.html" class="admin-profile">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
+                    <div class="admin-info">
+                        <h4>System Admin</h4>
+                        <p>Colombo HQ</p>
+>>>>>>> develop
                     </div>
                 </a>
             </div>
         </header>
 
         <div class="content-area">
+<<<<<<< HEAD
 
+=======
+            
+>>>>>>> develop
             <div class="page-header">
                 <h1>Platform Settings</h1>
                 <p>Manage your account settings, security preferences, and global platform configurations.</p>
             </div>
 
             <div class="settings-layout">
+<<<<<<< HEAD
 
+=======
+                
+>>>>>>> develop
                 <div class="settings-nav">
                     <button class="nav-tab active" onclick="switchTab(event, 'general')">
                         <i class="bi bi-person-gear"></i> General Account
@@ -1047,16 +1586,30 @@
                     <button class="nav-tab" onclick="switchTab(event, 'security')">
                         <i class="bi bi-shield-lock"></i> Security & Access
                     </button>
+<<<<<<< HEAD
 
                 </div>
 
                 <div class="settings-content">
 
+=======
+                    <button class="nav-tab" onclick="switchTab(event, 'notifications')">
+                        <i class="bi bi-bell"></i> Notifications
+                    </button>
+                    <button class="nav-tab" onclick="switchTab(event, 'system')">
+                        <i class="bi bi-sliders"></i> System Preferences
+                    </button>
+                </div>
+
+                <div class="settings-content">
+                    
+>>>>>>> develop
                     <div id="general" class="tab-pane active">
                         <div class="pane-header">
                             <h2>General Account</h2>
                             <p>Update your admin profile and basic platform information.</p>
                         </div>
+<<<<<<< HEAD
 
                         <form onsubmit="event.preventDefault();">
                             <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 24px;">
@@ -1071,12 +1624,22 @@
                                     <input type="file" id="profilePhotoInput" style="display: none;" accept="image/*">
                                     <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">JPG, GIF or
                                         PNG. Max size of 800K</p>
+=======
+                        
+                        <form onsubmit="event.preventDefault();">
+                            <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 24px;">
+                                <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Avatar" style="width: 72px; height: 72px; border-radius: 50%;">
+                                <div>
+                                    <button type="button" class="btn btn-outline" style="padding: 8px 16px; font-size: 13px;">Change Avatar</button>
+                                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 8px;">JPG, GIF or PNG. Max size of 800K</p>
+>>>>>>> develop
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-col">
                                     <label>Full Name</label>
+<<<<<<< HEAD
                                     <input type="text" id="settingFullName" class="form-control"
                                         placeholder="Enter Full Name">
                                 </div>
@@ -1086,11 +1649,19 @@
                                         placeholder="admin@example.com">
                                     <div id="settingEmailError" style="color:#ef4444;font-size:12px;margin-top:4px;">
                                     </div>
+=======
+                                    <input type="text" class="form-control" value="System Admin">
+                                </div>
+                                <div class="form-col">
+                                    <label>Administrator Email</label>
+                                    <input type="email" class="form-control" value="admin@carereach.lk">
+>>>>>>> develop
                                 </div>
                             </div>
 
                             <div class="form-row">
                                 <div class="form-col">
+<<<<<<< HEAD
                                     <label>Phone Number</label>
                                     <input type="text" id="settingPhone" class="form-control"
                                         placeholder="e.g. 0712345678">
@@ -1127,10 +1698,19 @@
                                     </div>
                                 </div>
                                 <div class="form-col">
+=======
+                                    <label>Assigned Region / Hospital</label>
+                                    <select class="form-control">
+                                        <option>National HQ (All Regions)</option>
+                                        <option>Colombo General</option>
+                                        <option>Kandy Teaching Hospital</option>
+                                    </select>
+>>>>>>> develop
                                 </div>
                             </div>
 
                             <div class="form-group">
+<<<<<<< HEAD
                                 <label>Address</label>
                                 <input type="text" id="settingAddress" class="form-control"
                                     placeholder="e.g. No. 12, Main St, Colombo">
@@ -1141,6 +1721,15 @@
                                     onclick="loadProfileData()">Discard</button>
                                 <button type="button" id="saveProfileBtn" class="btn btn-primary"
                                     style="color:white;"><i class="bi bi-save"></i> Save Changes</button>
+=======
+                                <label>Admin Bio / Notes</label>
+                                <textarea class="form-control" rows="3" placeholder="Brief description of admin responsibilities..."></textarea>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Save Changes</button>
+>>>>>>> develop
                             </div>
                         </form>
                     </div>
@@ -1150,6 +1739,7 @@
                             <h2>Security & Access</h2>
                             <p>Manage your password and secure your account with 2FA.</p>
                         </div>
+<<<<<<< HEAD
 
                         <form onsubmit="event.preventDefault();" id="securityForm">
                             <!-- STEP 1: Current password -->
@@ -1192,11 +1782,151 @@
                                     <button type="button" id="confirmPwBtn" class="btn btn-primary" style="color:white;"
                                         onclick="submitPasswordChange()"><i class="bi bi-check-lg"></i> Confirm
                                         Change</button>
+=======
+                        
+                        <form onsubmit="event.preventDefault();">
+                            <div class="form-group" style="max-width: 400px;">
+                                <label>Current Password</label>
+                                <input type="password" class="form-control" placeholder="Enter current password">
+                            </div>
+                            
+                            <div class="form-group" style="max-width: 400px;">
+                                <label>New Password</label>
+                                <input type="password" class="form-control" placeholder="Enter new password">
+                            </div>
+
+                            <div class="form-group" style="max-width: 400px;">
+                                <label>Confirm New Password</label>
+                                <input type="password" class="form-control" placeholder="Re-enter new password">
+                            </div>
+                            
+                            <div style="margin-top: 16px;">
+                                <button type="button" class="btn btn-primary">Update Password</button>
+                            </div>
+                            
+                            <div style="margin-top: 40px; padding-top: 24px; border-top: 1px solid var(--border);">
+                                <h3>Two-Factor Authentication (2FA)</h3>
+                                <p style="font-size: 13px; color: var(--text-muted); margin: 8px 0 16px;">Add an extra layer of security to your account by requiring a code from your mobile device.</p>
+                                
+                                <div class="toggle-row">
+                                    <div class="toggle-info">
+                                        <h4>Authenticator App</h4>
+                                        <p>Use an app like Google Authenticator to generate codes.</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox" checked>
+                                        <span class="slider"></span>
+                                    </label>
+                                </div>
+                                <div class="toggle-row">
+                                    <div class="toggle-info">
+                                        <h4>SMS Recovery</h4>
+                                        <p>Receive codes via SMS if you lose access to your app.</p>
+                                    </div>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider"></span>
+                                    </label>
+>>>>>>> develop
                                 </div>
                             </div>
                         </form>
                     </div>
 
+<<<<<<< HEAD
+=======
+                    <div id="notifications" class="tab-pane">
+                        <div class="pane-header">
+                            <h2>Notification Preferences</h2>
+                            <p>Choose what alerts you want to receive and how you get them.</p>
+                        </div>
+                        
+                        <form onsubmit="event.preventDefault();">
+                            <h3 style="font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">Emergency Alerts</h3>
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>New Critical SOS Alerts</h4>
+                                    <p>Receive immediate push notifications when a critical SOS is triggered in your region.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Responder Assigned</h4>
+                                    <p>Get notified when a doctor or volunteer accepts an emergency request.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <h3 style="font-size: 14px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin: 32px 0 8px;">System & Reports</h3>
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>New User Registrations</h4>
+                                    <p>Email me when a new doctor or guardian registers on the platform.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Weekly Analytics Report</h4>
+                                    <p>Receive a weekly summary of response times and system performance via email.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline">Discard</button>
+                                <button type="submit" class="btn btn-primary">Save Preferences</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div id="system" class="tab-pane">
+                        <div class="pane-header">
+                            <h2>System Preferences</h2>
+                            <p>Configure global dispatch and platform behaviors.</p>
+                        </div>
+                        
+                        <form onsubmit="event.preventDefault();">
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Auto-Dispatch Nearest Unit</h4>
+                                    <p>Automatically alert the nearest active responder based on GPS before manual admin assignment.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            
+                            <div class="toggle-row">
+                                <div class="toggle-info">
+                                    <h4>Require Guardian Approval for Minors</h4>
+                                    <p>Force system to verify guardian link before finalizing pediatric emergency records.</p>
+                                </div>
+                                <label class="switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Save System Settings</button>
+                            </div>
+                        </form>
+                    </div>
+>>>>>>> develop
 
                 </div>
             </div>
@@ -1204,6 +1934,7 @@
         </div>
     </main>
 
+<<<<<<< HEAD
     <!-- Toast container -->
     <div id="toastContainer"
         style="position:fixed;top:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:12px;"></div>
@@ -1757,3 +2488,41 @@
 
 
 
+=======
+    <script>
+        // Simple script for mobile sidebar toggle
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('open');
+        }
+
+        // Script for Tab Switching
+        function switchTab(event, tabId) {
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Remove active class from all panes
+            const panes = document.querySelectorAll('.tab-pane');
+            panes.forEach(pane => pane.classList.remove('active'));
+
+            // Add active class to clicked tab and target pane
+            event.currentTarget.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
+        }
+    
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            dropdown.classList.toggle('show');
+        }
+        document.addEventListener('click', function(event) {
+            const wrapper = document.querySelector('.notification-wrapper');
+            const dropdown = document.getElementById('notificationDropdown');
+            if (wrapper && dropdown && !wrapper.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
+>>>>>>> develop

@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
   <!-- Core Session Manager -->
   <script>
     (function () {
@@ -23,6 +24,8 @@
   </script>
 
 
+=======
+>>>>>>> develop
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CareReach | My Activities</title>
@@ -73,7 +76,11 @@
 
     .sidebar {
       width: var(--sidebar-width);
+<<<<<<< HEAD
       background: #112F28;
+=======
+      background-color: var(--sidebar-bg);
+>>>>>>> develop
       display: flex;
       flex-direction: column;
       position: fixed;
@@ -81,7 +88,10 @@
       left: 0;
       height: 100vh;
       z-index: 100;
+<<<<<<< HEAD
       border-right: 1px solid rgba(255, 255, 255, 0.05);
+=======
+>>>>>>> develop
     }
 
     .brand {
@@ -92,6 +102,7 @@
       font-size: 20px;
       font-weight: 800;
       color: #ffffff;
+<<<<<<< HEAD
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -117,20 +128,55 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+=======
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+>>>>>>> develop
     }
 
     .menu-title {
       font-size: 11px;
       text-transform: uppercase;
+<<<<<<< HEAD
       font-weight: 800;
       color: #31B498;
       letter-spacing: 0.5px;
       margin: 16px 0 8px 4px;
+=======
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+>>>>>>> develop
     }
 
     .menu-item {
       display: flex;
       align-items: center;
+<<<<<<< HEAD
       gap: 14px;
       padding: 12px 16px;
       border-radius: 12px;
@@ -138,10 +184,20 @@
       text-decoration: none;
       font-size: 15px;
       font-weight: 600;
+=======
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+>>>>>>> develop
       transition: all 0.2s;
     }
 
     .menu-item i {
+<<<<<<< HEAD
       font-size: 20px;
       color: #9ca3af;
       transition: all 0.2s;
@@ -153,16 +209,33 @@
     }
 
     .menu-item:hover i {
+=======
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+>>>>>>> develop
       color: #ffffff;
     }
 
     .menu-item.active {
+<<<<<<< HEAD
       background-color: #127161;
+=======
+      background-color: var(--primary);
+>>>>>>> develop
       color: #ffffff;
     }
 
     .menu-item.active i {
       color: #ffffff;
+<<<<<<< HEAD
+=======
+      opacity: 1;
+>>>>>>> develop
     }
 
     .main-content {
@@ -395,8 +468,12 @@
       color: var(--success);
     }
 
+<<<<<<< HEAD
     .mobile-close-btn { display: block !important; }
             .mobile-toggle {
+=======
+    .mobile-toggle {
+>>>>>>> develop
       display: none;
       font-size: 24px;
       cursor: pointer;
@@ -405,6 +482,7 @@
 
     @media (max-width: 1024px) {
       .sidebar {
+<<<<<<< HEAD
         width: var(--sidebar-width);
         background: #0b2e29;
         box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
@@ -415,6 +493,9 @@
         left: 0;
         height: 100vh;
         z-index: 100;
+=======
+        transform: translateX(-100%);
+>>>>>>> develop
       }
 
       .sidebar.open {
@@ -425,8 +506,12 @@
         margin-left: 0;
       }
 
+<<<<<<< HEAD
       .mobile-close-btn { display: block !important; }
             .mobile-toggle {
+=======
+      .mobile-toggle {
+>>>>>>> develop
         display: block;
       }
 
@@ -434,6 +519,7 @@
         display: none;
       }
     }
+<<<<<<< HEAD
 
     /* Modal Styles (New Stacked Design) */
     .modal-overlay {
@@ -784,10 +870,14 @@
     }
 
 </style>
+=======
+  </style>
+>>>>>>> develop
 </head>
 
 <body>
   <aside class="sidebar" id="sidebar">
+<<<<<<< HEAD
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
@@ -810,12 +900,28 @@
       <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn"
         style="color: #f97316; margin-top: auto; border:1px solid rgba(249,115,22,0.2);"><i
           class="bi bi-box-arrow-right" style="color:#f97316;"></i> Sign Out</a>
+=======
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div>
+        <div class="menu-title">Volunteer Hub</div>
+        <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="activities.html" class="menu-item active"><i class="bi bi-journal-text"></i> My Activities</a>
+        <div class="menu-title">Account</div>
+        <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+      </div>
+      <a href="#" class="menu-item" style="color: #ef4444; margin-top: auto;"><i class="bi bi-box-arrow-right"></i> Sign
+        Out</a>
+>>>>>>> develop
     </nav>
   </aside>
   <main class="main-content">
     <header class="top-header">
       <div style="display:flex;align-items:center;gap:20px;">
         <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+<<<<<<< HEAD
         <div class="header-search">
           <input type="text" placeholder="Search patients, reports, or locations...">
           <i class="bi bi-search"></i>
@@ -859,17 +965,36 @@
           </div>
         </a>
       </div>
+=======
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search activities...">
+        </div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Nimal Sirisena</h4>
+          <p>Community Volunteer</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Nimal+Sirisena&background=042f2e&color=fff" alt="Volunteer">
+      </a>
+>>>>>>> develop
     </header>
     <div class="content-area">
       <div class="page-header">
         <h1>My Activities</h1>
+<<<<<<< HEAD
         <p>A comprehensive record of the patients you have reported to CareReach.</p>
+=======
+        <p>A complete record of the patients you have reported to CareReach.</p>
+>>>>>>> develop
       </div>
       <div class="filters">
         <button class="filter-chip active">All Reports</button>
         <button class="filter-chip">Verified</button>
         <button class="filter-chip">Pending Verification</button>
+<<<<<<< HEAD
         <button class="filter-chip">Rejected</button>
+=======
+>>>>>>> develop
       </div>
       <div class="panel">
         <div class="panel-header">
@@ -891,6 +1016,7 @@
                 <th
                   style="padding: 16px 24px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px;">
                   Status</th>
+<<<<<<< HEAD
                 <th
                   style="padding: 16px 24px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; font-size: 12px; letter-spacing: 0.5px; text-align: center;">
                   Action</th>
@@ -898,12 +1024,74 @@
             </thead>
             <tbody id="activities-table-body">
               <!-- Dynamically populated via JS -->
+=======
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Saman Perera</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Elderly Male • possible dementia</div>
+                </td>
+                <td style="padding: 16px 24px;">Station Road, Kirulapone</td>
+                <td style="padding: 16px 24px;">Oct 12, 10:30 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--warning-bg); color: var(--warning); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Pending
+                    Verification</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Kamala Siriwardena</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Female, 65 Yrs</div>
+                </td>
+                <td style="padding: 16px 24px;">High Level Rd intersection</td>
+                <td style="padding: 16px 24px;">Oct 12, 08:15 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--warning-bg); color: var(--warning); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Pending
+                    Verification</span></td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Sunil Jayasooriya</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Male</div>
+                </td>
+                <td style="padding: 16px 24px;">Negombo, Gampaha</td>
+                <td style="padding: 16px 24px;">Oct 11, 07:00 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--success-bg); color: var(--success); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Verified</span>
+                </td>
+              </tr>
+              <tr style="border-bottom: 1px solid var(--border);">
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Rasika Wijesekera</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Female, living alone with limited mobility
+                  </div>
+                </td>
+                <td style="padding: 16px 24px;">Temple Road</td>
+                <td style="padding: 16px 24px;">Jul 02, 10:00 AM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--success-bg); color: var(--success); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Verified</span>
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 16px 24px;">
+                  <div style="font-weight: 600; color: var(--text-dark);">Ayesha Mendis</div>
+                  <div style="font-size: 13px; color: var(--text-muted);">Young mother • isolated, post-partum</div>
+                </td>
+                <td style="padding: 16px 24px;">Kandy Four Gravets</td>
+                <td style="padding: 16px 24px;">Jun 18, 02:00 PM</td>
+                <td style="padding: 16px 24px;"><span
+                    style="background: var(--danger-bg); color: var(--danger); padding: 4px 8px; border-radius: 99px; font-size: 12px; font-weight: 600;">Rejected</span>
+                </td>
+              </tr>
+>>>>>>> develop
             </tbody>
           </table>
         </div>
       </div>
     </div>
   </main>
+<<<<<<< HEAD
 
   <!-- Modal for Report Details -->
   <div class="modal-overlay" id="reportModal">
@@ -1507,3 +1695,9 @@
 </body>
 
 </html>
+=======
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>
+>>>>>>> develop

@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function() {
@@ -22,6 +23,8 @@
     </script>
     
 
+=======
+>>>>>>> develop
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Doctor Reports</title>
@@ -116,6 +119,7 @@
             display: block;
         }
 
+<<<<<<< HEAD
 
         .notification-wrapper { position: relative; }
         .notification-icon { color: var(--text-muted); font-size: 20px; cursor: pointer; position: relative; display: flex; align-items: center; justify-content: center; }
@@ -190,13 +194,18 @@
         .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
     }
 
+=======
+>>>>>>> develop
 </style>
 </head>
 <body>
     <aside class="sidebar" id="sidebar">
+<<<<<<< HEAD
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
+=======
+>>>>>>> develop
         <div class="brand"><div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span></div>
         <nav class="sidebar-menu">
             <div class="menu-title">Main</div>
@@ -209,7 +218,11 @@
             <div class="menu-title">Management</div>
             <a href="reports.html" class="menu-item active"><i class="bi bi-file-earmark-text"></i> Reports</a>
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
+<<<<<<< HEAD
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
+=======
+            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+>>>>>>> develop
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
         </nav>
@@ -219,6 +232,7 @@
             <div style="display:flex;align-items:center;gap:20px;"><i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i><div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search reports, dates, or patient IDs..."></div></div>
             
             <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+<<<<<<< HEAD
 
                 <div class="notification-wrapper">
                     <div class="notification-icon" onclick="toggleNotifications()">
@@ -240,6 +254,14 @@
                 </div>
 
                 <a href="profile.html" class="doctor-profile">
+=======
+                <div class="action-icon" title="Notifications" onclick="document.getElementById('notificationDropdown').classList.toggle('active')" style="font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative;">
+                    <i class="bi bi-bell"></i>
+                    <div class="dot" style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--warning); border-radius: 50%; border: 2px solid white;"></div>
+                </div>
+            
+<a href="profile.html" class="doctor-profile">
+>>>>>>> develop
                     <img src="https://ui-avatars.com/api/?name=Dr+Aruna+Silva&background=0f766e&color=fff" alt="Doctor">
                     <div class="doctor-info">
                         <h4>Dr. Aruna Silva</h4>
@@ -247,7 +269,38 @@
                     </div>
                 </a>
         
+<<<<<<< HEAD
         </header>
+=======
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <span><i class="bi bi-bell"></i> Notifications</span>
+                <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark all as read</span>
+            </div>
+            <a href="home-visits.html" class="notification-item">
+                <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
+                <div class="notification-content">
+                    <h4>New GN-Verified Visit</h4>
+                    <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
+                    <span class="notification-time">10 mins ago</span>
+                </div>
+            </a>
+            <a href="appointments.html" class="notification-item">
+                <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
+                <div class="notification-content">
+                    <h4>Appointment Reminder</h4>
+                    <p>You have 4 pending clinic appointments for today.</p>
+                    <span class="notification-time">1 hour ago</span>
+                </div>
+            </a>
+            <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                View All Notifications
+                    </a>
+        </div>
+
+</header>
+>>>>>>> develop
         <div class="content-area">
             <div class="page-header"><div><h1>Reports and Findings</h1><p>Monitor patient reports, review summaries, and prepare clinical follow-ups.</p></div><div><a href="patients.html" class="btn btn-primary"><i class="bi bi-file-earmark-plus"></i> New Report</a></div></div>
             <div class="metrics-grid">
@@ -259,6 +312,7 @@
             <section class="panel"><div class="panel-header"><h2 class="panel-title"><i class="bi bi-clipboard2-data"></i> Report Summary</h2><a href="appointments.html" class="btn btn-outline"><i class="bi bi-calendar2-week"></i> Link Appointment</a></div><div class="report-grid"><div class="report-card"><h3>Lab Review</h3><p>Blood pressure, sugar level, and symptom trends from the latest patient visits.</p></div><div class="report-card"><h3>Home Visit Notes</h3><p>Doctor observations captured after GN-verified home visit assessments.</p></div><div class="report-card"><h3>Follow-up Action</h3><p>Next steps, medication changes, and priority cases requiring review.</p></div></div><table><thead><tr><th>Report</th><th>Patient</th><th>Date</th><th>Status</th></tr></thead><tbody><tr><td>Monthly review summary</td><td>Amaya Perera</td><td>05 Jul 2026</td><td><span class="status-badge status-complete">Completed</span></td></tr><tr><td>Home visit assessment</td><td>Ruwan Madushanka</td><td>04 Jul 2026</td><td><span class="status-badge status-review">Needs review</span></td></tr><tr><td>Medication follow-up</td><td>Sanduni Karunaratne</td><td>03 Jul 2026</td><td><span class="status-badge status-draft">Draft saved</span></td></tr></tbody></table></section>
         </div>
     </main>
+<<<<<<< HEAD
     
     <script>
         function toggleSidebar() {
@@ -495,6 +549,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     </script>
 
+=======
+    <script>function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}</script>
+>>>>>>> develop
 </body>
 </html>
 

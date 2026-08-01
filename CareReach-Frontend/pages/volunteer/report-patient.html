@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function() {
@@ -23,6 +24,8 @@
     </script>
     
 
+=======
+>>>>>>> develop
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CareReach | Report a Patient</title>
@@ -31,9 +34,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
+<<<<<<< HEAD
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+=======
+>>>>>>> develop
   <style>
     :root {
       --primary: #0f766e;
@@ -76,7 +82,11 @@
 
     .sidebar {
       width: var(--sidebar-width);
+<<<<<<< HEAD
       background: #112F28;
+=======
+      background-color: var(--sidebar-bg);
+>>>>>>> develop
       display: flex;
       flex-direction: column;
       position: fixed;
@@ -84,7 +94,10 @@
       left: 0;
       height: 100vh;
       z-index: 100;
+<<<<<<< HEAD
       border-right: 1px solid rgba(255, 255, 255, 0.05);
+=======
+>>>>>>> develop
     }
 
     .brand {
@@ -95,6 +108,7 @@
       font-size: 20px;
       font-weight: 800;
       color: #ffffff;
+<<<<<<< HEAD
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
 
@@ -120,20 +134,55 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+=======
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+>>>>>>> develop
     }
 
     .menu-title {
       font-size: 11px;
       text-transform: uppercase;
+<<<<<<< HEAD
       font-weight: 800;
       color: #31B498;
       letter-spacing: 0.5px;
       margin: 16px 0 8px 4px;
+=======
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+>>>>>>> develop
     }
 
     .menu-item {
       display: flex;
       align-items: center;
+<<<<<<< HEAD
       gap: 14px;
       padding: 12px 16px;
       border-radius: 12px;
@@ -141,10 +190,20 @@
       text-decoration: none;
       font-size: 15px;
       font-weight: 600;
+=======
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+>>>>>>> develop
       transition: all 0.2s;
     }
 
     .menu-item i {
+<<<<<<< HEAD
       font-size: 20px;
       color: #9ca3af;
       transition: all 0.2s;
@@ -156,16 +215,33 @@
     }
 
     .menu-item:hover i {
+=======
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+>>>>>>> develop
       color: #ffffff;
     }
 
     .menu-item.active {
+<<<<<<< HEAD
       background-color: #127161;
+=======
+      background-color: var(--primary);
+>>>>>>> develop
       color: #ffffff;
     }
 
     .menu-item.active i {
       color: #ffffff;
+<<<<<<< HEAD
+=======
+      opacity: 1;
+>>>>>>> develop
     }
 
     .main-content {
@@ -243,7 +319,11 @@
 
     .content-area {
       padding: 32px;
+<<<<<<< HEAD
       max-width: 1200px;
+=======
+      max-width: 800px;
+>>>>>>> develop
       margin: 0 auto;
       width: 100%;
     }
@@ -292,7 +372,11 @@
       border-radius: 16px;
       border: 1px solid var(--border);
       margin-bottom: 24px;
+<<<<<<< HEAD
       overflow: visible;
+=======
+      overflow: hidden;
+>>>>>>> develop
     }
 
     .panel-header {
@@ -366,6 +450,91 @@
       min-height: 100px;
     }
 
+<<<<<<< HEAD
+=======
+    .file-upload {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 10px;
+      padding: 32px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+      background: var(--bg-page);
+    }
+
+    .file-upload:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .file-upload i {
+      font-size: 32px;
+      color: var(--text-muted);
+    }
+
+    .file-upload span {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .file-upload small {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .severity-options {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .severity-option {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .severity-option input {
+      display: none;
+    }
+
+    .severity-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: 0.2s;
+    }
+
+    .severity-option input:checked+.severity-label.low {
+      border-color: var(--success);
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .severity-option input:checked+.severity-label.medium {
+      border-color: var(--warning);
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .severity-option input:checked+.severity-label.high {
+      border-color: var(--danger);
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+>>>>>>> develop
     .btn {
       padding: 14px 28px;
       border-radius: 12px;
@@ -394,8 +563,21 @@
       color: var(--text-normal);
     }
 
+<<<<<<< HEAD
     .mobile-close-btn { display: block !important; }
             .mobile-toggle {
+=======
+    .form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+    }
+
+    .mobile-toggle {
+>>>>>>> develop
       display: none;
       font-size: 24px;
       cursor: pointer;
@@ -404,6 +586,7 @@
 
     @media (max-width: 1024px) {
       .sidebar {
+<<<<<<< HEAD
         width: var(--sidebar-width);
         background: #0b2e29;
         box-shadow: 4px 0 24px rgba(0, 0, 0, 0.08);
@@ -414,6 +597,9 @@
         left: 0;
         height: 100vh;
         z-index: 100;
+=======
+        transform: translateX(-100%);
+>>>>>>> develop
       }
 
       .sidebar.open {
@@ -424,8 +610,12 @@
         margin-left: 0;
       }
 
+<<<<<<< HEAD
       .mobile-close-btn { display: block !important; }
             .mobile-toggle {
+=======
+      .mobile-toggle {
+>>>>>>> develop
         display: block;
       }
 
@@ -439,6 +629,7 @@
         grid-template-columns: 1fr;
       }
     }
+<<<<<<< HEAD
 
     /* Custom Searchable Dropdown CSS */
     .custom-dropdown {
@@ -809,10 +1000,14 @@
     }
 
 </style>
+=======
+  </style>
+>>>>>>> develop
 </head>
 
 <body>
   <aside class="sidebar" id="sidebar">
+<<<<<<< HEAD
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
@@ -834,12 +1029,28 @@
       <a href="javascript:void(0);" onclick="showLogoutModal(event)" class="menu-item logout-btn"
         style="color: #f97316; margin-top: auto; border:1px solid rgba(249,115,22,0.2);"><i
           class="bi bi-box-arrow-right" style="color:#f97316;"></i> Sign Out</a>
+=======
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu" style="display: flex; flex-direction: column; height: calc(100vh - 84px);">
+      <div>
+        <div class="menu-title">Volunteer Hub</div>
+        <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+        <a href="activities.html" class="menu-item"><i class="bi bi-journal-text"></i> My Activities</a>
+        <div class="menu-title">Account</div>
+        <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+      </div>
+      <a href="#" class="menu-item" style="color: #ef4444; margin-top: auto;"><i class="bi bi-box-arrow-right"></i> Sign
+        Out</a>
+>>>>>>> develop
     </nav>
   </aside>
   <main class="main-content">
     <header class="top-header">
       <div style="display:flex;align-items:center;gap:20px;">
         <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+<<<<<<< HEAD
       </div>
       <div style="display:flex; align-items:center; gap:24px;">
         <div style="position:relative; cursor:pointer;" class="nav-bell" id="bellIconWrapper">
@@ -878,6 +1089,17 @@
           </div>
         </a>
       </div>
+=======
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search..."></div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Nimal Sirisena</h4>
+          <p>Community Volunteer</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Nimal+Sirisena&background=042f2e&color=fff" alt="Volunteer">
+      </a>
+>>>>>>> develop
     </header>
     <div class="content-area">
       <div class="page-header">
@@ -890,6 +1112,7 @@
           CareReach for ongoing care.</p>
       </div>
       <!-- Patient Info -->
+<<<<<<< HEAD
       <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
         <div
           style="background:var(--primary-light); color:var(--primary); width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;">
@@ -996,10 +1219,43 @@
                 <input type="email" id="guardianEmail" placeholder="e.g., guardian@example.com"
                   style="padding-left:42px;">
               </div>
+=======
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-person-fill"></i> Patient Information</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Patient Name <span class="required">*</span></label><input type="text"
+                placeholder="Enter patient's full name"></div>
+            <div class="form-group"><label>Approximate Age</label><input type="number" placeholder="e.g. 65"></div>
+            <div class="form-group"><label>Gender</label><select>
+                <option value="" disabled selected>Select gender</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Other</option>
+              </select></div>
+            <div class="form-group"><label>NIC (if known)</label><input type="text" placeholder="e.g. 196050401234">
             </div>
           </div>
         </div>
       </div>
+      <!-- Guardian Info -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-people-fill"></i> Guardian Information (Optional)</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group"><label>Guardian Name</label><input type="text" placeholder="Enter guardian's name">
+            </div>
+            <div class="form-group"><label>Guardian Phone Number</label><input type="tel" placeholder="e.g. 0771234567">
+>>>>>>> develop
+            </div>
+          </div>
+        </div>
+      </div>
+<<<<<<< HEAD
 
       <!-- Location -->
       <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
@@ -1075,11 +1331,38 @@
                 </div>
                 <div class="field-error" id="error-gps"
                   style="color:#ef4444; font-size:12px; margin-top:4px; display:none;"></div>
+=======
+      <!-- Location -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-geo-alt-fill"></i> Location Details</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group full-width"><label>Address / Location Description <span
+                  class="required">*</span></label><input type="text"
+                placeholder="e.g. 45, High Level Road, near the temple, Colombo 05"></div>
+            <div class="form-group"><label>GN Division (if known)</label><select>
+                <option value="" disabled selected>Select division</option>
+                <option>Thimbirigasyaya</option>
+                <option>Kirulapone</option>
+                <option>Narahenpita</option>
+                <option>Borella</option>
+                <option>Other / Unknown</option>
+              </select></div>
+            <div class="form-group">
+              <label>GPS Coordinates</label>
+              <div style="display: flex; gap: 8px;">
+                <input type="text" placeholder="e.g. 6.9005, 79.8612" style="flex: 1;">
+                <button type="button" class="btn btn-outline" style="padding: 0 16px; border-radius: 10px;"
+                  title="Get Current Location"><i class="bi bi-crosshair"></i> Get Location</button>
+>>>>>>> develop
               </div>
             </div>
           </div>
         </div>
       </div>
+<<<<<<< HEAD
 
       <!-- Issue Details -->
       <div class="panel" style="display:flex; gap:20px; border-radius:16px;">
@@ -1783,3 +2066,29 @@
 </body>
 
 </html>
+=======
+      <!-- Issue Details -->
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-clipboard2-pulse"></i> Issue Description</h2>
+        </div>
+        <div class="panel-body">
+          <div class="form-grid">
+            <div class="form-group full-width"><label>Description of Issue <span
+                  class="required">*</span></label><textarea
+                placeholder="Describe the patient's condition, visible symptoms, living situation, or any concerns..."></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button class="btn btn-outline">Cancel</button>
+              <button class="btn btn-primary"><i class="bi bi-send-fill"></i> Submit Report</button>
+            </div>
+          </div>
+        </div>
+      </div>
+  </main>
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>
+>>>>>>> develop

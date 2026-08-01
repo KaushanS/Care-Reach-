@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | My Appointments</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .filter-chip {
+      padding: 8px 16px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 600;
+      background: var(--bg-surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .filter-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .filter-chip:hover:not(.active) {
+      background: #e2e8f0;
+    }
+
+    .panel {
+      background: var(--bg-surface);
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .panel-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-dark);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    th {
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      border-bottom: 1px solid var(--border);
+      background: #f9fafb;
+    }
+
+    td {
+      padding: 20px 24px;
+      vertical-align: middle;
+      border-bottom: 1px solid var(--border);
+      font-size: 14px;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr:hover td {
+      background-color: #f9fafb;
+    }
+
+    .doctor-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .doctor-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .doctor-details h4 {
+      font-weight: 700;
+      color: var(--text-dark);
+      font-size: 14px;
+    }
+
+    .doctor-details p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 99px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-upcoming {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    .status-completed {
+      background: var(--success-bg);
+      color: var(--success);
+    }
+
+    .status-cancelled {
+      background: var(--danger-bg);
+      color: var(--danger);
+    }
+
+    .type-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-normal);
+    }
+
+    .btn {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: 0.2s;
+      text-decoration: none;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-normal);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-page);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu">
+      <div class="menu-title">My Health</div>
+      <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="appointments.html" class="menu-item active"><i class="bi bi-calendar-check"></i> Appointments</a>
+      <a href="prescriptions.html" class="menu-item"><i class="bi bi-capsule"></i> Prescriptions</a>
+      <a href="medical-history.html" class="menu-item"><i class="bi bi-journal-medical"></i> Medical History</a>
+      <div class="menu-title">Notifications</div>
+      <a href="reminders.html" class="menu-item"><i class="bi bi-bell"></i> Reminders</a>
+      <div class="menu-title">Account</div>
+      <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search appointments...">
+        </div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Kamal Perera</h4>
+          <p>Patient</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Kamal+Perera&background=042f2e&color=fff" alt="Patient">
+      </a>
+    </header>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>My Appointments</h1>
+        <p>View your upcoming and past medical appointments.</p>
+      </div>
+      <div class="filters">
+        <button class="filter-chip active">All</button>
+        <button class="filter-chip">Upcoming</button>
+        <button class="filter-chip">Completed</button>
+        <button class="filter-chip">Cancelled</button>
+      </div>
+      <div class="panel">
+        <div class="panel-header">
+          <h2 class="panel-title"><i class="bi bi-calendar3"></i> Appointment Schedule</h2>
+        </div>
+        <div style="overflow-x:auto;">
+          <table>
+            <thead>
+              <tr>
+                <th>Doctor</th>
+                <th>Date & Time</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar">AW</div>
+                    <div class="doctor-details">
+                      <h4>Dr. Anura Wickremasinghe</h4>
+                      <p>General Physician</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-weight:700;color:var(--text-dark);">July 15, 2026</div>
+                  <div style="font-size:13px;color:var(--text-muted);">10:00 AM</div>
+                </td>
+                <td><span class="type-badge"><i class="bi bi-geo-alt" style="color:var(--info);"></i> Clinic
+                    Visit</span></td>
+                <td>CareReach Clinic, Colombo 05</td>
+                <td><span class="status-badge status-upcoming"><i class="bi bi-clock-fill"></i> Upcoming</span></td>
+                <td><button class="btn btn-outline"><i class="bi bi-eye"></i> Details</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar">SD</div>
+                    <div class="doctor-details">
+                      <h4>Dr. Samantha Dias</h4>
+                      <p>Endocrinologist</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-weight:700;color:var(--text-dark);">July 22, 2026</div>
+                  <div style="font-size:13px;color:var(--text-muted);">2:30 PM</div>
+                </td>
+                <td><span class="type-badge"><i class="bi bi-house-door" style="color:var(--primary);"></i> Home
+                    Visit</span></td>
+                <td>12, Temple Road, Colombo 05</td>
+                <td><span class="status-badge status-upcoming"><i class="bi bi-clock-fill"></i> Upcoming</span></td>
+                <td><button class="btn btn-outline"><i class="bi bi-eye"></i> Details</button></td>
+              </tr>
+              <tr>
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar">AW</div>
+                    <div class="doctor-details">
+                      <h4>Dr. Anura Wickremasinghe</h4>
+                      <p>General Physician</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-weight:700;color:var(--text-dark);">Aug 05, 2026</div>
+                  <div style="font-size:13px;color:var(--text-muted);">11:00 AM</div>
+                </td>
+                <td><span class="type-badge"><i class="bi bi-geo-alt" style="color:var(--info);"></i> Clinic
+                    Visit</span></td>
+                <td>CareReach Clinic, Colombo 05</td>
+                <td><span class="status-badge status-upcoming"><i class="bi bi-clock-fill"></i> Upcoming</span></td>
+                <td><button class="btn btn-outline"><i class="bi bi-eye"></i> Details</button></td>
+              </tr>
+              <tr style="opacity:0.75;">
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar" style="background:var(--success-bg);color:var(--success);">AW</div>
+                    <div class="doctor-details">
+                      <h4>Dr. Anura Wickremasinghe</h4>
+                      <p>General Physician</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-weight:700;color:var(--text-dark);">July 01, 2026</div>
+                  <div style="font-size:13px;color:var(--text-muted);">10:00 AM</div>
+                </td>
+                <td><span class="type-badge"><i class="bi bi-geo-alt"></i> Clinic Visit</span></td>
+                <td>CareReach Clinic, Colombo 05</td>
+                <td><span class="status-badge status-completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                </td>
+                <td><button class="btn btn-outline"><i class="bi bi-file-text"></i> Report</button></td>
+              </tr>
+              <tr style="opacity:0.75;">
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar" style="background:var(--success-bg);color:var(--success);">SD</div>
+                    <div class="doctor-details">
+                      <h4>Dr. Samantha Dias</h4>
+                      <p>Endocrinologist</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-weight:700;color:var(--text-dark);">June 18, 2026</div>
+                  <div style="font-size:13px;color:var(--text-muted);">2:30 PM</div>
+                </td>
+                <td><span class="type-badge"><i class="bi bi-house-door"></i> Home Visit</span></td>
+                <td>12, Temple Road, Colombo 05</td>
+                <td><span class="status-badge status-completed"><i class="bi bi-check-circle-fill"></i> Completed</span>
+                </td>
+                <td><button class="btn btn-outline"><i class="bi bi-file-text"></i> Report</button></td>
+              </tr>
+              <tr style="opacity:0.5;">
+                <td>
+                  <div class="doctor-cell">
+                    <div class="doctor-avatar" style="background:var(--danger-bg);color:var(--danger);">PM</div>
+                    <div class="doctor-details">
+                      <h4>Dr. Priya Mendis</h4>
+                      <p>Ophthalmologist</p>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div style="font-weight:700;color:var(--text-dark);">June 10, 2026</div>
+                  <div style="font-size:13px;color:var(--text-muted);">3:00 PM</div>
+                </td>
+                <td><span class="type-badge"><i class="bi bi-geo-alt"></i> Clinic Visit</span></td>
+                <td>National Eye Hospital</td>
+                <td><span class="status-badge status-cancelled"><i class="bi bi-x-circle-fill"></i> Cancelled</span>
+                </td>
+                <td><button class="btn btn-outline"><i class="bi bi-arrow-repeat"></i> Rebook</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>

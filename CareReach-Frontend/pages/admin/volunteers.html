@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function () {
@@ -26,6 +27,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Manage Registered Volunteers</title>
+=======
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareReach | Manage Volunteer Reporters</title>
+>>>>>>> develop
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -131,6 +137,7 @@
             flex-direction: column;
             gap: 4px;
             overflow-y: auto;
+<<<<<<< HEAD
             /* Hide scrollbar for IE, Edge and Firefox */
             -ms-overflow-style: none;
             scrollbar-width: none;
@@ -139,6 +146,8 @@
         /* Hide scrollbar for Chrome, Safari and Opera */
         .sidebar-menu::-webkit-scrollbar {
             display: none;
+=======
+>>>>>>> develop
         }
 
         .menu-title {
@@ -594,8 +603,12 @@
             border-color: rgba(239, 68, 68, 0.2);
         }
 
+<<<<<<< HEAD
         .mobile-close-btn { display: block !important; }
             .mobile-toggle {
+=======
+        .mobile-toggle {
+>>>>>>> develop
             display: none;
             font-size: 24px;
             cursor: pointer;
@@ -616,7 +629,10 @@
                 margin-left: 0;
             }
 
+<<<<<<< HEAD
             .mobile-close-btn { display: block !important; }
+=======
+>>>>>>> develop
             .mobile-toggle {
                 display: block;
             }
@@ -648,6 +664,7 @@
                 flex: 1;
             }
         }
+<<<<<<< HEAD
 
         /* Notifications */
         .notification-wrapper {
@@ -922,17 +939,43 @@
     }
 
 </style>
+=======
+    
+        /* Notifications */
+        .notification-wrapper { position: relative; }
+        .notification-icon-bell { font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative; text-decoration: none; display: flex; align-items: center; justify-content: center; }
+        .notification-icon-bell:hover { color: var(--primary); }
+        .notification-badge-new { position: absolute; top: -4px; right: -4px; background: var(--danger); color: white; font-size: 10px; font-weight: 700; width: 16px; height: 16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg-surface); }
+        .notification-dropdown { position: absolute; top: 100%; right: 0; margin-top: 12px; width: 320px; background: var(--bg-surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); display: none; z-index: 1000; overflow: hidden; text-align: left; }
+        .notification-dropdown.show { display: block; }
+        .notification-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .notification-header h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--text-dark); }
+        .notification-list { max-height: 360px; overflow-y: auto; }
+        .notification-item { padding: 16px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; cursor: pointer; transition: 0.2s; }
+        .notification-item:hover { background: var(--bg-page); }
+        .notification-item:last-child { border-bottom: none; }
+        .noti-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+        .noti-content h4 { font-size: 14px; margin: 0 0 4px 0; font-weight: 600; color: var(--text-dark); }
+        .noti-content p { font-size: 13px; margin: 0 0 6px 0; color: var(--text-normal); line-height: 1.4; }
+    </style>
+>>>>>>> develop
 </head>
 
 <body>
 
     <aside class="sidebar" id="sidebar">
+<<<<<<< HEAD
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
             <div><div style="line-height: 1.2;">CARE<span>REACH</span></div><div style="font-size: 11px; font-weight: 500; color: #5eead4; opacity: 0.7; letter-spacing: 0.3px;">Admin Control Center</div></div>
+=======
+        <div class="brand">
+            <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
+            CARE<span>REACH</span>
+>>>>>>> develop
         </div>
 
         <nav class="sidebar-menu">
@@ -942,7 +985,11 @@
             </a>
             <a href="emergency.html" class="menu-item">
                 <i class="bi bi-exclamation-triangle"></i> Emergencies
+<<<<<<< HEAD
                 
+=======
+                <span class="badge-alert">2 Active</span>
+>>>>>>> develop
             </a>
 
             <div class="menu-title">Network Management</div>
@@ -969,11 +1016,14 @@
             <a href="reports.html" class="menu-item">
                 <i class="bi bi-file-earmark-text"></i> Reports
             </a>
+<<<<<<< HEAD
 
             <div class="menu-title" style="margin-top:auto;">Account</div>
             <a href="#" class="menu-item" onclick="logout()" style="color: #fca5a5; margin-bottom: 24px;">
                 <i class="bi bi-box-arrow-left" style="color: #fca5a5;"></i> Logout
             </a>
+=======
+>>>>>>> develop
         </nav>
     </aside>
 
@@ -989,7 +1039,11 @@
             </div>
 
             <div class="header-actions">
+<<<<<<< HEAD
                 <!-- Notifications Icon -->
+=======
+                                <!-- Notifications Icon -->
+>>>>>>> develop
                 <div class="notification-wrapper">
                     <div class="notification-icon-bell" onclick="toggleNotifications()" title="Notifications">
                         <i class="bi bi-bell"></i>
@@ -998,6 +1052,7 @@
                     <div class="notification-dropdown" id="notificationDropdown">
                         <div class="notification-header">
                             <h3>Notifications</h3>
+<<<<<<< HEAD
                             <a href="#"
                                 style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark
                                 all read</a>
@@ -1006,6 +1061,13 @@
                             <div class="notification-item">
                                 <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i
                                         class="bi bi-calendar-event"></i></div>
+=======
+                            <a href="#" style="font-size:12px;color:var(--primary);text-decoration:none;font-weight:600;">Mark all read</a>
+                        </div>
+                        <div class="notification-list">
+                            <div class="notification-item">
+                                <div class="noti-icon" style="background:#eff6ff;color:#3b82f6;"><i class="bi bi-calendar-event"></i></div>
+>>>>>>> develop
                                 <div class="noti-content">
                                     <h4>New Registration</h4>
                                     <p>Dr. Silva has submitted registration for approval.</p>
@@ -1014,14 +1076,22 @@
                             </div>
                         </div>
                         <div style="padding: 12px; border-top: 1px solid var(--border); text-align: center;">
+<<<<<<< HEAD
                             <a href="notifications.html"
                                 style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See
                                 all notifications</a>
+=======
+                            <a href="notifications.html" style="font-size: 13px; font-weight: 600; color: var(--primary); text-decoration: none;">See all notifications</a>
+>>>>>>> develop
                         </div>
                     </div>
                 </div>
 
+<<<<<<< HEAD
                 <a href="settings.html" class="admin-profile">
+=======
+                <a href="profile.html" class="admin-profile">
+>>>>>>> develop
                     <img src="https://ui-avatars.com/api/?name=Admin+User&background=0f766e&color=fff" alt="Admin">
                     <div class="admin-info">
                         <h4>System Admin</h4>
@@ -1035,7 +1105,11 @@
 
             <div class="page-header">
                 <div>
+<<<<<<< HEAD
                     <h1>Registered Volunteers</h1>
+=======
+                    <h1>Medical Volunteer Reporters</h1>
+>>>>>>> develop
                     <p>Manage public users who report medical emergencies and patients into the system.</p>
                 </div>
             </div>
@@ -1049,17 +1123,48 @@
                     </div>
                 </div>
 
+<<<<<<< HEAD
+=======
+                <div class="metric-card">
+                    <div class="metric-icon icon-blue"><i class="bi bi-file-earmark-plus"></i></div>
+                    <div class="metric-info">
+                        <h3>145</h3>
+                        <p>Reports Submitted Today</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon icon-warning"><i class="bi bi-exclamation-triangle"></i></div>
+                    <div class="metric-info">
+                        <h3>85</h3>
+                        <p>Critical Alerts Raised</p>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <div class="metric-icon icon-green"><i class="bi bi-geo-alt"></i></div>
+                    <div class="metric-info">
+                        <h3>Colombo</h3>
+                        <p>Top Reporting District</p>
+                    </div>
+                </div>
+>>>>>>> develop
             </div>
 
             <div class="panel">
                 <div class="panel-header">
                     <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+<<<<<<< HEAD
                         <h2 class="panel-title">Registered Volunteers</h2>
+=======
+                        <h2 class="panel-title">Volunteer Reporters</h2>
+>>>>>>> develop
                         <button class="btn btn-outline" style="padding: 6px 12px; font-size: 12px;"
                             onclick="resetFilters()"><i class="bi bi-arrow-counterclockwise"></i> Reset Filters</button>
                     </div>
 
                     <div class="filter-group">
+<<<<<<< HEAD
                         <div class="custom-dropdown" id="district-dropdown-container">
                             <input type="hidden" id="filterDistrict" value="all">
 
@@ -1082,6 +1187,19 @@
                                 </ul>
                             </div>
                         </div>
+=======
+                        <select class="filter-select" id="filterDistrict" onchange="filterTable()">
+                            <option value="all">All Districts</option>
+                            <option value="Colombo">Colombo</option>
+                            <option value="Gampaha">Gampaha</option>
+                            <option value="Kandy">Kandy</option>
+                        </select>
+                        <select class="filter-select" id="filterActivity" onchange="filterTable()">
+                            <option value="all">Any Time</option>
+                            <option value="Today">Reported Today</option>
+                            <option value="ThisWeek">Reported This Week</option>
+                        </select>
+>>>>>>> develop
                     </div>
                 </div>
 
@@ -1089,6 +1207,7 @@
                     <table id="volunteerTable">
                         <thead>
                             <tr>
+<<<<<<< HEAD
                                 <th>Volunteer Profile</th>
                                 <th>Location Details</th>
                                 <th>Contact Information</th>
@@ -1100,6 +1219,114 @@
                                 <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">
                                     Loading volunteers...</td>
                             </tr>
+=======
+                                <th>Volunteer Name</th>
+                                <th>Patient Name</th>
+                                <th>Location</th>
+                                <th>Date / Time</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr data-district="Colombo" data-activity="Today">
+                                <td>
+                                    <div class="profile-cell">
+                                        <div class="profile-avatar">SP</div>
+                                        <div>
+                                            <span class="profile-name">Samantha Perera</span>
+                                            <span class="profile-id"><i class="bi bi-telephone"></i> +94 77 000
+                                                1122</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Nimal Fernando</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">CR-90421</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Colombo 03</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Western Province</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Today, 10:30 AM</div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="icon-btn" title="View Full Report"><i
+                                                class="bi bi-eye"></i></button>
+                                        <button class="icon-btn delete" title="Remove Record"
+                                            onclick="deleteRow(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-district="Kandy" data-activity="Today">
+                                <td>
+                                    <div class="profile-cell">
+                                        <img src="https://ui-avatars.com/api/?name=Nuwan+Bandara&background=d1f2eb&color=0f766e"
+                                            alt="Avatar" class="profile-avatar">
+                                        <div>
+                                            <span class="profile-name">Nuwan Bandara</span>
+                                            <span class="profile-id"><i class="bi bi-telephone"></i> +94 71 555
+                                                6677</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Kamal Jayawardena</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">CR-88301</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Kandy City</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Central Province</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Today, 08:15 AM</div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="icon-btn" title="View Full Report"><i
+                                                class="bi bi-eye"></i></button>
+                                        <button class="icon-btn delete" title="Remove Record"
+                                            onclick="deleteRow(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-district="Gampaha" data-activity="ThisWeek">
+                                <td>
+                                    <div class="profile-cell">
+                                        <div class="profile-avatar"
+                                            style="background: var(--bg-page); color: var(--text-muted);">DP</div>
+                                        <div>
+                                            <span class="profile-name">Dinesh Perera</span>
+                                            <span class="profile-id"><i class="bi bi-telephone"></i> +94 76 222
+                                                3344</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Priya Silva</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">CR-11029</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">Negombo</div>
+                                    <div style="font-size: 12px; color: var(--text-muted);">Gampaha District</div>
+                                </td>
+                                <td>
+                                    <div style="font-weight: 500; color: var(--text-dark);">July 1st, 14:00</div>
+                                </td>
+                                <td>
+                                    <div class="actions-cell">
+                                        <button class="icon-btn" title="View Full Report"><i
+                                                class="bi bi-eye"></i></button>
+                                        <button class="icon-btn delete" title="Remove Record"
+                                            onclick="deleteRow(this)"><i class="bi bi-trash"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+
+>>>>>>> develop
                         </tbody>
                     </table>
                 </div>
@@ -1121,6 +1348,7 @@
             </div>
 
         </div>
+<<<<<<< HEAD
 
         <!-- Modern Delete Confirmation Modal -->
         <div id="modernConfirm" class="modal-overlay"
@@ -1417,6 +1645,11 @@
         });
 
 
+=======
+    </main>
+
+    <script>
+>>>>>>> develop
         function toggleSidebar() {
             const sidebar = document.getElementById('sidebar');
             sidebar.classList.toggle('open');
@@ -1431,6 +1664,7 @@
         }
 
         // Multi-criteria Table Filter Logic
+<<<<<<< HEAD
 
         let locationDistricts = [];
 
@@ -1506,15 +1740,30 @@
 
         function filterTable() {
             const valDistrict = document.getElementById("filterDistrict").value;
+=======
+        function filterTable() {
+            const valDistrict = document.getElementById("filterDistrict").value;
+            const valActivity = document.getElementById("filterActivity").value;
+>>>>>>> develop
 
             const rows = document.querySelectorAll("#volunteerTable tbody tr");
 
             rows.forEach(row => {
+<<<<<<< HEAD
                 const dist = row.getAttribute("data-district") || "";
 
                 const matchDistrict = (valDistrict === "all" || dist.toLowerCase() === valDistrict.toLowerCase());
 
                 if (matchDistrict) {
+=======
+                const dist = row.getAttribute("data-district");
+                const act = row.getAttribute("data-activity");
+
+                const matchDistrict = (valDistrict === "all" || dist === valDistrict);
+                const matchActivity = (valActivity === "all" || act === valActivity);
+
+                if (matchDistrict && matchActivity) {
+>>>>>>> develop
                     row.style.display = "";
                 } else {
                     row.style.display = "none";
@@ -1525,15 +1774,26 @@
         // Reset Filters Helper
         function resetFilters() {
             document.getElementById("filterDistrict").value = "all";
+<<<<<<< HEAD
             document.getElementById("district-selected-text").textContent = "All Districts";
             filterTable();
         }
 
+=======
+            document.getElementById("filterActivity").value = "all";
+            filterTable();
+        }
+    
+>>>>>>> develop
         function toggleNotifications() {
             const dropdown = document.getElementById('notificationDropdown');
             dropdown.classList.toggle('show');
         }
+<<<<<<< HEAD
         document.addEventListener('click', function (event) {
+=======
+        document.addEventListener('click', function(event) {
+>>>>>>> develop
             const wrapper = document.querySelector('.notification-wrapper');
             const dropdown = document.getElementById('notificationDropdown');
             if (wrapper && dropdown && !wrapper.contains(event.target)) {
@@ -1541,6 +1801,7 @@
             }
         });
     </script>
+<<<<<<< HEAD
     <!-- Logout Confirmation Modal -->
     <style>
         .logout-btn {
@@ -1836,3 +2097,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
+=======
+</body>
+
+</html>
+>>>>>>> develop

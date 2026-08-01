@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function() {
@@ -23,6 +24,8 @@
     </script>
     
 
+=======
+>>>>>>> develop
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Visit Details</title>
@@ -51,6 +54,7 @@
             --warning-bg: #fffbeb;
             --sidebar-width: 260px;
             --font-family: 'Inter', sans-serif;
+<<<<<<< HEAD
         
             /* Status Colors */
             --danger: #ef4444;
@@ -62,6 +66,9 @@
             --info: #3b82f6;
             --info-bg: #eff6ff;
 }
+=======
+        }
+>>>>>>> develop
 
         * {
             margin: 0;
@@ -413,6 +420,7 @@
             display: block;
         }
 
+<<<<<<< HEAD
 
         .mobile-close-btn { display: block !important; }
             .mobile-toggle {
@@ -530,15 +538,20 @@
         .notification-dropdown { position: fixed !important; top: 72px !important; left: 5% !important; width: 90% !important; max-width: none !important; right: auto !important; z-index: 9999 !important; }
     }
 
+=======
+>>>>>>> develop
 </style>
 </head>
 
 <body>
     <!-- DOCTOR SIDEBAR -->
     <aside class="sidebar" id="sidebar">
+<<<<<<< HEAD
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn" style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;" onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
+=======
+>>>>>>> develop
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>
             CARE<span>REACH</span>
@@ -553,11 +566,19 @@
             <a href="patients.html" class="menu-item"><i class="bi bi-person-lines-fill"></i> Patients</a>
             <a href="home-visits.html" class="menu-item">
                 <i class="bi bi-house-heart"></i> Home Visits
+<<<<<<< HEAD
 
             </a>
             <div class="menu-title">Management</div>
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
+=======
+                <span class="badge-alert">2</span>
+            </a>
+            <div class="menu-title">Management</div>
+            <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
+            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+>>>>>>> develop
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
         </nav>
@@ -565,8 +586,11 @@
 
     <main class="main-content">
         <header class="top-header">
+<<<<<<< HEAD
         <div style="display:flex;align-items:center;"><i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
 </div>
+=======
+>>>>>>> develop
             <div></div> <!-- empty placeholder for left -->
             <div style="display:flex; align-items:center; gap: 12px;">
                 <img src="https://ui-avatars.com/api/?name=Dr+Aruna+Silva&background=0f766e&color=fff"
@@ -577,7 +601,38 @@
                 </div>
             </div>
         
+<<<<<<< HEAD
         </header>
+=======
+        <!-- NOTIFICATION DROPDOWN -->
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <span><i class="bi bi-bell"></i> Notifications</span>
+                <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark all as read</span>
+            </div>
+            <a href="home-visits.html" class="notification-item">
+                <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
+                <div class="notification-content">
+                    <h4>New GN-Verified Visit</h4>
+                    <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
+                    <span class="notification-time">10 mins ago</span>
+                </div>
+            </a>
+            <a href="appointments.html" class="notification-item">
+                <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
+                <div class="notification-content">
+                    <h4>Appointment Reminder</h4>
+                    <p>You have 4 pending clinic appointments for today.</p>
+                    <span class="notification-time">1 hour ago</span>
+                </div>
+            </a>
+            <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                View All Notifications
+                    </a>
+        </div>
+
+</header>
+>>>>>>> develop
 
         <div class="content-area">
             <div class="page-header">
@@ -637,6 +692,7 @@
         </div>
     </main>
 
+<<<<<<< HEAD
 <!-- Logout Confirmation Modal -->
 <div id="logoutModalOverlay" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; opacity:0; transition: opacity 0.3s ease;">
     <div id="logoutModal" style="background:#ffffff; border-radius:16px; padding:40px; width:400px; max-width:90%; text-align:center; transform:scale(0.85) translateY(20px); transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow:0 10px 40px rgba(0,0,0,0.1);">
@@ -845,6 +901,10 @@ document.addEventListener('DOMContentLoaded', () => {
     </script>
 
 </body>
+=======
+</body>
+
+>>>>>>> develop
 </html>
 
 

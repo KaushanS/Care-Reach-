@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function () {
@@ -23,6 +24,8 @@
     </script>
 
 
+=======
+>>>>>>> develop
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Doctor Patients</title>
@@ -54,6 +57,7 @@
             --info-bg: #eff6ff;
             --sidebar-width: 260px;
             --font-family: 'Inter', sans-serif;
+<<<<<<< HEAD
 
             /* Status Colors */
             --danger: #ef4444;
@@ -64,6 +68,8 @@
             --success-bg: #ecfdf5;
             --info: #3b82f6;
             --info-bg: #eff6ff;
+=======
+>>>>>>> develop
         }
 
         * {
@@ -502,10 +508,13 @@
             border-color: var(--border)
         }
 
+<<<<<<< HEAD
         .mobile-close-btn {
             display: block !important;
         }
 
+=======
+>>>>>>> develop
         .mobile-toggle {
             display: none;
             font-size: 24px;
@@ -551,10 +560,13 @@
                 margin-left: 0
             }
 
+<<<<<<< HEAD
             .mobile-close-btn {
                 display: block !important;
             }
 
+=======
+>>>>>>> develop
             .mobile-toggle {
                 display: block
             }
@@ -655,6 +667,7 @@
             margin-top: 4px;
             display: block;
         }
+<<<<<<< HEAD
 
         .notification-wrapper {
             position: relative;
@@ -1023,16 +1036,21 @@
                 z-index: 9999 !important;
             }
         }
+=======
+>>>>>>> develop
     </style>
 </head>
 
 <body>
     <aside class="sidebar" id="sidebar">
+<<<<<<< HEAD
         <!-- MOBILE CLOSE BUTTON -->
         <i class="bi bi-x-lg mobile-close-btn"
             style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;"
             onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
+=======
+>>>>>>> develop
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
         </div>
@@ -1047,7 +1065,11 @@
             <div class="menu-title">Management</div>
             <!-- <a href="reports.html" class="menu-item"><i class="bi bi-file-earmark-text"></i> Reports</a> -->
             <a href="profile.html" class="menu-item"><i class="bi bi-person-badge"></i> Profile</a>
+<<<<<<< HEAD
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;">
+=======
+            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;">
+>>>>>>> develop
                 <i class="bi bi-box-arrow-right"></i> Log Out
             </a>
         </nav>
@@ -1061,6 +1083,7 @@
             </div>
 
             <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+<<<<<<< HEAD
 
                 <div class="notification-wrapper">
                     <div class="notification-icon" onclick="toggleNotifications()">
@@ -1081,6 +1104,14 @@
                             style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
                             View All Notifications
                         </a>
+=======
+                <div class="action-icon" title="Notifications"
+                    onclick="document.getElementById('notificationDropdown').classList.toggle('active')"
+                    style="font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative;">
+                    <i class="bi bi-bell"></i>
+                    <div class="dot"
+                        style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--warning); border-radius: 50%; border: 2px solid white;">
+>>>>>>> develop
                     </div>
                 </div>
 
@@ -1092,6 +1123,38 @@
                     </div>
                 </a>
 
+<<<<<<< HEAD
+=======
+                <!-- NOTIFICATION DROPDOWN -->
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <span><i class="bi bi-bell"></i> Notifications</span>
+                        <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark
+                            all as read</span>
+                    </div>
+                    <a href="home-visits.html" class="notification-item">
+                        <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
+                        <div class="notification-content">
+                            <h4>New GN-Verified Visit</h4>
+                            <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
+                            <span class="notification-time">10 mins ago</span>
+                        </div>
+                    </a>
+                    <a href="appointments.html" class="notification-item">
+                        <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
+                        <div class="notification-content">
+                            <h4>Appointment Reminder</h4>
+                            <p>You have 4 pending clinic appointments for today.</p>
+                            <span class="notification-time">1 hour ago</span>
+                        </div>
+                    </a>
+                    <a href="notifications.html" class="notification-item"
+                        style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                        View All Notifications
+                    </a>
+                </div>
+
+>>>>>>> develop
         </header>
         <div class="content-area">
             <div class="page-header">
@@ -1104,7 +1167,11 @@
                 <div class="metric-card">
                     <div class="metric-icon icon-teal"><i class="bi bi-people-fill"></i></div>
                     <div class="metric-info">
+<<<<<<< HEAD
                         <h3 id="statTotalPatients">--</h3>
+=======
+                        <h3>128</h3>
+>>>>>>> develop
                         <p>Total Patients</p>
                     </div>
                 </div>
@@ -1119,12 +1186,73 @@
                             <th>Patient</th>
                             <th>Symptoms</th>
                             <th>Last Visit</th>
+<<<<<<< HEAD
                             <th>Next Appointment</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="activePatientList">
                         <!-- Dynamic content loaded via JS -->
+=======
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="patient-cell">
+                                    <div class="patient-avatar">AM</div>
+                                    <div class="patient-info"><span class="patient-name">Amaya Perera</span><span
+                                            class="patient-meta">ID: PT-1024</span></div>
+                                </div>
+                            </td>
+                            <td>High blood pressure, headache</td>
+                            <td>Today, 09:30 AM</td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="patient-details.html" class="btn btn-outline"
+                                        style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View
+                                        Details</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="patient-cell">
+                                    <div class="patient-avatar">SK</div>
+                                    <div class="patient-info"><span class="patient-name">Sanduni Karunaratne</span><span
+                                            class="patient-meta">ID: PT-1088</span></div>
+                                </div>
+                            </td>
+                            <td>Increased thirst, frequent urination</td>
+                            <td>Yesterday, 02:10 PM</td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="patient-details.html" class="btn btn-outline"
+                                        style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View
+                                        Details</a>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="patient-cell">
+                                    <div class="patient-avatar">RM</div>
+                                    <div class="patient-info"><span class="patient-name">Ruwan Madushanka</span><span
+                                            class="patient-meta">ID: PT-1112</span></div>
+                                </div>
+                            </td>
+                            <td>Shortness of breath, mild cough</td>
+                            <td>2 days ago</td>
+                            <td>
+                                <div class="actions-cell">
+                                    <a href="patient-details.html" class="btn btn-outline"
+                                        style="padding: 6px 12px; font-size: 12px;"><i class="bi bi-eye"></i> View
+                                        Details</a>
+                                </div>
+                            </td>
+                        </tr>
+>>>>>>> develop
                     </tbody>
                 </table>
             </section>
@@ -1149,6 +1277,7 @@
             </section>
         </div>
     </main>
+<<<<<<< HEAD
     <script>
         function toggleSidebar() {
             document.getElementById('sidebar').classList.toggle('open');
@@ -1411,6 +1540,9 @@
         });
     </script>
 
+=======
+    <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+>>>>>>> develop
 </body>
 
 </html>

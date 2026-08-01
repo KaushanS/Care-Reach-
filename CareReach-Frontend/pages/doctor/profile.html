@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+<<<<<<< HEAD
     <!-- Core Session Manager -->
     <script>
         (function () {
@@ -23,6 +24,8 @@
     </script>
 
 
+=======
+>>>>>>> develop
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareReach | Doctor Profile Settings</title>
@@ -48,6 +51,7 @@
             --border: #e2e8f0;
             --sidebar-width: 260px;
             --font-family: 'Inter', sans-serif;
+<<<<<<< HEAD
 
             /* Status Colors */
             --danger: #ef4444;
@@ -58,6 +62,8 @@
             --success-bg: #ecfdf5;
             --info: #3b82f6;
             --info-bg: #eff6ff;
+=======
+>>>>>>> develop
         }
 
         * {
@@ -409,6 +415,7 @@
             margin-top: 4px;
             display: block;
         }
+<<<<<<< HEAD
 
         .mobile-close-btn {
             display: block !important;
@@ -669,6 +676,13 @@
             style="display: none; position: absolute; right: 20px; top: 28px; cursor: pointer; color: #5eead4; z-index: 10000; font-size: 20px;"
             onclick="document.getElementById('sidebar').classList.remove('open')"></i>
 
+=======
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar">
+>>>>>>> develop
         <div class="brand">
             <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
         </div>
@@ -681,13 +695,18 @@
             <a href="home-visits.html" class="menu-item"><i class="bi bi-house-heart"></i> Home Visits</a>
             <div class="menu-title">Management</div>
             <a href="profile.html" class="menu-item active"><i class="bi bi-person-badge"></i> Profile</a>
+<<<<<<< HEAD
             <a href="#" onclick="showLogoutModal(event)" class="menu-item" style="color: #ef4444; margin-top: auto;"><i
+=======
+            <a href="../../login.html" class="menu-item" style="color: #ef4444; margin-top: auto;"><i
+>>>>>>> develop
                     class="bi bi-box-arrow-right"></i> Log Out</a>
         </nav>
     </aside>
 
     <main class="main-content">
         <header class="top-header">
+<<<<<<< HEAD
             <div style="display:flex;align-items:center;"><i class="bi bi-list mobile-toggle"
                     onclick="toggleSidebar()"></i>
             </div>
@@ -713,6 +732,16 @@
                             style="display: flex; justify-content: center; padding: 12px; color: var(--primary); font-weight: 600; font-size: 13px; text-decoration: none; border-top: 1px solid var(--border); background: #f8fafc;">
                             View All Notifications
                         </a>
+=======
+
+            <div class="header-actions" style="margin-left: auto; display: flex; align-items: center; gap: 20px;">
+                <div class="action-icon" title="Notifications"
+                    onclick="document.getElementById('notificationDropdown').classList.toggle('active')"
+                    style="font-size: 20px; color: var(--text-muted); cursor: pointer; position: relative;">
+                    <i class="bi bi-bell"></i>
+                    <div class="dot"
+                        style="position: absolute; top: -2px; right: -2px; width: 8px; height: 8px; background: var(--warning); border-radius: 50%; border: 2px solid white;">
+>>>>>>> develop
                     </div>
                 </div>
 
@@ -724,6 +753,37 @@
                     </div>
                 </a>
 
+<<<<<<< HEAD
+=======
+                <!-- NOTIFICATION DROPDOWN -->
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notification-header">
+                        <span><i class="bi bi-bell"></i> Notifications</span>
+                        <span style="font-size: 12px; color: var(--primary); cursor: pointer; font-weight: 500;">Mark
+                            all as read</span>
+                    </div>
+                    <a href="home-visits.html" class="notification-item">
+                        <div class="notification-icon notif-orange"><i class="bi bi-house-exclamation"></i></div>
+                        <div class="notification-content">
+                            <h4>New GN-Verified Visit</h4>
+                            <p>Amaya Perera has been verified by the Grama Niladari for a home visit.</p>
+                            <span class="notification-time">10 mins ago</span>
+                        </div>
+                    </a>
+                    <a href="appointments.html" class="notification-item">
+                        <div class="notification-icon notif-blue"><i class="bi bi-calendar-event"></i></div>
+                        <div class="notification-content">
+                            <h4>Appointment Reminder</h4>
+                            <p>You have 4 pending clinic appointments for today.</p>
+                            <span class="notification-time">1 hour ago</span>
+                        </div>
+                    </a>
+                    <a href="notifications.html" class="notification-item" style="justify-content: center; color: var(--primary); font-weight: 600; font-size: 13px;">
+                View All Notifications
+                    </a>
+                </div>
+
+>>>>>>> develop
         </header>
 
         <div class="content-area">
@@ -732,6 +792,7 @@
                 <p>Update your personal information, contact credentials, and hospital affiliation.</p>
             </div>
 
+<<<<<<< HEAD
             <!-- Profile Photo Upload -->
             <div class="panel" style="display: flex; align-items: center; gap: 24px; padding: 24px 32px;">
                 <div style="position: relative; width: 100px; height: 100px;">
@@ -762,12 +823,16 @@
             </div>
 
             <form onsubmit="handleProfileUpdate(event)">
+=======
+            <form action="profile.html">
+>>>>>>> develop
                 <!-- Personal & Contact Info -->
                 <div class="panel">
                     <h2 class="panel-title"><i class="bi bi-person-vcard text-primary"></i> Personal Details</h2>
                     <div class="form-grid">
                         <div class="form-group">
                             <label class="form-label">Full Name</label>
+<<<<<<< HEAD
                             <input type="text" class="form-control" id="uFullName" required>
                         </div>
                         <div class="form-group">
@@ -786,12 +851,28 @@
                             <label class="form-label">Home Address</label>
                             <textarea class="form-control" id="uAddress" rows="2"
                                 style="font-family: inherit; resize: vertical;" required></textarea>
+=======
+                            <input type="text" class="form-control" value="Dr. Aruna Silva" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">NIC ID</label>
+                            <input type="text" class="form-control" value="851234567V" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mobile Number</label>
+                            <input type="tel" class="form-control" value="071 234 5678" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Email Address</label>
+                            <input type="email" class="form-control" value="aruna.silva@carereach.lk" required>
+>>>>>>> develop
                         </div>
                     </div>
                 </div>
 
                 <!-- Professional Info -->
                 <div class="panel">
+<<<<<<< HEAD
                     <h2 class="panel-title"><i class="bi bi-hospital text-primary"></i> doctor_career</h2>
                     <div class="form-grid">
                         <div class="form-group">
@@ -809,12 +890,48 @@
                         <div class="form-group">
                             <label class="form-label">Experience (Years)</label>
                             <input type="number" class="form-control" id="uExperienceYears" min="0" required>
+=======
+                    <h2 class="panel-title"><i class="bi bi-hospital text-primary"></i> Professional Affiliation</h2>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Specialist Category</label>
+                            <input type="text" class="form-control" value="Medical Officer / Community Health" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Main Hospital Name</label>
+                            <input type="text" class="form-control" value="District General Hospital, Gampaha" required>
+                        </div>
+                        <div class="form-group full-width">
+                            <label class="form-label">Working Area (GN Division)</label>
+                            <input type="text" class="form-control" value="Meda Ward 03 / Kanda-15" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Security Info -->
+                <div class="panel">
+                    <h2 class="panel-title"><i class="bi bi-shield-lock text-primary"></i> Security & Password</h2>
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label class="form-label">Current Password</label>
+                            <input type="password" class="form-control"
+                                placeholder="Enter current password to make changes">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">New Password</label>
+                            <input type="password" class="form-control" placeholder="Enter new password">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirm New Password</label>
+                            <input type="password" class="form-control" placeholder="Confirm new password">
+>>>>>>> develop
                         </div>
                     </div>
                 </div>
 
                 <!-- Actions -->
                 <div style="display: flex; gap: 16px; justify-content: flex-end;">
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-primary" id="saveProfBtn">
                         <i class="bi bi-check-circle"></i> Save Changes
                     </button>
@@ -1451,3 +1568,19 @@
 </body>
 
 </html>
+=======
+                    <a href="dashboard.html" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary"
+                        onclick="alert('Profile details updated successfully');"><i class="bi bi-check-circle"></i> Save
+                        Changes</button>
+                </div>
+            </form>
+
+            <div style="height: 48px;"></div>
+        </div>
+    </main>
+</body>
+
+</html>
+
+>>>>>>> develop
