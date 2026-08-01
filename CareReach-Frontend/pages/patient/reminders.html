@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareReach | My Reminders</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-hover: #0a5c56;
+      --primary-light: #d1f2eb;
+      --bg-page: #f4f7f6;
+      --bg-surface: #ffffff;
+      --text-dark: #111827;
+      --text-normal: #374151;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
+      --danger: #dc2626;
+      --danger-bg: #fef2f2;
+      --warning: #f59e0b;
+      --warning-bg: #fffbeb;
+      --success: #10b981;
+      --success-bg: #ecfdf5;
+      --info: #3b82f6;
+      --info-bg: #eff6ff;
+      --sidebar-bg: #042f2e;
+      --sidebar-text: #ccfbf1;
+      --sidebar-text-muted: #99f6e4;
+      --sidebar-width: 260px;
+      --font-family: 'Inter', sans-serif;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: var(--font-family);
+    }
+
+    body {
+      background-color: var(--bg-page);
+      color: var(--text-normal);
+      display: flex;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      width: var(--sidebar-width);
+      background-color: var(--sidebar-bg);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .brand {
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .brand-icon {
+      background: rgba(255, 255, 255, 0.15);
+      color: #5eead4;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+    }
+
+    .brand span {
+      color: #5eead4;
+    }
+
+    .sidebar-menu {
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .menu-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--sidebar-text-muted);
+      opacity: 0.7;
+      letter-spacing: 0.5px;
+      margin: 16px 0 8px 8px;
+    }
+
+    .menu-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+    }
+
+    .menu-item i {
+      font-size: 18px;
+      color: var(--sidebar-text-muted);
+      opacity: 0.8;
+    }
+
+    .menu-item:hover {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .menu-item.active {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .menu-item.active i {
+      color: #ffffff;
+      opacity: 1;
+    }
+
+    .main-content {
+      margin-left: var(--sidebar-width);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .top-header {
+      height: 72px;
+      background-color: var(--bg-surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 32px;
+      position: sticky;
+      top: 0;
+      z-index: 90;
+    }
+
+    .header-search {
+      display: flex;
+      align-items: center;
+      background: var(--bg-page);
+      padding: 8px 16px;
+      border-radius: 99px;
+      width: 320px;
+    }
+
+    .header-search i {
+      color: var(--text-muted);
+      margin-right: 8px;
+    }
+
+    .header-search input {
+      border: none;
+      background: transparent;
+      outline: none;
+      width: 100%;
+      font-size: 14px;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      border-left: 1px solid var(--border);
+      padding-left: 20px;
+    }
+
+    .user-profile img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--primary-light);
+    }
+
+    .user-info {
+      text-align: right;
+    }
+
+    .user-info h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-dark);
+    }
+
+    .user-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .content-area {
+      padding: 32px;
+      max-width: 900px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .page-header {
+      margin-bottom: 24px;
+    }
+
+    .page-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+
+    .page-header p {
+      font-size: 15px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .reminder-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 32px;
+    }
+
+    .reminder-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: 0.2s;
+    }
+
+    .reminder-card:hover {
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    }
+
+    .reminder-card.active-now {
+      border-left: 4px solid var(--primary);
+    }
+
+    .reminder-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+
+    .icon-med {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .icon-appt {
+      background: var(--info-bg);
+      color: var(--info);
+    }
+
+    .icon-test {
+      background: var(--warning-bg);
+      color: var(--warning);
+    }
+
+    .reminder-content {
+      flex: 1;
+    }
+
+    .reminder-content h4 {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .reminder-content p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .reminder-time {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .reminder-time .time {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .reminder-time .label {
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      border-radius: 24px;
+      transition: 0.3s;
+    }
+
+    .toggle-slider::before {
+      content: '';
+      position: absolute;
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+
+    .toggle-switch input:checked+.toggle-slider {
+      background-color: var(--primary);
+    }
+
+    .toggle-switch input:checked+.toggle-slider::before {
+      transform: translateX(20px);
+    }
+
+    .mobile-toggle {
+      display: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: var(--text-dark);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar {
+        transform: translateX(-100%);
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+      }
+
+      .mobile-toggle {
+        display: block;
+      }
+
+      .header-search {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <aside class="sidebar" id="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i class="bi bi-heart-pulse-fill"></i></div>CARE<span>REACH</span>
+    </div>
+    <nav class="sidebar-menu">
+      <div class="menu-title">My Health</div>
+      <a href="dashboard.html" class="menu-item"><i class="bi bi-grid-1x2-fill"></i> Dashboard</a>
+      <a href="appointments.html" class="menu-item"><i class="bi bi-calendar-check"></i> Appointments</a>
+      <a href="prescriptions.html" class="menu-item"><i class="bi bi-capsule"></i> Prescriptions</a>
+      <a href="medical-history.html" class="menu-item"><i class="bi bi-journal-medical"></i> Medical History</a>
+      <div class="menu-title">Notifications</div>
+      <a href="reminders.html" class="menu-item active"><i class="bi bi-bell"></i> Reminders</a>
+      <div class="menu-title">Account</div>
+      <a href="profile.html" class="menu-item"><i class="bi bi-person-gear"></i> My Profile</a>
+    </nav>
+  </aside>
+  <main class="main-content">
+    <header class="top-header">
+      <div style="display:flex;align-items:center;gap:20px;">
+        <i class="bi bi-list mobile-toggle" onclick="toggleSidebar()"></i>
+        <div class="header-search"><i class="bi bi-search"></i><input type="text" placeholder="Search reminders...">
+        </div>
+      </div>
+      <a href="profile.html" class="user-profile">
+        <div class="user-info">
+          <h4>Kamal Perera</h4>
+          <p>Patient</p>
+        </div>
+        <img src="https://ui-avatars.com/api/?name=Kamal+Perera&background=042f2e&color=fff" alt="Patient">
+      </a>
+    </header>
+    <div class="content-area">
+      <div class="page-header">
+        <h1>My Reminders</h1>
+        <p>Manage medication schedules and appointment notifications.</p>
+      </div>
+
+      <h3 class="section-title"><i class="bi bi-capsule"></i> Medication Reminders</h3>
+      <div class="reminder-list">
+        <div class="reminder-card active-now">
+          <div class="reminder-icon icon-med"><i class="bi bi-capsule"></i></div>
+          <div class="reminder-content">
+            <h4>Metformin 500mg</h4>
+            <p>Take with breakfast — Morning dose</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">7:00 AM</div>
+            <div class="label">Daily</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="reminder-icon icon-med"><i class="bi bi-capsule"></i></div>
+          <div class="reminder-content">
+            <h4>Amlodipine 5mg</h4>
+            <p>Take before breakfast — Morning dose</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">6:30 AM</div>
+            <div class="label">Daily</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="reminder-icon icon-med"><i class="bi bi-capsule"></i></div>
+          <div class="reminder-content">
+            <h4>Aspirin 75mg</h4>
+            <p>Take after lunch</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">1:00 PM</div>
+            <div class="label">Daily</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="reminder-icon icon-med"><i class="bi bi-capsule"></i></div>
+          <div class="reminder-content">
+            <h4>Metformin 500mg</h4>
+            <p>Take with dinner — Evening dose</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">7:00 PM</div>
+            <div class="label">Daily</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <h3 class="section-title"><i class="bi bi-calendar-check"></i> Appointment Reminders</h3>
+      <div class="reminder-list">
+        <div class="reminder-card">
+          <div class="reminder-icon icon-appt"><i class="bi bi-calendar-event"></i></div>
+          <div class="reminder-content">
+            <h4>Dr. Anura Wickremasinghe — General Checkup</h4>
+            <p>CareReach Clinic, Colombo 05</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">Jul 15</div>
+            <div class="label">10:00 AM</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="reminder-icon icon-appt"><i class="bi bi-house-door"></i></div>
+          <div class="reminder-content">
+            <h4>Dr. Samantha Dias — Diabetes Followup</h4>
+            <p>Home Visit</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">Jul 22</div>
+            <div class="label">2:30 PM</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+
+      <h3 class="section-title"><i class="bi bi-clipboard2-pulse"></i> Health Test Reminders</h3>
+      <div class="reminder-list">
+        <div class="reminder-card">
+          <div class="reminder-icon icon-test"><i class="bi bi-droplet-fill"></i></div>
+          <div class="reminder-content">
+            <h4>Blood Pressure Check</h4>
+            <p>Record morning and evening BP readings</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">6:00 AM</div>
+            <div class="label">Twice Daily</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+        </div>
+        <div class="reminder-card">
+          <div class="reminder-icon icon-test"><i class="bi bi-thermometer-half"></i></div>
+          <div class="reminder-content">
+            <h4>Fasting Blood Sugar Test</h4>
+            <p>Measure blood glucose before breakfast</p>
+          </div>
+          <div class="reminder-time">
+            <div class="time">6:30 AM</div>
+            <div class="label">Weekly (Mon)</div>
+          </div>
+          <label class="toggle-switch"><input type="checkbox"><span class="toggle-slider"></span></label>
+        </div>
+      </div>
+    </div>
+  </main>
+  <script>function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }</script>
+</body>
+
+</html>
