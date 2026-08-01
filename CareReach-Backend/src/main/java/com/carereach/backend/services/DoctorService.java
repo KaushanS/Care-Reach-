@@ -115,6 +115,7 @@ public class DoctorService {
         }
 
         List<Map<String, Object>> activePatients = latestReports.entrySet().stream()
+                .sorted((a, b) -> b.getValue().getCreatedAt().compareTo(a.getValue().getCreatedAt()))
                 .map(entry -> {
                     Patient p = entry.getKey();
                     com.carereach.backend.models.MedicalReport latest = entry.getValue();
@@ -123,11 +124,12 @@ public class DoctorService {
                     map.put("patientId", p.getId());
                     map.put("name", p.getName());
                     map.put("symptoms", latest.getSymptoms());
-                    map.put("lastVisit", latest.getVisitDate() != null ? latest.getVisitDate().toString() : "Unknown");
+                    java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter
+                            .ofPattern("MMM dd, yyyy hh:mm a");
+                    map.put("lastVisit", latest.getCreatedAt() != null ? latest.getCreatedAt().format(fmt)
+                            : (latest.getVisitDate() != null ? latest.getVisitDate().toString() : "Unknown"));
                     return map;
                 })
-                // Sort by most recent report first
-                .sorted((a, b) -> b.get("lastVisit").toString().compareTo(a.get("lastVisit").toString()))
                 .collect(Collectors.toList());
 
         com.carereach.backend.dtos.DoctorRegistryDto dto = new com.carereach.backend.dtos.DoctorRegistryDto();

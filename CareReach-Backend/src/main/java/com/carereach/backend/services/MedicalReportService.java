@@ -26,6 +26,9 @@ public class MedicalReportService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private NotificationService notificationService;
+
     @Transactional
     public MedicalReportDto createMedicalReport(MedicalReportDto dto) {
         if (dto.getPatientId() == null) {
@@ -52,6 +55,16 @@ public class MedicalReportService {
         report.setDescription(dto.getDescription());
 
         MedicalReport saved = medicalReportRepository.save(report);
+
+        try {
+            notificationService.createNotification(
+                    doctor.getId(),
+                    "Successfully filed a Medical Diagnosis report for patient " + patient.getName() + " (PT-"
+                            + patient.getId() + ").",
+                    "SUCCESS");
+        } catch (Exception e) {
+            System.err.println("Failed to dispatch doctor notification: " + e.getMessage());
+        }
 
         return mapToDto(saved);
     }
