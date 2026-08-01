@@ -317,6 +317,10 @@ public class UserService {
             throw new RuntimeException("OTP expired!");
         }
 
+        if (user.getPassword() != null && user.getPassword().equals(newPassword)) {
+            throw new RuntimeException("New password cannot be the same as your old password!");
+        }
+
         user.setPassword(newPassword);
         user.setResetOtpCode(null);
         user.setResetOtpExpiry(null);

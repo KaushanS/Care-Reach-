@@ -32,5 +32,5 @@ public class Notification {
     private boolean isRead = false;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now(java.time.ZoneId.of("Asia/Colombo"));
 }

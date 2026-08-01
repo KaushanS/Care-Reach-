@@ -1,4 +1,0 @@
-Resource: file:///e%3A/2nd%20Year%20final%20Project%20%28Care%20Reach%29/Care%20Reach/dashboards/admin-dashboard.html
-Resource: file:///e%3A/2nd%20Year%20final%20Project%20%28Care%20Reach%29/Care%20Reach/CareReach-Frontend/pages/admin/dashboard.html
-Resource: file:///f%3A/Portfolio/src/main/resources/templates/admin/dashboard.html
-Resource: file:///c%3A/Users/pksat/Desktop/Care%20Reach/CareReach-Frontend/pages/admin/dashboard.html
