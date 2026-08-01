@@ -20,9 +20,11 @@ public class MedicalReport {
     @JoinColumn(name = "doctor_id", nullable = false)
     private User doctor;
 
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
     @Column(name = "visit_date")
     private LocalDate visitDate;
 
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
     @Column(name = "next_visit_date")
     private LocalDate nextVisitDate;
 

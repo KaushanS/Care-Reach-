@@ -7,7 +7,10 @@ public class MedicalReportDto {
     private Long id;
     private Long patientId;
     private Long doctorId;
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
     private LocalDate visitDate;
+
+    @com.fasterxml.jackson.annotation.JsonFormat(pattern = "yyyy-MM-dd", timezone = "Asia/Colombo")
     private LocalDate nextVisitDate;
     private String symptoms;
     private String diagnosis;
